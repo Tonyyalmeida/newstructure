@@ -11,13 +11,12 @@ class App extends Component {
             <div id="main">
             <IntroSection/>
             <FirstSection/>
-            <SecondSection/>
             <SpecialSection/>
             </div>
             <footer id="footer">
               <FooterFirstSection/>
               <FooterSecondSection/>
-              <p className="copyright">&copy; Untitled. 2018 - Made in Saigon</p>
+              <p className="copyright">&copy; 2018 - Made in Saigon</p>
             </footer>
         </Wrapper>  
     );
@@ -29,8 +28,7 @@ const Wrapper = props => <div id="wrapper">{props.children}</div>
 const Header = props => <header id="header" className="alt">
 <span className="logo"><img src="images/logo.svg" alt="" /></span>
 <h1>Topico</h1>
-<p>Intuitive Flashcard App for Learning Languages<br />
-built by <a href="https://twitter.com/namn0mn0m">@namn0mn0m</a></p>
+<p>A Simple Flashcard App</p>
 </header>
 
 const Navbar = props => <nav id="nav">
@@ -46,14 +44,9 @@ const IntroSection = props => <section id="intro" className="main">
 <div className="spotlight">
   <div className="content">
     <header className="major">
-      <h2>Ipsum sed adipiscing</h2>
+      <h2>Motivation</h2>
     </header>
-    <p>Sed lorem ipsum dolor sit amet nullam consequat feugiat consequat magna
-    adipiscing magna etiam amet veroeros. Lorem ipsum dolor tempus sit cursus.
-    Tempus nisl et nullam lorem ipsum dolor sit amet aliquam.</p>
-    <ul className="actions">
-      <li><a href="generic.html" className="button">Learn More</a></li>
-    </ul>
+    <p>Studying Flashcards is already challinging enough - we don't need complex and bloated apps to do so. We believe that learning flashcards should be a simple and enjoyable experience </p>
   </div>
   <span class="icon major style1 fa-code"></span>
 </div>
@@ -61,29 +54,26 @@ const IntroSection = props => <section id="intro" className="main">
 
 const FirstSection = props => <section id="first" className="main special">
 <header className="major">
-  <h2>Magna veroeros</h2>
+  <h2>Feature Overview</h2>
 </header>
 <ul className="features">
   <li>
     <span className="icon major style1 fa-code"></span>
-    <h3>Ipsum consequat</h3>
-    <p>Sed lorem amet ipsum dolor et amet nullam consequat a feugiat consequat tempus veroeros sed consequat.</p>
+    <h3>Create Decks</h3>
+    <p>Topico allows you to create up to 10 flashcard decks with 20 cards.</p>
   </li>
   <li>
     <span className="icon major style3 fa-copy"></span>
-    <h3>Amed sed feugiat</h3>
-    <p>Sed lorem amet ipsum dolor et amet nullam consequat a feugiat consequat tempus veroeros sed consequat.</p>
+    <h3>Track for you progress</h3>
+    <p>Track the progress you are making. Topico marks all cards as done when they are done</p>
   </li>
   <li>
     <span className="icon major style5 fa-diamond"></span>
-    <h3>Dolor nullam</h3>
-    <p>Sed lorem amet ipsum dolor et amet nullam consequat a feugiat consequat tempus veroeros sed consequat.</p>
+    <h3>Study</h3>
+    <p>Studying a deck is as easy as swipe</p>
   </li>
 </ul>
 <footer className="major">
-  <ul className="actions">
-    <li><a href="generic.html" className="button">Learn More</a></li>
-  </ul>
 </footer>
 </section>
 
@@ -125,28 +115,30 @@ const SecondSection = props =><section id="second" className="main special">
 
 const SpecialSection = props => <section id="cta" className="main special">
 <header className="major">
-  <h2>Congue imperdiet</h2>
-  <p>Donec imperdiet consequat consequat. Suspendisse feugiat congue<br />
-  posuere. Nulla massa urna, fermentum eget quam aliquet.</p>
+  <h2>Create and Study everywhere</h2>
+  <p>Topico is available on the web and on your mobile device.<br />
+  Sign up now for a special promotion.</p>
 </header>
 <footer className="major">
   <ul className="actions">
-    <li><a href="generic.html" className="button special">Get Started</a></li>
-    <li><a href="generic.html" className="button">Learn More</a></li>
+    <li><a href="generic.html" className="button special">Signup</a></li>
+    <li><a href="generic.html" className="button">Google PlayStore</a></li>
+    <li><a href="generic.html" className="button">iTunes App Store</a></li>
   </ul>
 </footer>
 </section>
 
 const FooterFirstSection = props =>              <section>
-<h2>Aliquam sed mauris</h2>
-<p>Sed lorem ipsum dolor sit amet et nullam consequat feugiat consequat magna adipiscing tempus etiam dolore veroeros. eget dapibus mauris. Cras aliquet, nisl ut viverra sollicitudin, ligula erat egestas velit, vitae tincidunt odio.</p>
+<h2>About Us</h2>
+<p>Part of Nam A Bank <br/> built by <a href="https://twitter.com/namn0mn0m">@namn0mn0m</a></p> 
+
 <ul className="actions">
   <li><a href="generic.html" className="button">Learn More</a></li>
 </ul>
 </section>
 
 const FooterSecondSection = props =>               <section>
-<h2>Etiam feugiat</h2>
+<h2>Contact</h2>
 <dl className="alt">
   <dt>Address</dt>
   <dd>1234 Somewhere Road &bull; Nashville, TN 00000 &bull; USA</dd>
@@ -159,8 +151,6 @@ const FooterSecondSection = props =>               <section>
   <li><a href="#" className="icon fa-twitter alt"><span className="label">Twitter</span></a></li>
   <li><a href="#" className="icon fa-facebook alt"><span className="label">Facebook</span></a></li>
   <li><a href="#" className="icon fa-instagram alt"><span className="label">Instagram</span></a></li>
-  <li><a href="#" className="icon fa-github alt"><span className="label">GitHub</span></a></li>
-  <li><a href="#" className="icon fa-dribbble alt"><span className="label">Dribbble</span></a></li>
 </ul>
 </section>
 
