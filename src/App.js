@@ -1,16 +1,71 @@
 import React, { Component } from 'react';
-import logo from './logo.svg';
 import './css/main.css';
+import {
+  BrowserRouter as Router,
+  Route,
+  Link
+} from 'react-router-dom'
+
+
+const BasicExample = () => (
+  <Router>
+    <div>
+      <Route exact path="/" component={App}/>
+      <Route path="/about" component={RealApp}/>
+      <Route exact path="/signup" component={SignupForm}/>
+    </div>
+  </Router>
+)
+
+
+class SignupForm extends Component {
+render() {
+return (
+  <Wrapper>
+     <div id="main">
+     <section id="content" className="main">
+     <section>
+     Username<input type="text" name="username" placeholder="username"/>
+     Password<input type="text" name="password1" placeholder="Password"/>
+     Repeat Password<input type="text" name="password2" placeholder="Repeat password"/>
+</section></section></div>
+<footer id="footer">
+<FooterFirstSection/>
+<FooterSecondSection/>
+<p className="copyright">&copy; 2018 - Made in Saigon</p>
+</footer>
+ </Wrapper>
+)}};
+
+
 
 class App extends Component {
   render() {
     return (
         <Wrapper>
-         <Header/>
-         <Navbar/>
+        <Navbar/>
+         <Header></Header>
             <div id="main">
             <IntroSection/>
             <FirstSection/>
+            <SpecialSection/>
+            </div>
+            <footer id="footer">
+              <FooterFirstSection/>
+              <FooterSecondSection/>
+              <p className="copyright">&copy; 2018 - Made in Saigon</p>
+            </footer>
+        </Wrapper>  
+    );
+  }
+}
+
+class RealApp extends Component {
+  render() {
+    return (
+        <Wrapper>
+         <Navbar/>
+            <div id="main">
             <SpecialSection/>
             </div>
             <footer id="footer">
@@ -28,15 +83,14 @@ const Wrapper = props => <div id="wrapper">{props.children}</div>
 const Header = props => <header id="header" className="alt">
 <span className="logo"><img src="images/logo.svg" alt="" /></span>
 <h1>Topico</h1>
-<p>A Simple Flashcard App</p>
+<p>Just another simple Flashcard App</p>
 </header>
 
 const Navbar = props => <nav id="nav">
 <ul>
-  <li><a href="#intro" className="active">Introduction</a></li>
-  <li><a href="#first">First Section</a></li>
-  <li><a href="#second">Second Section</a></li>
-  <li><a href="#cta">Get Started</a></li>
+<li><Link to="/">Home</Link></li>
+<li><Link to="/about">About</Link></li>
+<li><Link to="/signup">Signup</Link></li>
 </ul>
 </nav>;
 
@@ -154,4 +208,4 @@ const FooterSecondSection = props =>               <section>
 </ul>
 </section>
 
-export default App;
+export default BasicExample;
