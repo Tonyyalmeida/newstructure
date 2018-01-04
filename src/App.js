@@ -25,9 +25,16 @@ return (
      <div id="main">
      <section id="content" className="main">
      <section>
-     Username<input type="text" name="username" placeholder="username"/>
-     Password<input type="text" name="password1" placeholder="Password"/>
-     Repeat Password<input type="text" name="password2" placeholder="Repeat password"/>
+     Username<input type="text" name="username"/>
+     Email<input type="text" name="email"/>
+     Password<input type="text" name="password1"/>
+     Repeat Password<input type="text" name="password2"/>
+     <br/>
+     <div class="6u 12u$(medium)">
+     <ul class="actions">
+       <li><a href="#" className="button special">Submit</a></li>
+     </ul>
+   </div>
 </section></section></div>
 <footer id="footer">
 <FooterFirstSection/>
