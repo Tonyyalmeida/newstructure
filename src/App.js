@@ -18,23 +18,23 @@ const BasicExample = () => (
 )
 
 
-class SignupForm extends Component {
+class SignupForm extends React.Component {
 render() {
 return (
   <Wrapper>
      <div id="main">
      <section id="content" className="main">
-     <section>
-     Username<input type="text" name="username"/>
+     <section><form onsubmit="return false" action="http://localhost:3101/users" method="post">
      Email<input type="text" name="email"/>
-     Password<input type="text" name="password1"/>
-     Repeat Password<input type="text" name="password2"/>
+     Username<input type="text" name="username"/>
+     Password<input type="password" name="password1"/>
+     Repeat Password<input type="password" name="password2"/>
      <br/>
      <div class="6u 12u$(medium)">
      <ul class="actions">
-       <li><a href="#" className="button special">Submit</a></li>
+       <Button type="submit" formtarget="_self" className="button submit">Submit</Button>
      </ul>
-   </div>
+   </div></form>
 </section></section></div>
 <footer id="footer">
 <FooterFirstSection/>
@@ -44,6 +44,40 @@ return (
  </Wrapper>
 )}};
 
+// class SignupForm extends React.Component {
+//   constructor(props) {
+//     super(props);
+//     this.state = {value: 'coconut'};
+
+//     this.handleChange = this.handleChange.bind(this);
+//     this.handleSubmit = this.handleSubmit.bind(this);
+//   }
+
+//   handleChange(event) {
+//     this.setState({value: event.target.value});
+//   }
+
+//   handleSubmit(event) {
+//     event.preventDefault();
+//   }
+
+//   render() {
+//     return (
+//       <form onSubmit={this.handleSubmit} action="http://localhost:3101/users" method="post">
+//         <label>
+//           Pick your favorite La Croix flavor:
+//           <select value={this.state.value} onChange={this.handleChange}>
+//             <option value="grapefruit">Grapefruit</option>
+//             <option value="lime">Lime</option>
+//             <option value="coconut">Coconut</option>
+//             <option value="mango">Mango</option>
+//           </select>
+//         </label>
+//         <input type="submit" value="Submit" />
+//       </form>
+//     );
+//   }
+// }
 
 
 class App extends Component {
