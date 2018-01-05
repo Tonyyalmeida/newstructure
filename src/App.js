@@ -4,7 +4,8 @@ import {
   BrowserRouter as Router,
   Route,
   Link
-} from 'react-router-dom'
+} from 'react-router-dom';
+import axios from 'axios';
 
 
 const BasicExample = () => (
@@ -19,23 +20,45 @@ const BasicExample = () => (
 
 
 class SignupForm extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {error: false};
+    this.handleSubmit = this.handleSubmit.bind(this);
+  }
+
+  handleSubmit(event) {
+  event.preventDefault();    
+  var formData = { email: event.target.email.value, username: event.target.username.value, password1: event.target.password1.value, password2: event.target.password2.value  };
+  console.log(event.target.email.value); 
+    axios.post('http://localhost:3101/users', formData)
+  .then(function (response) {
+    if (response)
+    {
+   this.setState({error: true});
+    }
+  });
+  }
 render() {
+const isError = this.state.error;
 return (
   <Wrapper>
      <div id="main">
      <section id="content" className="main">
-     <section><form onsubmit="return false" action="http://localhost:3101/users" method="post">
+     <section><form onSubmit={this.handleSubmit}>
      Email<input type="text" name="email"/>
      Username<input type="text" name="username"/>
      Password<input type="password" name="password1"/>
      Repeat Password<input type="password" name="password2"/>
      <br/>
      <div class="6u 12u$(medium)">
-     <ul class="actions">
-       <Button type="submit" formtarget="_self" className="button submit">Submit</Button>
+     <ul className="actions">
+       <button type="submit" className="button submit">Submit</button>
      </ul>
    </div></form>
-</section></section></div>
+   {isError ? <ErrorField/>: <ErrorField/> }
+</section></section>
+
+</div>
 <footer id="footer">
 <FooterFirstSection/>
 <FooterSecondSection/>
@@ -43,6 +66,11 @@ return (
 </footer>
  </Wrapper>
 )}};
+
+
+const ErrorField = props =>
+<blockquote>Fringilla nisl. Donec accumsan interdum nisi
+</blockquote>
 
 // class SignupForm extends React.Component {
 //   constructor(props) {
