@@ -3,7 +3,8 @@ import './css/main.css';
 import {
   BrowserRouter as Router,
   Route,
-  Link
+  Link,
+  Redirect
 } from 'react-router-dom';
 import axios from 'axios';
 
@@ -22,29 +23,40 @@ const BasicExample = () => (
 class SignupForm extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {error: false, errorText: ""};
+    this.state = {error: false, errorText: "", redirect: false, successText: ''};
     this.handleSubmit = this.handleSubmit.bind(this);
   }
-
   handleSubmit(event) {
   event.preventDefault();    
   var formData = { email: event.target.email.value, username: event.target.username.value, password1: event.target.password1.value, password2: event.target.password2.value  };
     axios.post('http://localhost:3101/users', formData)
   .then( (response) => {
-    if (response)
+    if (response.data.error)
     {
-   this.setState({error: true, errorText: response.data.map(x => x.msg)});
+   this.setState({error: true, errorText: response.data.messages.map(x => x.msg)});
     }
-    console.log(this.state.errorText.length)
+    else {
+    this.setState({redirect: true, successText: response.data.messages});
+    }
   });
   }
 render() {
 const isError = this.state.error;
+const redirect = this.state.redirect;
+const successText = this.state.successText;
+if (redirect) {
+  return  <Redirect to={{
+    pathname: '/about',
+    state: { from: successText }
+  }}/>
+}
+else {
 return (
   <Wrapper>
      <div id="main">
      <section id="content" className="main">
-     <section><form onSubmit={this.handleSubmit}>
+     <section>     
+     <form onSubmit={this.handleSubmit}>
      Email<input type="text" name="email"/>
      Username<input type="text" name="username"/>
      Password<input type="password" name="password1"/>
@@ -65,7 +77,7 @@ return (
 <p className="copyright">&copy; 2018 - Made in Saigon</p>
 </footer>
  </Wrapper>
-)}};
+)}}};
 
 
 const ErrorField = props =>
@@ -134,10 +146,12 @@ class App extends Component {
 
 class RealApp extends Component {
   render() {
+    console.log(this.props.location.state);
     return (
         <Wrapper>
          <Navbar/>
             <div id="main">
+            <h2>{this.props.location.state.from}</h2>
             <SpecialSection/>
             </div>
             <footer id="footer">
