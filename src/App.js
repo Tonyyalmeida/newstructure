@@ -22,20 +22,20 @@ const BasicExample = () => (
 class SignupForm extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {error: false};
+    this.state = {error: false, errorText: ""};
     this.handleSubmit = this.handleSubmit.bind(this);
   }
 
   handleSubmit(event) {
   event.preventDefault();    
   var formData = { email: event.target.email.value, username: event.target.username.value, password1: event.target.password1.value, password2: event.target.password2.value  };
-  console.log(event.target.email.value); 
     axios.post('http://localhost:3101/users', formData)
-  .then(function (response) {
+  .then( (response) => {
     if (response)
     {
-   this.setState({error: true});
+   this.setState({error: true, errorText: response.data.map(x => x.msg)});
     }
+    console.log(this.state.errorText.length)
   });
   }
 render() {
@@ -55,7 +55,7 @@ return (
        <button type="submit" className="button submit">Submit</button>
      </ul>
    </div></form>
-   {isError ? <ErrorField/>: <ErrorField/> }
+   {isError ? <ErrorField msg={this.state.errorText}/> : null  }
 </section></section>
 
 </div>
@@ -69,8 +69,11 @@ return (
 
 
 const ErrorField = props =>
-<blockquote>Fringilla nisl. Donec accumsan interdum nisi
-</blockquote>
+<blockquote><ul>
+{props.msg.map(
+x => <li>{x}</li>  
+)}
+</ul></blockquote>
 
 // class SignupForm extends React.Component {
 //   constructor(props) {
