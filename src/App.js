@@ -15,10 +15,70 @@ const BasicExample = () => (
       <Route exact path="/" component={App}/>
       <Route path="/about" component={RealApp}/>
       <Route exact path="/signup" component={SignupForm}/>
+      <Route exact path="/login" component={LoginForm}/>
+      <Route exact path="/welcome" component={Welcome}/>
     </div>
   </Router>
 )
+class LoginForm extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {error: false, errorText: "", redirect: false, successText: ''};
+    this.handleSubmit = this.handleSubmit.bind(this);
+  }
+  handleSubmit(event) {
+  event.preventDefault();    
+  var formData = { username: event.target.username.value, password: event.target.password1.value};
+    axios.post('http://localhost:3101/login', formData)
+  .then( (response) => {
+    if (response.data.error)
+    {
+   this.setState({error: true, errorText: response.data.messages.map(x => x.msg)});
+    }
+    else {
+    this.setState({redirect: true, successText: response.data.message + response.data.token });
+    window.sessionStorage.setItem("token", response.data.token);
+    document.cookie = "token=" + response.data.token;
+    }
+  });
+  }
+render() {
+const isError = this.state.error;
+const redirect = this.state.redirect;
+const successText = this.state.successText;
+if (redirect) {
+  return  <Redirect to={{
+    pathname: '/welcome',
+    state: { from: successText }
+  }}/>
+}
+else {
+return (
+  <Wrapper>
+    <Navbar/>
+     <div id="main">
+     <section id="content" className="main">
+     <section>     
+     <form onSubmit={this.handleSubmit}>
+     Username<input type="text" name="username"/>
+     Password<input type="password" name="password1"/>
+     <br/>
+     <div className="6u 12u$(medium)">
+     <ul className="actions">
+       <button type="submit" className="button submit">Login</button>
+     </ul>
+   </div></form>
+   {isError ? <ErrorField msg={this.state.errorText}/> : null  }
+</section></section>
 
+</div>
+<footer id="footer">
+<FooterFirstSection/>
+<FooterSecondSection/>
+<p className="copyright">&copy; 2018 - Made in Saigon</p>
+</footer>
+ </Wrapper>
+)}}};
 
 class SignupForm extends React.Component {
   constructor(props) {
@@ -53,6 +113,7 @@ if (redirect) {
 else {
 return (
   <Wrapper>
+  <Navbar/>
      <div id="main">
      <section id="content" className="main">
      <section>     
@@ -62,7 +123,7 @@ return (
      Password<input type="password" name="password1"/>
      Repeat Password<input type="password" name="password2"/>
      <br/>
-     <div class="6u 12u$(medium)">
+     <div className="6u 12u$(medium)">
      <ul className="actions">
        <button type="submit" className="button submit">Submit</button>
      </ul>
@@ -146,12 +207,16 @@ class App extends Component {
 
 class RealApp extends Component {
   render() {
-    console.log(this.props.location.state);
+// this.props.location.state carries the Router Props.
+console.log(document.cookie)
+console.log(window.sessionStorage.getItem("token"));
     return (
         <Wrapper>
          <Navbar/>
             <div id="main">
-            <h2>{this.props.location.state.from}</h2>
+            <h2>
+            {this.props.location.state === undefined ? null: this.props.location.state.from }
+            </h2>
             <SpecialSection/>
             </div>
             <footer id="footer">
@@ -163,6 +228,31 @@ class RealApp extends Component {
     );
   }
 }
+
+class Welcome extends Component {
+  render() {
+// this.props.location.state carries the Router Props.
+console.log(document.cookie)
+console.log(window.sessionStorage.getItem("token"));
+    return (
+        <Wrapper>
+         <Navbar/>
+            <div id="main">
+            <h1>
+            {this.props.location.state === undefined ? null: this.props.location.state.from }
+            </h1>
+            <SpecialSection/>
+            </div>
+            <footer id="footer">
+              <FooterFirstSection/>
+              <FooterSecondSection/>
+              <p className="copyright">&copy; 2018 - Made in Saigon</p>
+            </footer>
+        </Wrapper>  
+    );
+  }
+}
+
 
 const Wrapper = props => <div id="wrapper">{props.children}</div>
 
@@ -177,6 +267,7 @@ const Navbar = props => <nav id="nav">
 <li><Link to="/">Home</Link></li>
 <li><Link to="/about">About</Link></li>
 <li><Link to="/signup">Signup</Link></li>
+<li><Link to="/login">Login</Link></li>
 </ul>
 </nav>;
 
@@ -188,7 +279,7 @@ const IntroSection = props => <section id="intro" className="main">
     </header>
     <p>Studying Flashcards is already challinging enough - we don't need complex and bloated apps to do so. We believe that learning flashcards should be a simple and enjoyable experience </p>
   </div>
-  <span class="icon major style1 fa-code"></span>
+  <span className="icon major style1 fa-code"></span>
 </div>
 </section>
 
