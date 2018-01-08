@@ -40,7 +40,19 @@ class LoginForm extends React.Component {
     window.sessionStorage.setItem("token", response.data.token);
     document.cookie = "token=" + response.data.token;
     }
-  });
+  }).catch(
+    error =>
+    {
+    if ( error.request.status === 401) {
+    this.setState({error: true, errorText: "Username and password are not matching. Please try again"})
+  }
+  else if ( error.response.status === 400) {
+    this.setState({error: true, errorText: "Please enter username and password"})
+  }
+  else {
+    this.setState({error: true, errorText: "Something went wrong a lot"})
+  }
+});
   }
 render() {
 const isError = this.state.error;
@@ -68,7 +80,7 @@ return (
        <button type="submit" className="button submit">Login</button>
      </ul>
    </div></form>
-   {isError ? <ErrorField msg={this.state.errorText}/> : null  }
+   {isError ? <ErrorField1 msg={this.state.errorText}/> : null  }
 </section></section>
 
 </div>
@@ -146,6 +158,10 @@ const ErrorField = props =>
 {props.msg.map(
 x => <li>{x}</li>  
 )}
+</ul></blockquote>
+
+const ErrorField1 = props =>
+<blockquote><ul>{props.msg}
 </ul></blockquote>
 
 // class SignupForm extends React.Component {
