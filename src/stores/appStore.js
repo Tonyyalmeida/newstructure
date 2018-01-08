@@ -1,7 +1,7 @@
 import { observable, action, computed } from 'mobx';
 
 class studySessionStore {
-@observable isLoggedIn = true;
+@observable isLoggedIn = false;
 @observable token = ""
 @observable currentIndex = 0;
 @observable userName = "";
@@ -9,7 +9,7 @@ class studySessionStore {
     this.userName = username;
     }
 @action.bound toggleIsLoggedInState () {
-this.islLoggedIn = !this.isLoggedIn;
+this.isLoggedIn = !this.isLoggedIn;
 }
 @action.bound incrementIndex () {
 if (this.listing.length - this.currentIndex !== 1)
@@ -47,4 +47,5 @@ this.toggleAnimationState();
 }
 }
 
-export default studySessionStore;
+let myStore = new studySessionStore();
+export default myStore;

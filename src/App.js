@@ -7,7 +7,7 @@ import {
   Redirect
 } from 'react-router-dom';
 import axios from 'axios';
-import { Provider, observer } from 'mobx-react';
+import { Provider, observer, inject } from 'mobx-react';
 import appStore from './stores/appStore';
 
 const stores = { appStore };
@@ -25,7 +25,8 @@ const BasicExample = () => (
   </Router>
   </Provider>
 )
-class LoginForm extends React.Component {
+
+@inject('appStore') @observer class LoginForm extends React.Component {
   constructor(props) {
     super(props);
     this.state = {error: false, errorText: "", redirect: false, successText: ''};
@@ -41,9 +42,12 @@ class LoginForm extends React.Component {
    this.setState({error: true, errorText: response.data.messages.map(x => x.msg)});
     }
     else {
-    this.setState({redirect: true, successText: response.data.message + response.data.token });
+    this.setState({redirect: true, successText: "Your token is " + response.data.token });
     window.sessionStorage.setItem("token", response.data.token);
     document.cookie = "token=" + response.data.token;
+    this.props.appStore.setUserName("Melone");
+    this.props.appStore.toggleIsLoggedInState();
+    console.log(this.props.appStore.isLoggedIn);
     }
   }).catch(
     error =>
@@ -283,9 +287,10 @@ const Header = props => <header id="header" className="alt">
 <p>Just another simple Flashcard App</p>
 </header>
 
-inject('appStore')(
+@inject('appStore') @observer
 class Navbar extends Component {
   renderNormal() {
+    return(
     <nav id="nav">
     <ul>
     <li><Link to="/">Home</Link></li>
@@ -294,21 +299,23 @@ class Navbar extends Component {
     <li><Link to="/login">Login</Link></li>
     </ul>
     </nav>
-  };
+  )};
   renderLogin() {
+    return (
     <nav id="nav">
     <ul>
     <li><Link to="/">Home</Link></li>
-    <li><Link to="/about">WELCOME</Link></li>
+    <li><Link to="/about">WELCOME {this.props.appStore.userName}</Link></li>
     <li><Link to="/logout">Logout</Link></li>
     </ul>
     </nav>
-  };
+  )};
   render() {
+    console.log(this.props.appStore.isLoggedIn);
   const loggedIn = this.props.appStore.isLoggedIn;
-  if (loggeIn) this.renderLogin;
-  else this.renderNormal;
-};});
+  if (loggedIn) return this.renderLogin();
+  else return this.renderNormal();
+};};
 
 const IntroSection = props => <section id="intro" className="main">
 <div className="spotlight">
