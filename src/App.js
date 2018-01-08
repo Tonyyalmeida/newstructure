@@ -7,9 +7,13 @@ import {
   Redirect
 } from 'react-router-dom';
 import axios from 'axios';
+import { Provider, observer } from 'mobx-react';
+import appStore from './stores/appStore';
 
+const stores = { appStore };
 
 const BasicExample = () => (
+  <Provider {...stores}>
   <Router>
     <div>
       <Route exact path="/" component={App}/>
@@ -19,6 +23,7 @@ const BasicExample = () => (
       <Route exact path="/welcome" component={Welcome}/>
     </div>
   </Router>
+  </Provider>
 )
 class LoginForm extends React.Component {
   constructor(props) {
@@ -278,14 +283,32 @@ const Header = props => <header id="header" className="alt">
 <p>Just another simple Flashcard App</p>
 </header>
 
-const Navbar = props => <nav id="nav">
-<ul>
-<li><Link to="/">Home</Link></li>
-<li><Link to="/about">About</Link></li>
-<li><Link to="/signup">Signup</Link></li>
-<li><Link to="/login">Login</Link></li>
-</ul>
-</nav>;
+inject('appStore')(
+class Navbar extends Component {
+  renderNormal() {
+    <nav id="nav">
+    <ul>
+    <li><Link to="/">Home</Link></li>
+    <li><Link to="/about">About</Link></li>
+    <li><Link to="/signup">Signup</Link></li>
+    <li><Link to="/login">Login</Link></li>
+    </ul>
+    </nav>
+  };
+  renderLogin() {
+    <nav id="nav">
+    <ul>
+    <li><Link to="/">Home</Link></li>
+    <li><Link to="/about">WELCOME</Link></li>
+    <li><Link to="/logout">Logout</Link></li>
+    </ul>
+    </nav>
+  };
+  render() {
+  const loggedIn = this.props.appStore.isLoggedIn;
+  if (loggeIn) this.renderLogin;
+  else this.renderNormal;
+};});
 
 const IntroSection = props => <section id="intro" className="main">
 <div className="spotlight">

@@ -2,11 +2,14 @@ import { observable, action, computed } from 'mobx';
 
 class studySessionStore {
 @observable isLoggedIn = true;
-@observable curtainOpen = false;
+@observable token = ""
 @observable currentIndex = 0;
-@action.bound toggleAnimationState () {
-this.curtainOpen = !this.curtainOpen
-console.log('hello from the roof')
+@observable userName = "";
+@action.bound setUserName(username) {
+    this.userName = username;
+    }
+@action.bound toggleIsLoggedInState () {
+this.islLoggedIn = !this.isLoggedIn;
 }
 @action.bound incrementIndex () {
 if (this.listing.length - this.currentIndex !== 1)
