@@ -7,7 +7,7 @@ import {
   Redirect
 } from 'react-router-dom';
 import axios from 'axios';
-import { Provider, observer } from 'mobx-react';
+import { Provider, observer, inject } from 'mobx-react';
 import appStore from './stores/appStore';
 
 const stores = { appStore };
@@ -21,11 +21,49 @@ const BasicExample = () => (
       <Route exact path="/signup" component={SignupForm}/>
       <Route exact path="/login" component={LoginForm}/>
       <Route exact path="/welcome" component={Welcome}/>
+      <Route exact path="/logout" component={LogoutForm}/>
     </div>
   </Router>
   </Provider>
 )
-class LoginForm extends React.Component {
+
+const LogoutForm = inject('appStore')(observer(class LogoutForm extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {error: false, errorText: "", redirect: false, successText: ''};
+  }
+  componentDidMount () {
+  this.handleLogout();
+  }
+  handleLogout =  x => this.props.appStore.toggleIsLoggedInState();
+render() {
+// const isError = this.state.error;
+// const redirect = this.state.redirect;
+// const successText = this.state.successText;
+// if (redirect) {
+//   return  <Redirect to={{
+//     pathname: '/welcome',
+//     state: { from: successText }
+//   }}/>
+// }
+return (  <Wrapper>
+  <Navbar/>
+   <div id="main">
+   <section id="content" className="main">
+   <section>     
+<h3>Come back soon!</h3>
+</section></section>
+</div>
+<footer id="footer">
+<FooterFirstSection/>
+<FooterSecondSection/>
+<p className="copyright">&copy; 2018 - Made in Saigon</p>
+</footer>
+</Wrapper>)
+
+}}));
+
+const LoginForm = inject('appStore')(observer(class LoginForm extends React.Component {
   constructor(props) {
     super(props);
     this.state = {error: false, errorText: "", redirect: false, successText: ''};
@@ -41,9 +79,12 @@ class LoginForm extends React.Component {
    this.setState({error: true, errorText: response.data.messages.map(x => x.msg)});
     }
     else {
-    this.setState({redirect: true, successText: response.data.message + response.data.token });
+    this.setState({redirect: true, successText: "Your token is " + response.data.token });
     window.sessionStorage.setItem("token", response.data.token);
     document.cookie = "token=" + response.data.token;
+    this.props.appStore.setUserName("Melone");
+    this.props.appStore.toggleIsLoggedInState();
+    console.log(this.props.appStore.isLoggedIn);
     }
   }).catch(
     error =>
@@ -87,7 +128,6 @@ return (
    </div></form>
    {isError ? <ErrorField1 msg={this.state.errorText}/> : null  }
 </section></section>
-
 </div>
 <footer id="footer">
 <FooterFirstSection/>
@@ -95,7 +135,7 @@ return (
 <p className="copyright">&copy; 2018 - Made in Saigon</p>
 </footer>
  </Wrapper>
-)}}};
+)}}}));
 
 class SignupForm extends React.Component {
   constructor(props) {
@@ -283,9 +323,9 @@ const Header = props => <header id="header" className="alt">
 <p>Just another simple Flashcard App</p>
 </header>
 
-inject('appStore')(
-class Navbar extends Component {
+const Navbar= inject('appStore')(observer(class Navbar extends Component {
   renderNormal() {
+    return(
     <nav id="nav">
     <ul>
     <li><Link to="/">Home</Link></li>
@@ -294,21 +334,23 @@ class Navbar extends Component {
     <li><Link to="/login">Login</Link></li>
     </ul>
     </nav>
-  };
+  )};
   renderLogin() {
+    return (
     <nav id="nav">
     <ul>
     <li><Link to="/">Home</Link></li>
-    <li><Link to="/about">WELCOME</Link></li>
+    <li><Link to="/about">WELCOME {this.props.appStore.userName}</Link></li>
     <li><Link to="/logout">Logout</Link></li>
     </ul>
     </nav>
-  };
+  )};
   render() {
+    console.log(this.props.appStore.isLoggedIn);
   const loggedIn = this.props.appStore.isLoggedIn;
-  if (loggeIn) this.renderLogin;
-  else this.renderNormal;
-};});
+  if (loggedIn) return this.renderLogin();
+  else return this.renderNormal();
+};}));
 
 const IntroSection = props => <section id="intro" className="main">
 <div className="spotlight">
