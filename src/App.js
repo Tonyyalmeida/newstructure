@@ -16,7 +16,9 @@ const BasicExample = () => (
   <Provider {...stores}>
         <Router>
       <Wrapper>
+      <Header/>
     <Navbar/>
+
      <div id="main">
      <section id="content" className="main">
      <section>     
@@ -48,7 +50,7 @@ const LogoutForm = inject('appStore')(observer(class LogoutForm extends React.Co
   componentDidMount () {
   this.handleLogout();
   }
-  handleLogout =  x => { this.props.appStore.toggleIsLoggedInState()
+  handleLogout =  x => { this.props.appStore.setFalseLoggedInState();
 document.cookie = "topicoToken=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
 document.cookie = "userName=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
 };
@@ -102,7 +104,7 @@ const LoginForm = inject('appStore')(observer(class LoginForm extends React.Comp
     var expires = "expires="+ d.toUTCString();
     document.cookie = "topicoToken" + "=" + response.data.token + ";" + expires + ";path=/";
     document.cookie =  "userName=" + this.props.appStore.userName  + ";" + expires + ";path=/";
-    this.props.appStore.toggleIsLoggedInState();
+    this.props.appStore.setTrueLoggedInState();
     }
   }).catch(
     error =>
@@ -262,9 +264,7 @@ class RealApp extends Component {
   render() {
     return (
             <div id="main">
-            <h2>
-            {this.props.location.state === undefined ? null: this.props.location.state.from }
-            </h2>
+            <IntroSection/>
             <SpecialSection/>
             </div>
     );
@@ -320,11 +320,14 @@ const Navbar= inject('appStore')(observer(class Navbar extends Component {
 };
 componentWillMount() {
 const token = this.getCookie("topicoToken");
+console.log(this.props.appStore.isLoggedIn);
+console.log(token);
 const userName = this.getCookie('userName');
-if (token !== "" || !token ) {
+console.log(userName);
+if (token !== "") {
  //   this.props.appStore.setUserName;
     this.props.appStore.settopicoToken(token);
-    this.props.appStore.toggleIsLoggedInState();
+    this.props.appStore.setTrueLoggedInState();
     this.props.appStore.setUserName(userName);
 }
 }
@@ -351,6 +354,7 @@ if (token !== "" || !token ) {
   )};
   render() {
   const loggedIn = this.props.appStore.isLoggedIn;
+  console.log(loggedIn);
   if (loggedIn) return this.renderLogin();
   else return this.renderNormal();
 };}));
