@@ -14,7 +14,12 @@ const stores = { appStore };
 
 const BasicExample = () => (
   <Provider {...stores}>
-  <Router>
+        <Router>
+      <Wrapper>
+    <Navbar/>
+     <div id="main">
+     <section id="content" className="main">
+     <section>     
     <div>
       <Route exact path="/" component={App}/>
       <Route path="/about" component={RealApp}/>
@@ -23,7 +28,15 @@ const BasicExample = () => (
       <Route exact path="/welcome" component={Welcome}/>
       <Route exact path="/logout" component={LogoutForm}/>
     </div>
-  </Router>
+</section></section>
+</div>
+<footer id="footer">
+<FooterFirstSection/>
+<FooterSecondSection/>
+<p className="copyright">&copy; 2018 - Made in Saigon</p>
+</footer>
+ </Wrapper>
+   </Router>
   </Provider>
 )
 
@@ -35,7 +48,7 @@ const LogoutForm = inject('appStore')(observer(class LogoutForm extends React.Co
   componentDidMount () {
   this.handleLogout();
   }
-  handleLogout =  x => this.props.appStore.toggleIsLoggedInState();
+  handleLogout =  x => {console.log("A"); this.props.appStore.toggleIsLoggedInState()};
 render() {
 // const isError = this.state.error;
 // const redirect = this.state.redirect;
@@ -46,20 +59,9 @@ render() {
 //     state: { from: successText }
 //   }}/>
 // }
-return (  <Wrapper>
-  <Navbar/>
-   <div id="main">
-   <section id="content" className="main">
-   <section>     
-<h3>Come back soon!</h3>
-</section></section>
-</div>
-<footer id="footer">
-<FooterFirstSection/>
-<FooterSecondSection/>
-<p className="copyright">&copy; 2018 - Made in Saigon</p>
-</footer>
-</Wrapper>)
+return (
+ <h3>Come back soon!</h3>
+)
 
 }}));
 
@@ -68,10 +70,19 @@ const LoginForm = inject('appStore')(observer(class LoginForm extends React.Comp
     super(props);
     this.state = {error: false, errorText: "", redirect: false, successText: ''};
     this.handleSubmit = this.handleSubmit.bind(this);
+    this.setCookie = this.setCookie.bind(this);
   }
+ setCookie(cname, cvalue) {
+    var exdays = 3;
+    var d = new Date();
+    d.setTime(d.getTime() + (exdays*24*60*60*1000));
+    var expires = "expires="+ d.toUTCString();
+    document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
+};
   handleSubmit(event) {
   event.preventDefault();    
   var formData = { username: event.target.username.value, password: event.target.password1.value};
+  this.props.appStore.setUserName(event.target.username.value);
     axios.post('http://localhost:3101/login', formData)
   .then( (response) => {
     if (response.data.error)
@@ -80,15 +91,20 @@ const LoginForm = inject('appStore')(observer(class LoginForm extends React.Comp
     }
     else {
     this.setState({redirect: true, successText: "Your token is " + response.data.token });
-    window.sessionStorage.setItem("token", response.data.token);
-    document.cookie = "token=" + response.data.token;
-    this.props.appStore.setUserName("Melone");
+    // window.sessionStorage.setItem("token", response.data.token);
+    // document.cookie = "token=" + response.data.token;
+    var exdays = 3;
+    var d = new Date();
+    d.setTime(d.getTime() + (exdays*24*60*60*1000));
+    var expires = "expires="+ d.toUTCString();
+    document.cookie = "topicoToken" + "=" + response.data.token+ ";" + expires + ";path=/";
     this.props.appStore.toggleIsLoggedInState();
-    console.log(this.props.appStore.isLoggedIn);
     }
   }).catch(
     error =>
     {
+      console.log(error);
+      if (error) {
     if ( error.request.status === 401) {
     this.setState({error: true, errorText: "Username and password are not matching. Please try again"})
   }
@@ -98,7 +114,7 @@ const LoginForm = inject('appStore')(observer(class LoginForm extends React.Comp
   else {
     this.setState({error: true, errorText: "Something went wrong a lot"})
   }
-});
+}});
   }
 render() {
 const isError = this.state.error;
@@ -112,8 +128,6 @@ if (redirect) {
 }
 else {
 return (
-  <Wrapper>
-    <Navbar/>
      <div id="main">
      <section id="content" className="main">
      <section>     
@@ -129,12 +143,6 @@ return (
    {isError ? <ErrorField1 msg={this.state.errorText}/> : null  }
 </section></section>
 </div>
-<footer id="footer">
-<FooterFirstSection/>
-<FooterSecondSection/>
-<p className="copyright">&copy; 2018 - Made in Saigon</p>
-</footer>
- </Wrapper>
 )}}}));
 
 class SignupForm extends React.Component {
@@ -169,8 +177,6 @@ if (redirect) {
 }
 else {
 return (
-  <Wrapper>
-  <Navbar/>
      <div id="main">
      <section id="content" className="main">
      <section>     
@@ -187,14 +193,7 @@ return (
    </div></form>
    {isError ? <ErrorField msg={this.state.errorText}/> : null  }
 </section></section>
-
 </div>
-<footer id="footer">
-<FooterFirstSection/>
-<FooterSecondSection/>
-<p className="copyright">&copy; 2018 - Made in Saigon</p>
-</footer>
- </Wrapper>
 )}}};
 
 
@@ -248,20 +247,11 @@ const ErrorField1 = props =>
 class App extends Component {
   render() {
     return (
-        <Wrapper>
-        <Navbar/>
-         <Header></Header>
             <div id="main">
             <IntroSection/>
             <FirstSection/>
             <SpecialSection/>
             </div>
-            <footer id="footer">
-              <FooterFirstSection/>
-              <FooterSecondSection/>
-              <p className="copyright">&copy; 2018 - Made in Saigon</p>
-            </footer>
-        </Wrapper>  
     );
   }
 }
@@ -272,20 +262,12 @@ class RealApp extends Component {
 console.log(document.cookie)
 console.log(window.sessionStorage.getItem("token"));
     return (
-        <Wrapper>
-         <Navbar/>
             <div id="main">
             <h2>
             {this.props.location.state === undefined ? null: this.props.location.state.from }
             </h2>
             <SpecialSection/>
             </div>
-            <footer id="footer">
-              <FooterFirstSection/>
-              <FooterSecondSection/>
-              <p className="copyright">&copy; 2018 - Made in Saigon</p>
-            </footer>
-        </Wrapper>  
     );
   }
 }
@@ -293,29 +275,23 @@ console.log(window.sessionStorage.getItem("token"));
 class Welcome extends Component {
   render() {
 // this.props.location.state carries the Router Props.
-console.log(document.cookie)
-console.log(window.sessionStorage.getItem("token"));
+// console.log(document.cookie)
+// console.log(window.sessionStorage.getItem("token"));
     return (
-        <Wrapper>
-         <Navbar/>
-            <div id="main">
+            <div>
             <h1>
             {this.props.location.state === undefined ? null: this.props.location.state.from }
             </h1>
             <SpecialSection/>
             </div>
-            <footer id="footer">
-              <FooterFirstSection/>
-              <FooterSecondSection/>
-              <p className="copyright">&copy; 2018 - Made in Saigon</p>
-            </footer>
-        </Wrapper>  
     );
   }
 }
 
 
 const Wrapper = props => <div id="wrapper">{props.children}</div>
+
+
 
 const Header = props => <header id="header" className="alt">
 <span className="logo"><img src="images/logo.svg" alt="" /></span>
@@ -324,6 +300,34 @@ const Header = props => <header id="header" className="alt">
 </header>
 
 const Navbar= inject('appStore')(observer(class Navbar extends Component {
+  constructor(props) {
+    super(props);
+    this.getCookie = this.getCookie.bind(this);
+  }
+   getCookie(cname) {
+    var name = cname + "=";
+    var decodedCookie = decodeURIComponent(document.cookie);
+    var ca = decodedCookie.split(';');
+    for(var i = 0; i <ca.length; i++) {
+        var c = ca[i];
+        while (c.charAt(0) == ' ') {
+            c = c.substring(1);
+        }
+        if (c.indexOf(name) == 0) {
+            return c.substring(name.length, c.length);
+        }
+    }
+    return "";
+};
+componentWillMount() {
+const token = this.getCookie("topicoToken");
+console.log(this.props.appStore.topicoToken);
+if (token !== "" || !token ) {
+ //   this.props.appStore.setUserName;
+    this.props.appStore.settopicoToken(token);
+    this.props.appStore.toggleIsLoggedInState();
+}
+}
   renderNormal() {
     return(
     <nav id="nav">
@@ -346,7 +350,6 @@ const Navbar= inject('appStore')(observer(class Navbar extends Component {
     </nav>
   )};
   render() {
-    console.log(this.props.appStore.isLoggedIn);
   const loggedIn = this.props.appStore.isLoggedIn;
   if (loggedIn) return this.renderLogin();
   else return this.renderNormal();

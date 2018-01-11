@@ -4,12 +4,15 @@ class studySessionStore {
       constructor() {
         extendObservable(this, {
 isLoggedIn: false,
-token: "",
+topicoToken: "",
 currentIndex: 0,
 userName: "",
 setUserName: action(function(username) {
     this.userName = username;
-    }),
+}),
+settopicoToken: action(function(topicoToken) {
+    this.topicoToken = topicoToken;
+}),
 toggleIsLoggedInState: action(function () {
 this.isLoggedIn = !this.isLoggedIn;
 })
