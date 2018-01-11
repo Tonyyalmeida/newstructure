@@ -48,7 +48,10 @@ const LogoutForm = inject('appStore')(observer(class LogoutForm extends React.Co
   componentDidMount () {
   this.handleLogout();
   }
-  handleLogout =  x => {console.log("A"); this.props.appStore.toggleIsLoggedInState()};
+  handleLogout =  x => { this.props.appStore.toggleIsLoggedInState()
+document.cookie = "topicoToken=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+document.cookie = "userName=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+};
 render() {
 // const isError = this.state.error;
 // const redirect = this.state.redirect;
@@ -97,14 +100,13 @@ const LoginForm = inject('appStore')(observer(class LoginForm extends React.Comp
     var d = new Date();
     d.setTime(d.getTime() + (exdays*24*60*60*1000));
     var expires = "expires="+ d.toUTCString();
-    document.cookie = "topicoToken" + "=" + response.data.token+ ";" + expires + ";path=/";
+    document.cookie = "topicoToken" + "=" + response.data.token + ";" + expires + ";path=/";
+    document.cookie =  "userName=" + this.props.appStore.userName  + ";" + expires + ";path=/";
     this.props.appStore.toggleIsLoggedInState();
     }
   }).catch(
     error =>
     {
-      console.log(error);
-      if (error) {
     if ( error.request.status === 401) {
     this.setState({error: true, errorText: "Username and password are not matching. Please try again"})
   }
@@ -114,7 +116,7 @@ const LoginForm = inject('appStore')(observer(class LoginForm extends React.Comp
   else {
     this.setState({error: true, errorText: "Something went wrong a lot"})
   }
-}});
+});
   }
 render() {
 const isError = this.state.error;
@@ -258,9 +260,6 @@ class App extends Component {
 
 class RealApp extends Component {
   render() {
-// this.props.location.state carries the Router Props.
-console.log(document.cookie)
-console.log(window.sessionStorage.getItem("token"));
     return (
             <div id="main">
             <h2>
@@ -321,11 +320,12 @@ const Navbar= inject('appStore')(observer(class Navbar extends Component {
 };
 componentWillMount() {
 const token = this.getCookie("topicoToken");
-console.log(this.props.appStore.topicoToken);
+const userName = this.getCookie('userName');
 if (token !== "" || !token ) {
  //   this.props.appStore.setUserName;
     this.props.appStore.settopicoToken(token);
     this.props.appStore.toggleIsLoggedInState();
+    this.props.appStore.setUserName(userName);
 }
 }
   renderNormal() {
