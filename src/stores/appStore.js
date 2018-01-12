@@ -15,7 +15,13 @@ settopicoToken: action(function(topicoToken) {
 }),
 toggleIsLoggedInState: action(function () {
 this.isLoggedIn = !this.isLoggedIn;
-})
+}),
+setTrueLoggedInState: action(function () {
+    this.isLoggedIn = true;;
+    }),
+setFalseLoggedInState: action(function () {
+        this.isLoggedIn = false;;
+        }),
         })
 }}
 
