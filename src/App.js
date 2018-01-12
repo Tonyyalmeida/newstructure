@@ -253,40 +253,137 @@ class App extends Component {
     return (
             <div id="main">
             <IntroSection/>
-            <FirstSection/>
-            <SpecialSection/>
             </div>
     );
   }
 }
 
-class RealApp extends Component {
+
+// One my decks ( show dropdown, some info text)
+// api to call all wl from user
+// dropdown with all SL
+// button to create a new list (name them?)
+
+// SL screen (get and render all words)
+// rows to render every word
+// have "Add" (new row) and Save Button
+
+//StudySession Screen
+
+//some 
+
+
+const RealApp = inject('appStore')(observer(class RealApp extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {error: false };
+  }
+// 
+  componentDidMount () {
+
+  }
   render() {
     return (
             <div id="main">
-            <IntroSection/>
-            <SpecialSection/>
+            
+
+
+
             </div>
     );
   }
-}
+}));
 
-class Welcome extends Component {
+// class Welcome extends Component {
+//   render() {
+//     return (
+//       <div id="main">
+//       <section>
+// 										<h2>Form</h2>
+// 										<form method="post" action="#">
+// 											<div className="row uniform">
+// 												<div className="6u 12u$(xsmall)">
+// 													<input type="text" name="demo-name" id="demo-name" value="" placeholder="Name" />
+// 												</div>
+//                         <div className="6u 12u$(xsmall)">
+//                          <input type="text" name="demo-name" id="demo-name" value="" placeholder="Name" />
+//                         </div>
+//                       </div>
+//             </form>
+//             </section>
+//             </div>
+//     );
+//   }
+// }
+
+class Welcome extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = { list: [] };
+    // this.handleAdd = this.handleAdd.bind(this);
+    // this.handleEdit = this.handleEdit.bind(this);
+    // this.eachRecipe = this.eachRecipe.bind(this);
+    // this.handleDelete = this.handleDelete.bind(this);
+  }
+  componentWillMount() {
+    this.setState({list: [{name: "Carbonara", name2: "Noodles"}, {name: "Pho", name2: "Rice Noodles"}, {name: "Buger", name2: "mustard"}]})
+    //this.setState({ list: JSON.parse(localList) });
+  }
+  // handleAdd(e) {
+  //   var newRecipe = e;
+  //   var newList = this.state.list.slice();
+  //   newList.push(newRecipe);
+  //   this.setState({ list: newList });
+  //   localStorage.setItem("RecipeList", JSON.stringify(newList));
+  // }
+  // handleDelete(e) {
+  //   var newList = this.state.list.slice();
+  //   newList.splice(e, 1);
+  //   this.setState({ list: newList });
+  //   localStorage.setItem("RecipeList", JSON.stringify(newList));
+  // }
+  // handleEdit(value, index) {
+  //   var newRecipe = value;
+  //   var newList = this.state.list.slice();
+  //   newList[index] = newRecipe;
+  //   this.setState({ list: newList });
+  //   localStorage.setItem("RecipeList", JSON.stringify(newList));
+  // }
+  eachRecipe(product, id) {
+    console.log(product.name);
+    return (<div><Recipe className="normalrecipe" props={product} /> </div>)
+  }
   render() {
-// this.props.location.state carries the Router Props.
-// console.log(document.cookie)
-// console.log(window.sessionStorage.getItem("token"));
-    return (
-            <div>
-            <h1>
-            {this.props.location.state === undefined ? null: this.props.location.state.from }
-            </h1>
-            <SpecialSection/>
-            </div>
-    );
+    var list = this.state.list.map(this.eachRecipe);
+    return (<div>
+    <h2>hahaha</h2>
+      <form method="post" action="#">{list}</form>
+      <div className="12u$">
+      <ul class="actions">
+       <li><span class="button special disabled small">Disabled</span></li>
+       <li><span class="button disabled small">Disabled</span></li>
+      </ul>
+     </div>
+   </div>
+    )
   }
 }
 
+const Recipe = props => 
+<div className="row uniform">
+    <div className="3u 12u$(xsmall)">
+       <input type="text" name="demo-name" id="demo-name" defaultValue={props.props.name} placeholder="Name" />
+    </div>
+    <div className="3u 12u$(xsmall)">
+     <input type="text" name="demo-name" id="demo-name" defaultValue={props.props.name2} placeholder="Name" />
+    </div>
+    <div className="6u 12u$">
+    <input type="text" name="demo-name" id="demo-name" placeholder="Description" rows="1"></input>
+  </div>
+</div>
+// need to add a remove button and a check icon, clear a row
+
+//Recipe will have a button
 
 const Wrapper = props => <div id="wrapper">{props.children}</div>
 
