@@ -316,72 +316,215 @@ const RealApp = inject('appStore')(observer(class RealApp extends React.Componen
 //   }
 // }
 
+// class Welcome extends React.Component {
+//   constructor(props) {
+//     super(props);
+//     this.state = { list: [] };
+//     // this.handleAdd = this.handleAdd.bind(this);
+//     // this.handleEdit = this.handleEdit.bind(this);
+//     // this.eachRecipe = this.eachRecipe.bind(this);
+//     // this.handleDelete = this.handleDelete.bind(this);
+//   }
+//   componentWillMount() {
+//     this.setState({list: [{name: "Carbonara", name2: "Noodles"}, {name: "Pho", name2: "Rice Noodles"}, {name: "Buger", name2: "mustard"}]})
+//     //this.setState({ list: JSON.parse(localList) });
+//   }
+//   // handleAdd(e) {
+//   //   var newRecipe = e;
+//   //   var newList = this.state.list.slice();
+//   //   newList.push(newRecipe);
+//   //   this.setState({ list: newList });
+//   //   localStorage.setItem("RecipeList", JSON.stringify(newList));
+//   // }
+//   // handleDelete(e) {
+//   //   var newList = this.state.list.slice();
+//   //   newList.splice(e, 1);
+//   //   this.setState({ list: newList });
+//   //   localStorage.setItem("RecipeList", JSON.stringify(newList));
+//   // }
+//   // handleEdit(value, index) {
+//   //   var newRecipe = value;
+//   //   var newList = this.state.list.slice();
+//   //   newList[index] = newRecipe;
+//   //   this.setState({ list: newList });
+//   //   localStorage.setItem("RecipeList", JSON.stringify(newList));
+//   // }
+//   eachRecipe(product, id) {
+//     console.log(product.name);
+//     return (<div><Recipe className="normalrecipe" props={product} /> </div>)
+//   }
+//   render() {
+//     var list = this.state.list.map(this.eachRecipe);
+//     return (<div>
+//     <h2>Done</h2>
+//       <form method="post" action="#">{list}</form>
+//       <div className="12u$">
+//       <ul class="actions">
+//        <li><span class="button special disabled small">Save</span></li>
+//        <li><span class="button disabled small">Clear List</span></li>
+//       </ul>
+//      </div>
+//    </div>
+//     )
+//   }
+// }
+
+// class Checkbox extends Component {
+//   state = {
+//     isChecked: false,
+//   }
+
+//   toggleCheckboxChange = () => {
+//     const { handleCheckboxChange, label } = this.props;
+
+//     this.setState(({ isChecked }) => (
+//       {
+//         isChecked: !isChecked,
+//       }
+//     ));
+
+//     handleCheckboxChange(label);
+//   }
+//   render() {
+//     const { label } = this.props;
+//     const { isChecked } = this.state;
+
+//     return (
+//       <div className="checkbox">
+//         <label>
+//           <input
+//             type="checkbox"
+//             value={label}
+//             checked={isChecked}
+//             onChange={this.toggleCheckboxChange}
+//           />
+
+//           {label}
+//         </label>
+//       </div>
+//     );
+//   }
+// }
+
+  
+//   class CheckboxList extends Component {
+//     componentWillMount = () => {
+//       this.selectedCheckboxes = new Set();
+//     }
+  
+//     toggleCheckbox = label => {
+//       if (this.selectedCheckboxes.has(label)) {
+//         this.selectedCheckboxes.delete(label);
+//       } else {
+//         this.selectedCheckboxes.add(label);
+//       }
+//     }
+  
+//     handleFormSubmit = formSubmitEvent => {
+//       formSubmitEvent.preventDefault();
+  
+//       for (const checkbox of this.selectedCheckboxes) {
+//         console.log(checkbox, 'is selected.');
+//       }
+//     }
+  
+//     createCheckbox = label => (
+//       <Checkbox
+//         label={label}
+//         handleCheckboxChange={this.toggleCheckbox}
+//         key={label}
+//       />
+//     )
+  
+//     createCheckboxes = () => (
+//       ['One','Two','Three',].map(this.createCheckbox)
+//     )
+  
+//     render() {
+//       return (
+//         <div className="container">
+//           <div className="row">
+//             <div className="col-sm-12">
+  
+//               <form onSubmit={this.handleFormSubmit}>
+//                 {this.createCheckboxes()}
+  
+//                 <button className="btn btn-default" type="submit">Save</button>
+//               </form>
+  
+//             </div>
+//           </div>
+//         </div>
+//       );
+//     }
+//   }
+
 class Welcome extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { list: [] };
-    // this.handleAdd = this.handleAdd.bind(this);
-    // this.handleEdit = this.handleEdit.bind(this);
-    // this.eachRecipe = this.eachRecipe.bind(this);
-    // this.handleDelete = this.handleDelete.bind(this);
+    this.state = {
+      isGoing: true,
+      numberOfGuests: true
+    };
+
+    this.handleInputChange = this.handleInputChange.bind(this);
   }
-  componentWillMount() {
-    this.setState({list: [{name: "Carbonara", name2: "Noodles"}, {name: "Pho", name2: "Rice Noodles"}, {name: "Buger", name2: "mustard"}]})
-    //this.setState({ list: JSON.parse(localList) });
+
+  handleInputChange(event) {
+    const target = event.target;
+    const value = target.checked;
+    const name = target.name;
+    this.setState({
+      [name]: value
+    });
   }
-  // handleAdd(e) {
-  //   var newRecipe = e;
-  //   var newList = this.state.list.slice();
-  //   newList.push(newRecipe);
-  //   this.setState({ list: newList });
-  //   localStorage.setItem("RecipeList", JSON.stringify(newList));
-  // }
-  // handleDelete(e) {
-  //   var newList = this.state.list.slice();
-  //   newList.splice(e, 1);
-  //   this.setState({ list: newList });
-  //   localStorage.setItem("RecipeList", JSON.stringify(newList));
-  // }
-  // handleEdit(value, index) {
-  //   var newRecipe = value;
-  //   var newList = this.state.list.slice();
-  //   newList[index] = newRecipe;
-  //   this.setState({ list: newList });
-  //   localStorage.setItem("RecipeList", JSON.stringify(newList));
-  // }
-  eachRecipe(product, id) {
-    console.log(product.name);
-    return (<div><Recipe className="normalrecipe" props={product} /> </div>)
-  }
+
   render() {
-    var list = this.state.list.map(this.eachRecipe);
-    return (<div>
-    <h2>hahaha</h2>
-      <form method="post" action="#">{list}</form>
-      <div className="12u$">
-      <ul class="actions">
-       <li><span class="button special disabled small">Disabled</span></li>
-       <li><span class="button disabled small">Disabled</span></li>
-      </ul>
-     </div>
-   </div>
-    )
+    return (
+       <form> 
+      											<div className="row uniform">
+       												<div className="12u 12u$(xsmall)">
+       <input
+            name="isGoing"
+            type="checkbox"
+            id="isGoing"
+            checked={this.state.isGoing}
+            onChange={this.handleInputChange} />
+            <label for="isGoing">Email me a copy</label>
+            </div>
+            <div className="12u 12u$(xsmall)">
+            <input
+            name="numberOfGuests"
+            type="checkbox"
+            id="numberOfGuests"
+            checked={this.state.numberOfGuests}
+            onChange={this.handleInputChange} />
+            <label for="numberOfGuests">Email me a copy</label>
+            </div></div>
+      </form>
+    );
   }
 }
 
+
 const Recipe = props => 
 <div className="row uniform">
+<div class="1u 12u$(small)">
+												</div>
     <div className="3u 12u$(xsmall)">
        <input type="text" name="demo-name" id="demo-name" defaultValue={props.props.name} placeholder="Name" />
     </div>
     <div className="3u 12u$(xsmall)">
      <input type="text" name="demo-name" id="demo-name" defaultValue={props.props.name2} placeholder="Name" />
     </div>
-    <div className="6u 12u$">
+    <div className="4u 12u$">
     <input type="text" name="demo-name" id="demo-name" placeholder="Description" rows="1"></input>
   </div>
+  <ul class="icons">
+													<li><a href="#" class="icon alt fa-remove"><span class="label">Clear</span></a></li>
+                        </ul>
 </div>
-// need to add a remove button and a check icon, clear a row
+// check icon, clear a row
 
 //Recipe will have a button
 
