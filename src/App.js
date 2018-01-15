@@ -459,29 +459,18 @@ const RealApp = inject('appStore')(observer(class RealApp extends React.Componen
 //     }
 //   }
 
-class Welcome extends React.Component {
+const Welcome = inject('appStore')(class Welcome extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       isGoing: true,
       numberOfGuests: true
-    };
-
-    this.handleInputChange = this.handleInputChange.bind(this);
-  }
-
-  handleInputChange(event) {
-    const target = event.target;
-    const value = target.checked;
-    const name = target.name;
-    this.setState({
-      [name]: value
-    });
-  }
-
+    };}
   render() {
     return (
-       <form> 
+              <NameListComponent/>
+    )
+       /*<form> 
       											<div className="row uniform">
        												<div className="12u 12u$(xsmall)">
        <input
@@ -490,7 +479,7 @@ class Welcome extends React.Component {
             id="isGoing"
             checked={this.state.isGoing}
             onChange={this.handleInputChange} />
-            <label for="isGoing">Email me a copy</label>
+            <label htmlFor="isGoing">Email me a copy</label>
             </div>
             <div className="12u 12u$(xsmall)">
             <input
@@ -499,12 +488,79 @@ class Welcome extends React.Component {
             id="numberOfGuests"
             checked={this.state.numberOfGuests}
             onChange={this.handleInputChange} />
-            <label for="numberOfGuests">Email me a copy</label>
+            <label htmlFor="numberOfGuests">Email me a copy</label>
             </div></div>
-      </form>
-    );
+            <button onClick={this.consoleMe} ></button>
+      </form>*/
   }
+})
+
+
+const NameListComponent = inject('appStore')(observer(
+class NameListComponent extends React.Component {
+  constructor(props) {
+    super(props);
+    this.createWord = this.createWord.bind(this);
+    this.handeSubmit = this.handleSubmit.bind(this);
+    this.handleReset = this.handleReset.bind(this);
+  }
+
+    componentWillMount(){
+  this.props.appStore.getWordsbyListId(6);
+  // still hardcoded, has to be taken from router
 }
+handleReset() {
+  this.forceUpdate();
+}
+handleSubmit(event) {
+  event.preventDefault();
+  var wordArray = [];
+  [0, 2, 4].forEach((a) => {wordArray.push(this.createWord(event, a))
+if (a === 4) {axios.post('http://localhost:3101/words/words', wordArray)}  
+});
+  // will always be 10 items per list 
+  //if aa == 18, will push to API
+};
+createWord(event, index) {
+const createWordFactory = ({ en, vn, wordId, status }) => ({
+  en,
+  vn,
+  wordId,
+  status
+});
+const myWord = createWordFactory({
+  en: event.target[index].value, 
+  vn:  event.target[index+1].value, 
+  wordId: event.target[index].getAttribute('wordid'), 
+  status: event.target[index].getAttribute('status')   
+});
+return myWord;
+}
+
+  render() {
+    console.log(this.props.appStore.wordIds.data);
+    if (this.props.appStore.doneLoading)
+    return (
+     <form onReset={()=> this.handleReset()} onSubmit={(e) => this.handleSubmit(e)}>
+    {this.props.appStore.wordIds.data.map( (c, id) => (
+      <Texting vn={c.vn} en={c.en} status={c.status} wordId={c.wordId} key={id}/>
+    ))}
+       <button type="submit" className="button submit">Save</button>
+       <button type="reset" className="button">Cancel</button>
+  </form>
+    );
+    else {
+      return (<h2>Loading...</h2>)
+    }
+  }
+}));
+
+const Texting = inject('appStore')(observer(
+class Texting extends React.Component {
+  render() {
+return (<div><input status={this.props.status} wordid={this.props.wordId} name={this.props.id} defaultValue={this.props.en}/><br/><input defaultValue={this.props.vn}/></div>)
+  }
+}));
 
 
 const Recipe = props => 
