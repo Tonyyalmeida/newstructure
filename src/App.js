@@ -18,7 +18,6 @@ const BasicExample = () => (
       <Wrapper>
       <Header/>
     <Navbar/>
-
      <div id="main">
      <section id="content" className="main">
      <section>     
@@ -27,7 +26,8 @@ const BasicExample = () => (
       <Route path="/about" component={RealApp}/>
       <Route exact path="/signup" component={SignupForm}/>
       <Route exact path="/login" component={LoginForm}/>
-      <Route exact path="/welcome" component={Welcome}/>
+      <Route exact path="/welcome/" component={WelcomeComponent}/>
+      <Route exact path="/lists/:listId" component={ListComponent}/>
       <Route exact path="/logout" component={LogoutForm}/>
     </div>
 </section></section>
@@ -70,6 +70,24 @@ return (
 
 }}));
 
+const WelcomeComponent = inject('appStore')(observer(class WelcomeComponent extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state =  {doneLoading : false}
+}
+  componentWillMount() {
+this.props.appStore.getListsByUserId(this.props.appStore.userId);    
+  }
+  render() {
+    return(
+<div>
+  <h1>My ListIds:</h1>
+ {this.props.appStore.listIds.data ? this.props.appStore.listIds.data.map(x => <h1>My list: {x}</h1>) : null}
+<h2 onClick={() => console.log(this.props.appStore.listIds.data[0])}>{this.props.appStore.userName}</h2>
+</div>
+    )
+  }}))
+
 const LoginForm = inject('appStore')(observer(class LoginForm extends React.Component {
   constructor(props) {
     super(props);
@@ -95,6 +113,7 @@ const LoginForm = inject('appStore')(observer(class LoginForm extends React.Comp
    this.setState({error: true, errorText: response.data.messages.map(x => x.msg)});
     }
     else {
+    this.props.appStore.setUserId(response.data.userId);
     this.setState({redirect: true, successText: "Your token is " + response.data.token });
     // window.sessionStorage.setItem("token", response.data.token);
     // document.cookie = "token=" + response.data.token;
@@ -459,17 +478,17 @@ const RealApp = inject('appStore')(observer(class RealApp extends React.Componen
 //     }
 //   }
 
-const Welcome = inject('appStore')(class Welcome extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      isGoing: true,
-      numberOfGuests: true
-    };}
-  render() {
-    return (
-              <NameListComponent/>
-    )
+// const Welcome = inject('appStore')(class Welcome extends React.Component {
+//   constructor(props) {
+//     super(props);
+//     this.state = {
+//       isGoing: true,
+//       numberOfGuests: true
+//     };}
+//   render() {
+//     return (
+//               <NameListComponent/ id=>
+//     )
        /*<form> 
       											<div className="row uniform">
        												<div className="12u 12u$(xsmall)">
@@ -492,12 +511,12 @@ const Welcome = inject('appStore')(class Welcome extends React.Component {
             </div></div>
             <button onClick={this.consoleMe} ></button>
       </form>*/
-  }
-})
+//   }
+// })
 
 
-const NameListComponent = inject('appStore')(observer(
-class NameListComponent extends React.Component {
+const ListComponent = inject('appStore')(observer(
+class ListComponent extends React.Component {
   constructor(props) {
     super(props);
     this.createWord = this.createWord.bind(this);
@@ -506,44 +525,50 @@ class NameListComponent extends React.Component {
   }
 
     componentWillMount(){
-  this.props.appStore.getWordsbyListId(6);
+      console.log(this.props.match.params.listId);
+  this.props.appStore.getWordsByListId(6);
   // still hardcoded, has to be taken from router
 }
 handleReset() {
-  this.forceUpdate();
+ this.props.appStore.getWordsByListId(6);
 }
 handleSubmit(event) {
   event.preventDefault();
   var wordArray = [];
-  [0, 2, 4].forEach((a) => {wordArray.push(this.createWord(event, a))
-if (a === 4) {axios.post('http://localhost:3101/words/words', wordArray)}  
+  [0, 3, 6].forEach((a) => {wordArray.push(this.createWord(event, a))
+if (a === 6) {axios.post('http://localhost:3101/words/words', wordArray).then(alert('saved'))}  
 });
-  // will always be 10 items per list 
-  //if aa == 18, will push to API
 };
 createWord(event, index) {
-const createWordFactory = ({ en, vn, wordId, status }) => ({
+const createWordFactory = ({ en, vn, exampleUse, wordId, status }) => ({
   en,
   vn,
+  exampleUse,
   wordId,
   status
 });
 const myWord = createWordFactory({
   en: event.target[index].value, 
   vn:  event.target[index+1].value, 
+  exampleUse:  event.target[index+2].value, 
   wordId: event.target[index].getAttribute('wordid'), 
-  status: event.target[index].getAttribute('status')   
+  status: event.target[index].getAttribute('status'),
 });
+console.log(myWord);
 return myWord;
 }
 
   render() {
-    console.log(this.props.appStore.wordIds.data);
     if (this.props.appStore.doneLoading)
     return (
      <form onReset={()=> this.handleReset()} onSubmit={(e) => this.handleSubmit(e)}>
+       <div className="row uniform">
+             <div className="3u 12u$(xsmall)">VN</div>
+      <div className="3u 12u$(xsmall)">EN</div>
+      <div className="4u 12u$(xsmall)">Example Use</div>
+      <div className="2u 12u$(xsmall)">Status</div></div>
     {this.props.appStore.wordIds.data.map( (c, id) => (
-      <Texting vn={c.vn} en={c.en} status={c.status} wordId={c.wordId} key={id}/>
+      <Texting vn={c.vn} en={c.en} exampleUse={c.exampleUse} status={c.status} wordId={c.wordId} arrayid={id} key={id}/>
     ))}
        <button type="submit" className="button submit">Save</button>
        <button type="reset" className="button">Cancel</button>
@@ -561,35 +586,23 @@ const Texting = inject('appStore')(observer(
     return(
 <div className="row uniform">
     <div className="3u 12u$(xsmall)">
-       <input type="text" id={this.props.key} status={this.props.status} wordid={this.props.wordId} name={this.props.key} defaultValue={this.props.en} placeholder="Name" />
+       <input type="text" status={this.props.status} wordid={this.props.wordId}  name="demo-name" id="demo-name" defaultValue={this.props.vn} placeholder="Name" />
     </div>
     <div className="3u 12u$(xsmall)">
-     <input type="text" name="demo-name" id="demo-name" defaultValue={this.props.vn} placeholder="Name" />
+     <input type="text" name="demo-name" id="demo-name" defaultValue={this.props.en} placeholder="Name" />
     </div>
-
-  <div className="1u 12u$(xsmall)">
+    <div className="4u 12u$(xsmall)">
+    <input type="text" name="demo-name" id="demo-name" defaultValue={this.props.exampleUse} rows="1"></input>
+  </div>
+  <div className="2u 12u$(xsmall)">
   <ul className="icons">
-													<li><a href="#" onClick={this.props.appStore.consoleMe} className="icon alt fa-remove"><span className="label">Clear</span></a></li>
-                        </ul>
-</div>
-</div>)}}))
-
-// <div className="4u 12u$">
-// <input type="text" name="demo-name" id="demo-name" placeholder="Description" rows="1"></input>
-// </div>
-
-// <div className="1u 12u$(small)">
-// 													<input type="checkbox" id={this.props.hier} name={this.props.hier}/>
-// 													<label htmlFor={this.props.hier}></label>
-// 												</div>
-
-
-// const Texting = inject('appStore')(observer(
-// class Texting extends React.Component {
-//   render() {
-// return (<div><input status={this.props.status} wordid={this.props.wordId} name={this.props.id} defaultValue={this.props.en}/><br/><input defaultValue={this.props.vn}/></div>)
-//   }
-// }));
+    <li><a onClick={(e) => this.props.appStore.decrementStatus(e.target.getAttribute("arrayid"))} arrayid={this.props.arrayid} className="icon fa-minus-circle"></a></li>
+    <li>{this.props.status}</li>
+		<li><a onClick={(e) => this.props.appStore.incrementStatus(e.target.getAttribute("arrayid"))} arrayid={this.props.arrayid} className="icon fa-plus-circle"></a></li>
+  </ul>
+  </div>
+  </div>
+)}}))
 
 
 const Recipe = props => 

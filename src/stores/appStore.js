@@ -8,7 +8,9 @@ isLoggedIn: false,
 topicoToken: "",
 currentIndex: 0,
 userName: "",
+userId: "",
 doneLoading: false,
+listIds: [],
 wordIds: [
     {id: "1", name1: "Nam", name2: "I'm from the store", status: 0},
     {id: "2", name1: "Paasdsaying", name2: "Zweites Wort", status: 0},
@@ -24,6 +26,23 @@ wordIds: [
 setUserName: action(function(username) {
     this.userName = username;
 }),
+setListIds: action(function(listIds) {
+    this.listIds = listIds;
+}),
+setUserId: action(function(userId) {
+    this.userId = userId;
+}),
+updateListitem: action(function(wordArrayId, propName, propValue) {
+this.wordIds.data[wordArrayId][propName] = propValue;
+}),
+incrementStatus: action(function(wordArrayId) {
+if (this.wordIds.data[wordArrayId]["status"] < 10)
+this.wordIds.data[wordArrayId]["status"]++;
+}),
+decrementStatus: action(function(wordArrayId) {
+if (this.wordIds.data[wordArrayId]["status"] >= 0)
+this.wordIds.data[wordArrayId]["status"]--;
+}),
 settopicoToken: action(function(topicoToken) {
     this.topicoToken = topicoToken;
 }),
@@ -34,23 +53,34 @@ toggleIsLoggedInState: action(function () {
 this.isLoggedIn = !this.isLoggedIn;
 }),
 setTrueLoggedInState: action(function () {
-    this.isLoggedIn = true;;
+    this.isLoggedIn = true;
     }),
 setFalseLoggedInState: action(function () {
         this.isLoggedIn = false;
     }),
-getWordsbyListId: action(function (listId) {
-console.log(this.wordIds);    
+consoleMe: action(function (e) {
+console.log();
+}),
+getWordsByListId: action(function (listId) {  
 var base = "http://localhost:3101/lists/"
 var ending = "/words"
 var url = base + listId + ending;
 axios.get(url).then(action(json => { this.setWordIds(json) })).then(() => this.doneLoading = true).catch(function(error) {
     console.log(error);
-})
+})}),
+getListsByUserId: action(function (userId) {   
+var base = "http://localhost:3101/users/"
+var ending = "/lists"
+var url = base + userId + ending;
+axios.get(url).then(action( y =>{ this.setListIds(y) }));
+// (action ((y) => this.setListIds(y))).catch(function(error) 
+// {
+//     console.log(error);})
 
 
-
-})    
+}
+)
+    
 
 
 
