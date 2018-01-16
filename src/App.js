@@ -556,11 +556,40 @@ return myWord;
 }));
 
 const Texting = inject('appStore')(observer(
-class Texting extends React.Component {
+  class Texting extends Component {
   render() {
-return (<div><input status={this.props.status} wordid={this.props.wordId} name={this.props.id} defaultValue={this.props.en}/><br/><input defaultValue={this.props.vn}/></div>)
-  }
-}));
+    return(
+<div className="row uniform">
+    <div className="3u 12u$(xsmall)">
+       <input type="text" id={this.props.key} status={this.props.status} wordid={this.props.wordId} name={this.props.key} defaultValue={this.props.en} placeholder="Name" />
+    </div>
+    <div className="3u 12u$(xsmall)">
+     <input type="text" name="demo-name" id="demo-name" defaultValue={this.props.vn} placeholder="Name" />
+    </div>
+
+  <div className="1u 12u$(xsmall)">
+  <ul className="icons">
+													<li><a href="#" onClick={this.props.appStore.consoleMe} className="icon alt fa-remove"><span className="label">Clear</span></a></li>
+                        </ul>
+</div>
+</div>)}}))
+
+// <div className="4u 12u$">
+// <input type="text" name="demo-name" id="demo-name" placeholder="Description" rows="1"></input>
+// </div>
+
+// <div className="1u 12u$(small)">
+// 													<input type="checkbox" id={this.props.hier} name={this.props.hier}/>
+// 													<label htmlFor={this.props.hier}></label>
+// 												</div>
+
+
+// const Texting = inject('appStore')(observer(
+// class Texting extends React.Component {
+//   render() {
+// return (<div><input status={this.props.status} wordid={this.props.wordId} name={this.props.id} defaultValue={this.props.en}/><br/><input defaultValue={this.props.vn}/></div>)
+//   }
+// }));
 
 
 const Recipe = props => 
