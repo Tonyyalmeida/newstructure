@@ -26,7 +26,7 @@ const BasicExample = () => (
       <Route path="/about" component={RealApp}/>
       <Route exact path="/signup" component={SignupForm}/>
       <Route exact path="/login" component={LoginForm}/>
-      <Route exact path="/welcome/" component={WelcomeComponent}/>
+      <Route exact path="/welcome/userId=:userId" component={WelcomeComponent}/>
       <Route exact path="/lists/:listId" component={ListComponent}/>
       <Route exact path="/logout" component={LogoutForm}/>
     </div>
@@ -76,13 +76,13 @@ const WelcomeComponent = inject('appStore')(observer(class WelcomeComponent exte
     this.state =  {doneLoading : false}
 }
   componentWillMount() {
-this.props.appStore.getListsByUserId(this.props.appStore.userId);    
+this.props.appStore.getListsByUserId(this.props.match.params.userId);    
   }
   render() {
     return(
 <div>
-  <h1>My ListIds:</h1>
- {this.props.appStore.listIds.data ? this.props.appStore.listIds.data.map(x => <h1>My list: {x}</h1>) : null}
+  <h1>Overview:</h1>
+ {this.props.appStore.listIds.data ? this.props.appStore.listIds.data.map( (x, id) => <h1 key={id} >Listname: {x["listName"]}  ListId: {x["listId"]}</h1>) : null}
 <h2 onClick={() => console.log(this.props.appStore.listIds.data[0])}>{this.props.appStore.userName}</h2>
 </div>
     )
@@ -143,9 +143,10 @@ render() {
 const isError = this.state.error;
 const redirect = this.state.redirect;
 const successText = this.state.successText;
+const userId = this.props.appStore.userId;
 if (redirect) {
   return  <Redirect to={{
-    pathname: '/welcome',
+    pathname: '/welcome/' + "userId=" + userId,
     state: { from: successText }
   }}/>
 }
