@@ -4,7 +4,8 @@ import {
   BrowserRouter as Router,
   Route,
   Link,
-  Redirect
+  Redirect,
+  NavLink
 } from 'react-router-dom';
 import axios from 'axios';
 import { Provider, observer, inject } from 'mobx-react';
@@ -27,7 +28,7 @@ const BasicExample = () => (
       <Route exact path="/signup" component={SignupForm}/>
       <Route exact path="/login" component={LoginForm}/>
       <Route exact path="/welcome/userId=:userId" component={WelcomeComponent}/>
-      <Route exact path="/lists/:listId" component={ListComponent}/>
+      <Route exact path="/welcome/lists/:listId" component={ListComponent}/>
       <Route exact path="/logout" component={LogoutForm}/>
     </div>
 </section></section>
@@ -53,6 +54,8 @@ const LogoutForm = inject('appStore')(observer(class LogoutForm extends React.Co
   handleLogout =  x => { this.props.appStore.setFalseLoggedInState();
 document.cookie = "topicoToken=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
 document.cookie = "userName=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+document.cookie = "userId=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+
 };
 render() {
 // const isError = this.state.error;
@@ -82,8 +85,7 @@ this.props.appStore.getListsByUserId(this.props.match.params.userId);
     return(
 <div>
   <h1>Overview:</h1>
- {this.props.appStore.listIds.data ? this.props.appStore.listIds.data.map( (x, id) => <h1 key={id} >Listname: {x["listName"]}  ListId: {x["listId"]}</h1>) : null}
-<h2 onClick={() => console.log(this.props.appStore.listIds.data[0])}>{this.props.appStore.userName}</h2>
+ {this.props.appStore.listIds.data ? this.props.appStore.listIds.data.map( (x, id) =><div key={id}> <Link to={"lists/" + x.listId} key={id} >Listname: {x["listName"]}  ListId: {x["listId"]}</Link></div>) : null}
 </div>
     )
   }}))
@@ -123,6 +125,7 @@ const LoginForm = inject('appStore')(observer(class LoginForm extends React.Comp
     var expires = "expires="+ d.toUTCString();
     document.cookie = "topicoToken" + "=" + response.data.token + ";" + expires + ";path=/";
     document.cookie =  "userName=" + this.props.appStore.userName  + ";" + expires + ";path=/";
+    document.cookie =  "userId=" + this.props.appStore.userId  + ";" + expires + ";path=/";
     this.props.appStore.setTrueLoggedInState();
     }
   }).catch(
@@ -526,12 +529,10 @@ class ListComponent extends React.Component {
   }
 
     componentWillMount(){
-      console.log(this.props.match.params.listId);
-  this.props.appStore.getWordsByListId(6);
-  // still hardcoded, has to be taken from router
+  this.props.appStore.getWordsByListId(this.props.match.params.listId);
 }
 handleReset() {
- this.props.appStore.getWordsByListId(6);
+ this.props.appStore.getWordsByListId(this.props.match.params.listId);
 }
 handleSubmit(event) {
   event.preventDefault();
@@ -555,7 +556,6 @@ const myWord = createWordFactory({
   wordId: event.target[index].getAttribute('wordid'), 
   status: event.target[index].getAttribute('status'),
 });
-console.log(myWord);
 return myWord;
 }
 
@@ -659,15 +659,14 @@ const Navbar= inject('appStore')(observer(class Navbar extends Component {
 };
 componentWillMount() {
 const token = this.getCookie("topicoToken");
-console.log(this.props.appStore.isLoggedIn);
-console.log(token);
 const userName = this.getCookie('userName');
-console.log(userName);
+const userId = this.getCookie("userId");
 if (token !== "") {
  //   this.props.appStore.setUserName;
     this.props.appStore.settopicoToken(token);
     this.props.appStore.setTrueLoggedInState();
     this.props.appStore.setUserName(userName);
+    this.props.appStore.setUserId(userId);
 }
 }
   renderNormal() {
@@ -686,14 +685,13 @@ if (token !== "") {
     <nav id="nav">
     <ul>
     <li><Link to="/">Home</Link></li>
-    <li><Link to="/about">WELCOME {this.props.appStore.userName}</Link></li>
+    <li><Link to={"/welcome/" + "userId=" + this.props.appStore.userId} >WELCOME {this.props.appStore.userName}</Link></li>
     <li><Link to="/logout">Logout</Link></li>
     </ul>
     </nav>
   )};
   render() {
   const loggedIn = this.props.appStore.isLoggedIn;
-  console.log(loggedIn);
   if (loggedIn) return this.renderLogin();
   else return this.renderNormal();
 };}));
