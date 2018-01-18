@@ -4,7 +4,8 @@ import {
   BrowserRouter as Router,
   Route,
   Link,
-  Redirect
+  Redirect,
+  NavLink
 } from 'react-router-dom';
 import axios from 'axios';
 import { Provider, observer, inject } from 'mobx-react';
@@ -18,7 +19,6 @@ const BasicExample = () => (
       <Wrapper>
       <Header/>
     <Navbar/>
-
      <div id="main">
      <section id="content" className="main">
      <section>     
@@ -27,7 +27,8 @@ const BasicExample = () => (
       <Route path="/about" component={RealApp}/>
       <Route exact path="/signup" component={SignupForm}/>
       <Route exact path="/login" component={LoginForm}/>
-      <Route exact path="/welcome" component={Welcome}/>
+      <Route exact path="/welcome/userId=:userId" component={WelcomeComponent}/>
+      <Route exact path="/welcome/lists/:listId" component={ListComponent}/>
       <Route exact path="/logout" component={LogoutForm}/>
     </div>
 </section></section>
@@ -53,6 +54,8 @@ const LogoutForm = inject('appStore')(observer(class LogoutForm extends React.Co
   handleLogout =  x => { this.props.appStore.setFalseLoggedInState();
 document.cookie = "topicoToken=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
 document.cookie = "userName=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+document.cookie = "userId=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+
 };
 render() {
 // const isError = this.state.error;
@@ -69,6 +72,23 @@ return (
 )
 
 }}));
+
+const WelcomeComponent = inject('appStore')(observer(class WelcomeComponent extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state =  {doneLoading : false}
+}
+  componentWillMount() {
+this.props.appStore.getListsByUserId(this.props.match.params.userId);    
+  }
+  render() {
+    return(
+<div>
+  <h1>Overview:</h1>
+ {this.props.appStore.listIds.data ? this.props.appStore.listIds.data.map( (x, id) =><div key={id}> <Link to={"lists/" + x.listId} key={id} >Listname: {x["listName"]}  ListId: {x["listId"]}</Link></div>) : null}
+</div>
+    )
+  }}))
 
 const LoginForm = inject('appStore')(observer(class LoginForm extends React.Component {
   constructor(props) {
@@ -95,6 +115,7 @@ const LoginForm = inject('appStore')(observer(class LoginForm extends React.Comp
    this.setState({error: true, errorText: response.data.messages.map(x => x.msg)});
     }
     else {
+    this.props.appStore.setUserId(response.data.userId);
     this.setState({redirect: true, successText: "Your token is " + response.data.token });
     // window.sessionStorage.setItem("token", response.data.token);
     // document.cookie = "token=" + response.data.token;
@@ -104,6 +125,7 @@ const LoginForm = inject('appStore')(observer(class LoginForm extends React.Comp
     var expires = "expires="+ d.toUTCString();
     document.cookie = "topicoToken" + "=" + response.data.token + ";" + expires + ";path=/";
     document.cookie =  "userName=" + this.props.appStore.userName  + ";" + expires + ";path=/";
+    document.cookie =  "userId=" + this.props.appStore.userId  + ";" + expires + ";path=/";
     this.props.appStore.setTrueLoggedInState();
     }
   }).catch(
@@ -124,9 +146,10 @@ render() {
 const isError = this.state.error;
 const redirect = this.state.redirect;
 const successText = this.state.successText;
+const userId = this.props.appStore.userId;
 if (redirect) {
   return  <Redirect to={{
-    pathname: '/welcome',
+    pathname: '/welcome/' + "userId=" + userId,
     state: { from: successText }
   }}/>
 }
@@ -459,29 +482,18 @@ const RealApp = inject('appStore')(observer(class RealApp extends React.Componen
 //     }
 //   }
 
-class Welcome extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      isGoing: true,
-      numberOfGuests: true
-    };
-
-    this.handleInputChange = this.handleInputChange.bind(this);
-  }
-
-  handleInputChange(event) {
-    const target = event.target;
-    const value = target.checked;
-    const name = target.name;
-    this.setState({
-      [name]: value
-    });
-  }
-
-  render() {
-    return (
-       <form> 
+// const Welcome = inject('appStore')(class Welcome extends React.Component {
+//   constructor(props) {
+//     super(props);
+//     this.state = {
+//       isGoing: true,
+//       numberOfGuests: true
+//     };}
+//   render() {
+//     return (
+//               <NameListComponent/ id=>
+//     )
+       /*<form> 
       											<div className="row uniform">
        												<div className="12u 12u$(xsmall)">
        <input
@@ -490,7 +502,7 @@ class Welcome extends React.Component {
             id="isGoing"
             checked={this.state.isGoing}
             onChange={this.handleInputChange} />
-            <label for="isGoing">Email me a copy</label>
+            <label htmlFor="isGoing">Email me a copy</label>
             </div>
             <div className="12u 12u$(xsmall)">
             <input
@@ -499,12 +511,99 @@ class Welcome extends React.Component {
             id="numberOfGuests"
             checked={this.state.numberOfGuests}
             onChange={this.handleInputChange} />
-            <label for="numberOfGuests">Email me a copy</label>
+            <label htmlFor="numberOfGuests">Email me a copy</label>
             </div></div>
-      </form>
-    );
+            <button onClick={this.consoleMe} ></button>
+      </form>*/
+//   }
+// })
+
+
+const ListComponent = inject('appStore')(observer(
+class ListComponent extends React.Component {
+  constructor(props) {
+    super(props);
+    this.createWord = this.createWord.bind(this);
+    this.handeSubmit = this.handleSubmit.bind(this);
+    this.handleReset = this.handleReset.bind(this);
   }
+
+    componentWillMount(){
+  this.props.appStore.getWordsByListId(this.props.match.params.listId);
 }
+handleReset() {
+ this.props.appStore.getWordsByListId(this.props.match.params.listId);
+}
+handleSubmit(event) {
+  event.preventDefault();
+  var wordArray = [];
+  [0, 3, 6].forEach((a) => {wordArray.push(this.createWord(event, a))
+if (a === 6) {axios.post('http://localhost:3101/words/words', wordArray).then(alert('saved'))}  
+});
+};
+createWord(event, index) {
+const createWordFactory = ({ en, vn, exampleUse, wordId, status }) => ({
+  en,
+  vn,
+  exampleUse,
+  wordId,
+  status
+});
+const myWord = createWordFactory({
+  en: event.target[index].value, 
+  vn:  event.target[index+1].value, 
+  exampleUse:  event.target[index+2].value, 
+  wordId: event.target[index].getAttribute('wordid'), 
+  status: event.target[index].getAttribute('status'),
+});
+return myWord;
+}
+
+  render() {
+    if (this.props.appStore.doneLoading)
+    return (
+     <form onReset={()=> this.handleReset()} onSubmit={(e) => this.handleSubmit(e)}>
+       <div className="row uniform">
+             <div className="3u 12u$(xsmall)">VN</div>
+      <div className="3u 12u$(xsmall)">EN</div>
+      <div className="4u 12u$(xsmall)">Example Use</div>
+      <div className="2u 12u$(xsmall)">Status</div></div>
+    {this.props.appStore.wordIds.data.map( (c, id) => (
+      <Texting vn={c.vn} en={c.en} exampleUse={c.exampleUse} status={c.status} wordId={c.wordId} arrayid={id} key={id}/>
+    ))}
+       <button type="submit" className="button submit">Save</button>
+       <button type="reset" className="button">Cancel</button>
+  </form>
+    );
+    else {
+      return (<h2>Loading...</h2>)
+    }
+  }
+}));
+
+const Texting = inject('appStore')(observer(
+  class Texting extends Component {
+  render() {
+    return(
+<div className="row uniform">
+    <div className="3u 12u$(xsmall)">
+       <input type="text" status={this.props.status} wordid={this.props.wordId}  name="demo-name" id="demo-name" defaultValue={this.props.vn} placeholder="Name" />
+    </div>
+    <div className="3u 12u$(xsmall)">
+     <input type="text" name="demo-name" id="demo-name" defaultValue={this.props.en} placeholder="Name" />
+    </div>
+    <div className="4u 12u$(xsmall)">
+    <input type="text" name="demo-name" id="demo-name" defaultValue={this.props.exampleUse} rows="1"></input>
+  </div>
+  <div className="2u 12u$(xsmall)">
+  <ul className="icons">
+    <li><a onClick={(e) => this.props.appStore.decrementStatus(e.target.getAttribute("arrayid"))} arrayid={this.props.arrayid} className="icon fa-minus-circle"></a></li>
+    <li>{this.props.status}</li>
+		<li><a onClick={(e) => this.props.appStore.incrementStatus(e.target.getAttribute("arrayid"))} arrayid={this.props.arrayid} className="icon fa-plus-circle"></a></li>
+  </ul>
+  </div>
+  </div>
+)}}))
 
 
 const Recipe = props => 
@@ -560,15 +659,14 @@ const Navbar= inject('appStore')(observer(class Navbar extends Component {
 };
 componentWillMount() {
 const token = this.getCookie("topicoToken");
-console.log(this.props.appStore.isLoggedIn);
-console.log(token);
 const userName = this.getCookie('userName');
-console.log(userName);
+const userId = this.getCookie("userId");
 if (token !== "") {
  //   this.props.appStore.setUserName;
     this.props.appStore.settopicoToken(token);
     this.props.appStore.setTrueLoggedInState();
     this.props.appStore.setUserName(userName);
+    this.props.appStore.setUserId(userId);
 }
 }
   renderNormal() {
@@ -587,14 +685,13 @@ if (token !== "") {
     <nav id="nav">
     <ul>
     <li><Link to="/">Home</Link></li>
-    <li><Link to="/about">WELCOME {this.props.appStore.userName}</Link></li>
+    <li><Link to={"/welcome/" + "userId=" + this.props.appStore.userId} >WELCOME {this.props.appStore.userName}</Link></li>
     <li><Link to="/logout">Logout</Link></li>
     </ul>
     </nav>
   )};
   render() {
   const loggedIn = this.props.appStore.isLoggedIn;
-  console.log(loggedIn);
   if (loggedIn) return this.renderLogin();
   else return this.renderNormal();
 };}));
