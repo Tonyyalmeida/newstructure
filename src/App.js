@@ -27,8 +27,8 @@ const BasicExample = () => (
       <Route path="/about" component={RealApp}/>
       <Route exact path="/signup" component={SignupForm}/>
       <Route exact path="/login" component={LoginForm}/>
-      <Route exact path="/welcome/userId=:userId" component={WelcomeComponent}/>
-      <Route exact path="/welcome/lists/:listId" component={ListComponent}/>
+      <Route exact path="/home/userId=:userId" component={WelcomeComponent}/>
+      <Route exact path="/home/lists/:listId" component={ListComponent}/>
       <Route exact path="/logout" component={LogoutForm}/>
     </div>
 </section></section>
@@ -149,7 +149,7 @@ const successText = this.state.successText;
 const userId = this.props.appStore.userId;
 if (redirect) {
   return  <Redirect to={{
-    pathname: '/welcome/' + "userId=" + userId,
+    pathname: '/home/' + "userId=" + userId,
     state: { from: successText }
   }}/>
 }
@@ -684,8 +684,7 @@ if (token !== "") {
     return (
     <nav id="nav">
     <ul>
-    <li><Link to="/">Home</Link></li>
-    <li><Link to={"/welcome/" + "userId=" + this.props.appStore.userId} >WELCOME {this.props.appStore.userName}</Link></li>
+    <li><Link to={"/home/" + "userId=" + this.props.appStore.userId}>Home</Link></li>
     <li><Link to="/logout">Logout</Link></li>
     </ul>
     </nav>
