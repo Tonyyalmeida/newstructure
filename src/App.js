@@ -29,7 +29,7 @@ const BasicExample = () => (
       <Route exact path="/signup" component={SignupForm}/>
       <Route exact path="/login" component={LoginForm}/>
       <Route exact path="/home/userId=:userId" component={WelcomeComponent}/>
-      <Route exact path="/home/lists/:listId" component={ListComponent}/>
+      <Route exact path="/home/lists/:listId/:listName" component={ListComponent}/>
       <Route exact path="/logout" component={LogoutForm}/>
     </div>
 </section></section>
@@ -86,7 +86,7 @@ this.props.appStore.getListsByUserId(this.props.match.params.userId);
     return(
 <div>
   <h1>Overview:</h1>
- {this.props.appStore.listIds.data ? this.props.appStore.listIds.data.map( (x, id) =><div key={id}> <Link to={"lists/" + x.listId} key={id} >Listname: {x["listName"]}  ListId: {x["listId"]}</Link></div>) : null}
+ {this.props.appStore.listIds.data ? this.props.appStore.listIds.data.map( (x, id) =><div key={id}> <Link to={{pathname: "lists/" + x.listId + "/" + x.listName, }} key={id} >Listname: {x["listName"]}  ListId: {x["listId"]}</Link></div>) : null}
 </div>
     )
   }}))
@@ -530,7 +530,9 @@ class ListComponent extends React.Component {
   }
 
     componentWillMount(){
+  this.props.appStore.setCurrentListInfo(this.props.match.params.listName)
   this.props.appStore.getWordsByListId(this.props.match.params.listId);
+
 }
 handleReset() {
  this.props.appStore.getWordsByListId(this.props.match.params.listId);
@@ -698,6 +700,10 @@ if (token !== "") {
 const AppNavbar= inject('appStore')(observer(class AppNavbar extends Component {
   constructor(props) {
     super(props);
+    this.state = {
+      renderList: true,
+      helpString: ""
+    }
   }
   renderNormal() {
     return(
@@ -710,11 +716,15 @@ const AppNavbar= inject('appStore')(observer(class AppNavbar extends Component {
     </nav>
   )};
   renderBread() {
+var locationString = this.props.location.pathname;
+var matcher = new RegExp("/home/lists");
+var renderNavList = matcher.test(locationString);
+var listNameUrl = this.props.location.pathname.split("/")[4];
     return (
     <nav id="nav">
     <ul className="appnav">
    <li><Link to={"/home/" + "userId=" + this.props.appStore.userId}>Overview</Link></li>
-   <li><Link to={"/home/" + "userId=" + this.props.appStore.userId}>{this.props.match.params.listId}</Link></li>
+   <li><Link to={"/home/" + "userId=" + this.props.appStore.userId}>{this.props.appStore.currentListInfo}</Link></li>
     </ul>
     </nav>
   )};

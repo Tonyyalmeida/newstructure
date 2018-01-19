@@ -11,6 +11,7 @@ userName: "",
 userId: "",
 doneLoading: false,
 listIds: [],
+currentListInfo: "",
 wordIds: [
     {id: "1", name1: "Nam", name2: "I'm from the store", status: 0},
     {id: "2", name1: "Paasdsaying", name2: "Zweites Wort", status: 0},
@@ -25,6 +26,9 @@ wordIds: [
     ],
 setUserName: action(function(username) {
     this.userName = username;
+}),
+setCurrentListInfo: action(function(currentListInfo) {
+    this.currentListInfo = currentListInfo;
 }),
 setListIds: action(function(listIds) {
     this.listIds = listIds;
