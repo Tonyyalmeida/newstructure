@@ -3286,8 +3286,19 @@
 			margin: 0;
 			padding: 0;
 			list-style: none;
+			text-align: right;
+			overflow: auto;
 		}
-
+		#nav ul.appnav {
+			margin: 0;
+			padding: 0;
+			list-style: none;
+			text-align: left;
+			overflow: auto;
+		}
+		#nav ul li:first-of-type {
+			float: left;
+		}
 			#nav ul li {
 				-moz-transition: margin 0.2s ease;
 				-webkit-transition: margin 0.2s ease;
@@ -3298,7 +3309,6 @@
 				padding: 0;
 				vertical-align: middle;
 			}
-
 				#nav ul li a {
 					-moz-transition: font-size 0.2s ease;
 					-webkit-transition: font-size 0.2s ease;

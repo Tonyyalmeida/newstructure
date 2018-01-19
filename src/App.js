@@ -16,9 +16,10 @@ const stores = { appStore };
 const BasicExample = () => (
   <Provider {...stores}>
         <Router>
-      <Wrapper>
-      <Header/>
-    <Navbar/>
+        <Wrapper>
+        <LoginNavbar/>
+       <Header/>
+       <Route path="/home/" component={AppNavbar}/>
      <div id="main">
      <section id="content" className="main">
      <section>     
@@ -637,7 +638,7 @@ const Header = props => <header id="header" className="alt">
 <p>Just another simple Flashcard App</p>
 </header>
 
-const Navbar= inject('appStore')(observer(class Navbar extends Component {
+const LoginNavbar= inject('appStore')(observer(class LoginNavbar extends Component {
   constructor(props) {
     super(props);
     this.getCookie = this.getCookie.bind(this);
@@ -671,10 +672,9 @@ if (token !== "") {
 }
   renderNormal() {
     return(
-    <nav id="nav">
+    <nav id="nav" className="NavBar">
     <ul>
-    <li><Link to="/">Home</Link></li>
-    <li><Link to="/about">About</Link></li>
+    <li><Link to="/">Topico</Link></li>
     <li><Link to="/signup">Signup</Link></li>
     <li><Link to="/login">Login</Link></li>
     </ul>
@@ -684,7 +684,7 @@ if (token !== "") {
     return (
     <nav id="nav">
     <ul>
-    <li><Link to={"/home/" + "userId=" + this.props.appStore.userId}>Home</Link></li>
+    <li><Link to="/">Topico</Link></li>
     <li><Link to="/logout">Logout</Link></li>
     </ul>
     </nav>
@@ -694,6 +694,37 @@ if (token !== "") {
   if (loggedIn) return this.renderLogin();
   else return this.renderNormal();
 };}));
+
+const AppNavbar= inject('appStore')(observer(class AppNavbar extends Component {
+  constructor(props) {
+    super(props);
+  }
+  renderNormal() {
+    return(
+    <nav id="nav">
+    <ul>
+    <li><Link to="/Topico">Topico</Link></li>
+    <li><Link to="/signup">Signup</Link></li>
+    <li><Link to="/login">Login</Link></li>
+    </ul>
+    </nav>
+  )};
+  renderBread() {
+    return (
+    <nav id="nav">
+    <ul className="appnav">
+   <li><Link to={"/home/" + "userId=" + this.props.appStore.userId}>Overview</Link></li>
+   <li><Link to={"/home/" + "userId=" + this.props.appStore.userId}>{this.props.match.params.listId}</Link></li>
+    </ul>
+    </nav>
+  )};
+  render() {
+  const loggedIn = this.props.appStore.isLoggedIn;
+  if (true) return this.renderBread();
+  else return this.renderNormal();
+};}));
+
+
 
 const IntroSection = props => <section id="intro" className="main">
 <div className="spotlight">
