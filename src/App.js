@@ -19,7 +19,7 @@ const BasicExample = () => (
         <Wrapper>
         <LoginNavbar/>
        <Header/>
-       <Route path="/home/" component={AppNavbar}/>
+       <Route path="/home/:root/:ignore" component={AppNavbar}/>
      <div id="main">
      <section id="content" className="main">
      <section>     
@@ -28,7 +28,7 @@ const BasicExample = () => (
       <Route path="/about" component={RealApp}/>
       <Route exact path="/signup" component={SignupForm}/>
       <Route exact path="/login" component={LoginForm}/>
-      <Route exact path="/home/userId=:userId" component={WelcomeComponent}/>
+      <Route exact path="/home/userId/:userId" component={WelcomeComponent}/>
       <Route exact path="/home/lists/:listId/:listName" component={ListComponent}/>
       <Route exact path="/logout" component={LogoutForm}/>
     </div>
@@ -85,11 +85,21 @@ this.props.appStore.getListsByUserId(this.props.match.params.userId);
   render() {
     return(
 <div>
-  <h1>Overview:</h1>
- {this.props.appStore.listIds.data ? this.props.appStore.listIds.data.map( (x, id) =><div key={id}> <Link to={{pathname: "lists/" + x.listId + "/" + x.listName, }} key={id} >Listname: {x["listName"]}  ListId: {x["listId"]}</Link></div>) : null}
+  <h1>Your Study Decks:</h1>
+ {this.props.appStore.listIds.data ? this.props.appStore.listIds.data.map( (x, id) =><div key={id}> <Link to={`/home/lists/` + x.listId + "/" + x.listName} key={id}> Listname: {x["listName"]}  ListId: {x["listId"]}</Link></div>) : null}
+<button type="submit" className="button submit">Create new Deck</button>
 </div>
     )
   }}))
+
+  const AddDeckComponent =  inject('appStore')(observer(class AddDeckComponent extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {error: false, errorText: "", redirect: false, successText: ''};
+  }
+
+}))
+  
 
 const LoginForm = inject('appStore')(observer(class LoginForm extends React.Component {
   constructor(props) {
@@ -150,7 +160,7 @@ const successText = this.state.successText;
 const userId = this.props.appStore.userId;
 if (redirect) {
   return  <Redirect to={{
-    pathname: '/home/' + "userId=" + userId,
+    pathname: '/home/' + "userId/" + userId,
     state: { from: successText }
   }}/>
 }
@@ -527,21 +537,25 @@ class ListComponent extends React.Component {
     this.createWord = this.createWord.bind(this);
     this.handeSubmit = this.handleSubmit.bind(this);
     this.handleReset = this.handleReset.bind(this);
+   this.state = {redirect: false}
   }
 
     componentWillMount(){
-  this.props.appStore.setCurrentListInfo(this.props.match.params.listName)
-  this.props.appStore.getWordsByListId(this.props.match.params.listId);
-
+this.props.appStore.setCurrentListInfo(this.props.match.params.listName)
+this.props.appStore.getWordsByListId(this.props.match.params.listId);
 }
 handleReset() {
  this.props.appStore.getWordsByListId(this.props.match.params.listId);
+}
+componentWillUnmount () {
+this.props.appStore.doneLoading = false;
+console.log('set');
 }
 handleSubmit(event) {
   event.preventDefault();
   var wordArray = [];
   [0, 3, 6].forEach((a) => {wordArray.push(this.createWord(event, a))
-if (a === 6) {axios.post('http://localhost:3101/words/words', wordArray).then(alert('saved'))}  
+if (a === 6) {axios.post('http://localhost:3101/words/words', wordArray).then(this.setState({redirect: true}))}  
 });
 };
 createWord(event, index) {
@@ -563,6 +577,11 @@ return myWord;
 }
 
   render() {
+    if (this.state.redirect) {
+      return  <Redirect to={{
+    pathname: '/home/' + "userId/" + this.props.appStore.userId,
+  }}/>  
+  }
     if (this.props.appStore.doneLoading)
     return (
      <form onReset={()=> this.handleReset()} onSubmit={(e) => this.handleSubmit(e)}>
@@ -708,29 +727,24 @@ const AppNavbar= inject('appStore')(observer(class AppNavbar extends Component {
   renderNormal() {
     return(
     <nav id="nav">
-    <ul>
-    <li><Link to="/Topico">Topico</Link></li>
-    <li><Link to="/signup">Signup</Link></li>
-    <li><Link to="/login">Login</Link></li>
+    <ul  className="appnav">
+   <li><Link to={"/home/" + "userId/" + this.props.appStore.userId}>Back to Overview</Link></li>
     </ul>
     </nav>
   )};
-  renderBread() {
-var locationString = this.props.location.pathname;
-var matcher = new RegExp("/home/lists");
-var renderNavList = matcher.test(locationString);
-var listNameUrl = this.props.location.pathname.split("/")[4];
+  renderLists() {
     return (
     <nav id="nav">
     <ul className="appnav">
-   <li><Link to={"/home/" + "userId=" + this.props.appStore.userId}>Overview</Link></li>
-   <li><Link to={"/home/" + "userId=" + this.props.appStore.userId}>{this.props.appStore.currentListInfo}</Link></li>
+   <li><NavLink to={"/home/" + "userId/" + this.props.appStore.userId}>Back to Overview</NavLink></li>
+   <li><h2>{this.props.appStore.currentListInfo ? this.props.appStore.currentListInfo : "unnamed" }</h2></li>
     </ul>
     </nav>
   )};
   render() {
-  const loggedIn = this.props.appStore.isLoggedIn;
-  if (true) return this.renderBread();
+  const root = this.props.match.params.root; 
+  if (this.props.match.params.root === "lists")
+  return this.renderLists();
   else return this.renderNormal();
 };}));
 
