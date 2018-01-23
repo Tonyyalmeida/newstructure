@@ -77,6 +77,12 @@ createList: action(function (listName) {
     var base = "http://localhost:3101/lists/"
     var url = base
     axios.post(url, listNameObject)
+    .then(action(json => { this.create_ten_wordIds(json.data.listId); this.getListsByUserId(this.userId); }))
+}),
+create_ten_wordIds: action(function (listId) {  
+    var base = "http://localhost:3101/words/newwords/"
+    var url = base + listId
+    axios.post(url, {listId: listId})
     .then(action(json => { this.getListsByUserId(this.userId); }))
 }),
 getListsByUserId: action(function (userId) {   
@@ -84,11 +90,6 @@ var base = "http://localhost:3101/users/"
 var ending = "/lists"
 var url = base + userId + ending;
 axios.get(url).then(action( y =>{ this.setListIds(y) }));
-// (action ((y) => this.setListIds(y))).catch(function(error) 
-// {
-//     console.log(error);})
-
-
 }
 )
     

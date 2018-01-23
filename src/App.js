@@ -575,13 +575,12 @@ class ListComponent extends React.Component {
     this.handleReset = this.handleReset.bind(this);
    this.state = {redirect: false}
   }
-
     componentWillMount(){
 this.props.appStore.setCurrentListInfo(this.props.match.params.listName)
 this.props.appStore.getWordsByListId(this.props.match.params.listId);
 }
 handleReset() {
- this.props.appStore.getWordsByListId(this.props.match.params.listId);
+this.setState({redirect: true});
 }
 componentWillUnmount () {
 this.props.appStore.doneLoading = false;
@@ -590,21 +589,21 @@ console.log('set');
 handleSubmit(event) {
   event.preventDefault();
   var wordArray = [];
-  [0, 3, 6].forEach((a) => {wordArray.push(this.createWord(event, a))
-if (a === 6) {axios.post('http://localhost:3101/words/words', wordArray).then(this.setState({redirect: true}))}  
+  [0, 3, 6, 9, 12, 15, 18, 21, 24, 27].forEach((a) => {wordArray.push(this.createWord(event, a))
+if (a === 6) {axios.post('http://localhost:3101/words/words', wordArray).then(this.props.appStore.getWordsByListId(this.props.match.params.listId))}  
 });
 };
 createWord(event, index) {
-const createWordFactory = ({ en, vn, exampleUse, wordId, status }) => ({
-  en,
+const createWordFactory = ({ vn, en, exampleUse, wordId, status }) => ({
   vn,
+  en,
   exampleUse,
   wordId,
   status
 });
 const myWord = createWordFactory({
-  en: event.target[index].value, 
-  vn:  event.target[index+1].value, 
+  vn: event.target[index].value, 
+  en:  event.target[index+1].value, 
   exampleUse:  event.target[index+2].value, 
   wordId: event.target[index].getAttribute('wordid'), 
   status: event.target[index].getAttribute('status'),
@@ -645,10 +644,10 @@ const Texting = inject('appStore')(observer(
     return(
 <div className="row uniform">
     <div className="3u 12u$(xsmall)">
-       <input type="text" status={this.props.status} wordid={this.props.wordId}  name="demo-name" id="demo-name" defaultValue={this.props.vn} placeholder="Name" />
+       <input type="text" status={this.props.status} wordid={this.props.wordId}  name="demo-name" id="demo-name" defaultValue={this.props.vn} placeholder="VN" />
     </div>
     <div className="3u 12u$(xsmall)">
-     <input type="text" name="demo-name" id="demo-name" defaultValue={this.props.en} placeholder="Name" />
+     <input type="text" name="demo-name" id="demo-name" defaultValue={this.props.en} placeholder="EN" />
     </div>
     <div className="4u 12u$(xsmall)">
     <input type="text" name="demo-name" id="demo-name" defaultValue={this.props.exampleUse} rows="1"></input>
