@@ -87,18 +87,54 @@ this.props.appStore.getListsByUserId(this.props.match.params.userId);
 <div>
   <h1>Your Study Decks:</h1>
  {this.props.appStore.listIds.data ? this.props.appStore.listIds.data.map( (x, id) =><div key={id}> <Link to={`/home/lists/` + x.listId + "/" + x.listName} key={id}> Listname: {x["listName"]}  ListId: {x["listId"]}</Link></div>) : null}
-<button type="submit" className="button submit">Create new Deck</button>
+<AddDeckComponent/>
 </div>
     )
   }}))
 
   const AddDeckComponent =  inject('appStore')(observer(class AddDeckComponent extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {error: false, errorText: "", redirect: false, successText: ''};
-  }
-
-}))
+      constructor(props) {
+        super(props);
+        this.state = { adding: false}
+        this.handleSave = this.handleSave.bind(this);
+        this.handleClick = this.handleClick.bind(this);
+      }
+      handleClick() {
+        this.setState({ adding: !this.state.adding })
+      }
+      handleSave(e) {
+      e.preventDefault(); 
+      const newListName = e.target[0].value.toString();
+      if (newListName.length === 0)
+      {alert("Fields cannot be empty") }
+      else {
+      this.props.appStore.createList(newListName);
+      this.setState({ adding: false });
+      this.props.appStore.getListsByUserId(this.props.appStore.userId);    
+      }}
+      renderNormal() { return (<div><button onClick={this.handleClick}>Create WL</button></div>) }
+      renderEdit() {
+        return (
+          <form onReset={()=> this.handleClick()} onSubmit={(e) => this.handleSave(e)}>
+          <div className="row uniform">
+    <div className="5u 12u$(xsmall)">
+       <input type="text" name="demo-name" id="demo-name" placeholder="New Deck Name" />
+    </div>
+    <div className="12u 12u$(xsmall)">
+    <button type="submit" className="button submit">Save</button>
+    <button type="reset" className="button">Cancel</button>
+    </div>
+    </div>
+  </form>
+  )
+      }
+      render() {
+        if (this.state.adding)
+          return this.renderEdit();
+        else { return this.renderNormal() }
+      }
+    }
+))
   
 
 const LoginForm = inject('appStore')(observer(class LoginForm extends React.Component {

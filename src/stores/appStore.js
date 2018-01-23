@@ -72,6 +72,13 @@ var url = base + listId + ending;
 axios.get(url).then(action(json => { this.setWordIds(json); })).then(() => this.doneLoading = true).catch(function(error) {
     console.log(error);
 })}),
+createList: action(function (listName) {  
+    var listNameObject = {listName: listName, userId: this.userId}
+    var base = "http://localhost:3101/lists/"
+    var url = base
+    axios.post(url, listNameObject)
+    .then(action(json => { this.getListsByUserId(this.userId); }))
+}),
 getListsByUserId: action(function (userId) {   
 var base = "http://localhost:3101/users/"
 var ending = "/lists"
