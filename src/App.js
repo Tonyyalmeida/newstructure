@@ -78,19 +78,80 @@ const WelcomeComponent = inject('appStore')(observer(class WelcomeComponent exte
   constructor(props) {
     super(props);
     this.state =  {doneLoading : false}
+    this.eachListComponent = this.eachListComponent.bind(this);
 }
   componentWillMount() {
 this.props.appStore.getListsByUserId(this.props.match.params.userId);    
+  }
+  eachListComponent(x, id) {
+    return (<WelcomeListComponent x={x} id={id} key={id}/>)
   }
   render() {
     return(
 <div>
   <h1>Your Study Decks:</h1>
- {this.props.appStore.listIds.data ? this.props.appStore.listIds.data.map( (x, id) =><div key={id}> <Link to={`/home/lists/` + x.listId + "/" + x.listName} key={id}> Listname: {x["listName"]}  ListId: {x["listId"]}</Link></div>) : null}
+ {this.props.appStore.listIds.data ? this.props.appStore.listIds.data.map(this.eachListComponent) : null}
 <AddDeckComponent/>
 </div>
     )
   }}))
+
+
+  //smart component, like adddeckcomponent with conditional rendering (but its a list componetn? -> OK I guess)
+  class WelcomeListComponent extends React.Component {
+    constructor(props) {
+      super(props);
+      this.state = { editing: false}
+      this.handleSave = this.handleSave.bind(this);
+      this.handleClick = this.handleClick.bind(this);
+    }
+    handleClick() {
+      this.setState({ editing: !this.state.editing})
+    }
+    handleSave(e) {
+    e.preventDefault(); 
+    const newListName = e.target[0].value.toString();
+    console.log(e.target);
+    // if (newListName.length === 0)
+    // {alert("Fields cannot be empty") }
+    // else {
+    // this.props.appStore.createList(newListName);
+    // this.setState({ editing: false });
+    // this.props.appStore.getListsByUserId(this.props.appStore.userId);    
+    }
+    renderNormal() {
+    return (<div className="row uniform"key={this.props.id}>
+    <div className="5u 12u$(xsmall)">
+    <Link to={`/home/lists/` + this.props.x.listId + "/" + this.props.x.listName}> 
+             Listname: {this.props.x["listName"]}  ListId: {this.props.x["listId"]}</Link>
+    </div>
+    <div className="5u 12u$(xsmall)">
+    <ul className="icons">
+             <li><a  onClick={(e) => this.handleClick()} className="icon alt fa-edit"><span className="label">Clear</span></a></li>
+           </ul>
+    </div>
+             </div>)}
+    renderEdit() {
+              return (
+                <form onReset={()=> this.handleClick()} onSubmit={(e) => this.handleClick(e)}>
+                <div className="row uniform">
+          <div className="5u 12u$(xsmall)">
+             <input type="text" name="demo-name" id="demo-name" placeholder="New Deck Name" />
+          </div>
+          <div className="12u 12u$(xsmall)">
+          <button type="submit" className="button submit">Save</button>
+          <button type="reset" className="button">Cancel</button>
+          </div>
+          </div>
+        </form>
+        )}
+    render() {
+              if (this.state.editing)
+                return this.renderEdit();
+              else { return this.renderNormal() }
+            }
+          }
+
 
   const AddDeckComponent =  inject('appStore')(observer(class AddDeckComponent extends React.Component {
       constructor(props) {
