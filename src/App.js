@@ -98,7 +98,7 @@ this.props.appStore.getListsByUserId(this.props.match.params.userId);
 
 
   //smart component, like adddeckcomponent with conditional rendering (but its a list componetn? -> OK I guess)
-  class WelcomeListComponent extends React.Component {
+  const WelcomeListComponent = inject('appStore')(observer(class WelcomeListComponent extends React.Component {
     constructor(props) {
       super(props);
       this.state = { editing: false}
@@ -106,12 +106,18 @@ this.props.appStore.getListsByUserId(this.props.match.params.userId);
       this.handleClick = this.handleClick.bind(this);
     }
     handleClick() {
-      this.setState({ editing: !this.state.editing})
-    }
+      if (this.props.appStore.allowEditListName)
+    { 
+     this.setState({ editing: !this.state.editing});
+     this.props.appStore.setAllowEditListName();
+  }  
+  }
     handleSave(e) {
     e.preventDefault(); 
     const newListName = e.target[0].value.toString();
-    console.log(e.target);
+    this.props.appStore.updateListByListId({listName: e.target[0].value.toString(), listId: e.target[0].getAttribute('listid')});
+    this.props.appStore.setAllowEditListName();
+    this.setState({ editing: !this.state.editing});
     // if (newListName.length === 0)
     // {alert("Fields cannot be empty") }
     // else {
@@ -133,10 +139,10 @@ this.props.appStore.getListsByUserId(this.props.match.params.userId);
              </div>)}
     renderEdit() {
               return (
-                <form onReset={()=> this.handleClick()} onSubmit={(e) => this.handleClick(e)}>
+                <form onReset={()=> this.handleClick()} onSubmit={(e) => this.handleSave(e)}>
                 <div className="row uniform">
           <div className="5u 12u$(xsmall)">
-             <input type="text" name="demo-name" id="demo-name" placeholder="New Deck Name" />
+             <input type="text" listid={this.props.x.listId} name="demo-name" id="demo-name" placeholder="New Deck Name" />
           </div>
           <div className="12u 12u$(xsmall)">
           <button type="submit" className="button submit">Save</button>
@@ -150,7 +156,7 @@ this.props.appStore.getListsByUserId(this.props.match.params.userId);
                 return this.renderEdit();
               else { return this.renderNormal() }
             }
-          }
+          }))
 
 
   const AddDeckComponent =  inject('appStore')(observer(class AddDeckComponent extends React.Component {

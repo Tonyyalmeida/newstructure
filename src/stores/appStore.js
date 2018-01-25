@@ -12,6 +12,7 @@ userId: "",
 doneLoading: false,
 listIds: [],
 currentListInfo: "",
+allowEditListName: true,
 wordIds: [
     {id: "1", name1: "Nam", name2: "I'm from the store", status: 0},
     {id: "2", name1: "Paasdsaying", name2: "Zweites Wort", status: 0},
@@ -24,6 +25,9 @@ wordIds: [
     {id: "10", name1: "Paasdqsaying", name2: "The Bilewlsads", status: 0},   
     {id: "11", name1: "Paasdsasying", name2: "Looasjdw", status: 0}
     ],
+setAllowEditListName: action(function() {
+        this.allowEditListName = !this.allowEditListName;
+    }), 
 setUserName: action(function(username) {
     this.userName = username;
 }),
@@ -91,7 +95,14 @@ var ending = "/lists"
 var url = base + userId + ending;
 axios.get(url).then(action( y =>{ this.setListIds(y) }));
 }
-)
+),
+updateListByListId: action(function (listObject) {   
+    var base = "http://localhost:3101/lists/"
+    var ending = "/words"
+    var url = base + listObject.listId + ending;
+    axios.post(url, listObject).then(action( y => this.getListsByUserId(this.userId)));
+    }
+    ),
     
 
 
