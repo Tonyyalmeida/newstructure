@@ -104,6 +104,7 @@ this.props.appStore.getListsByUserId(this.props.match.params.userId);
       this.state = { editing: false}
       this.handleSave = this.handleSave.bind(this);
       this.handleClick = this.handleClick.bind(this);
+      this.handleCancel = this.handleCancel.bind(this);
     }
     handleClick() {
       if (this.props.appStore.allowEditListName)
@@ -112,6 +113,10 @@ this.props.appStore.getListsByUserId(this.props.match.params.userId);
      this.props.appStore.setAllowEditListName();
   }  
   }
+  handleCancel() {
+   this.setState({ editing: false});
+   this.props.appStore.setAllowEditListName();
+}
     handleSave(e) {
     e.preventDefault(); 
     const newListName = e.target[0].value.toString();
@@ -129,7 +134,7 @@ this.props.appStore.getListsByUserId(this.props.match.params.userId);
     return (<div className="row uniform"key={this.props.id}>
     <div className="5u 12u$(xsmall)">
     <Link to={`/home/lists/` + this.props.x.listId + "/" + this.props.x.listName}> 
-             Listname: {this.props.x["listName"]}  ListId: {this.props.x["listId"]}</Link>
+             {this.props.x["listName"]}</Link>
     </div>
     <div className="5u 12u$(xsmall)">
     <ul className="icons">
@@ -139,10 +144,10 @@ this.props.appStore.getListsByUserId(this.props.match.params.userId);
              </div>)}
     renderEdit() {
               return (
-                <form onReset={()=> this.handleClick()} onSubmit={(e) => this.handleSave(e)}>
+                <form onReset={()=> this.handleCancel()} onSubmit={(e) => this.handleSave(e)}>
                 <div className="row uniform">
           <div className="5u 12u$(xsmall)">
-             <input type="text" listid={this.props.x.listId} name="demo-name" id="demo-name" placeholder="New Deck Name" />
+             <input type="text" listid={this.props.x.listId} name="demo-name" id="demo-name" defaultValue={this.props.x.listName} />
           </div>
           <div className="12u 12u$(xsmall)">
           <button type="submit" className="button submit">Save</button>
@@ -651,7 +656,6 @@ this.setState({redirect: true});
 }
 componentWillUnmount () {
 this.props.appStore.doneLoading = false;
-console.log('set');
 }
 handleSubmit(event) {
   event.preventDefault();
