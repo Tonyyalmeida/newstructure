@@ -811,7 +811,7 @@ if (token !== "") {
     return (
     <nav id="nav">
     <ul>
-    <li><Link to="/">Topico</Link></li>
+    <li><Link to={"/home/" + "userId/" + this.props.appStore.userId}>Topico</Link></li>
     <li><Link to="/logout">Logout</Link></li>
     </ul>
     </nav>
@@ -834,7 +834,7 @@ const AppNavbar= inject('appStore')(observer(class AppNavbar extends Component {
     return(
     <nav id="nav">
     <ul  className="appnav">
-   <li><Link to={"/home/" + "userId/" + this.props.appStore.userId}>Back to Overview</Link></li>
+   <li><Link to={"/home/" + "userId/" + this.props.appStore.userId}>Home</Link></li>
     </ul>
     </nav>
   )};
@@ -845,6 +845,7 @@ const AppNavbar= inject('appStore')(observer(class AppNavbar extends Component {
    <li><NavLink to={"/home/" + "userId/" + this.props.appStore.userId}>Back to Overview</NavLink></li>
    <li><h2>{this.props.appStore.currentListInfo ? this.props.appStore.currentListInfo : "unnamed" }</h2></li>
     </ul>
+    <ScrollToTopOnMount/>
     </nav>
   )};
   render() {
@@ -853,6 +854,15 @@ const AppNavbar= inject('appStore')(observer(class AppNavbar extends Component {
   return this.renderLists();
   else return this.renderNormal();
 };}));
+
+class ScrollToTopOnMount extends Component {
+  componentDidMount(prevProps) {
+    window.scrollTo(0, 0)
+  }
+  render() {
+    return null
+  }
+}
 
 
 
