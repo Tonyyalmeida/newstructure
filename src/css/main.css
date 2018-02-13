@@ -1942,6 +1942,10 @@
 		.button.small {
 			font-size: 0.8em;
 		}
+		button.extrasmall,
+		.button.extrasmall {
+			font-size: 0,4em;
+		}
 
 		input[type="submit"].big,
 		input[type="reset"].big,
@@ -3251,6 +3255,7 @@
 
 		#nav input, #nav select, #nav textarea {
 			color: #636363;
+			background-color: white;
 		}
 
 		#nav a:hover {

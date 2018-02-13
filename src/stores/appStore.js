@@ -12,6 +12,10 @@ userId: "",
 doneLoading: false,
 listIds: [],
 currentListInfo: "",
+redirectReady: false,
+setRedirectReady: action(function() {
+    this.redirectReady = true;
+}),
 allowEditListName: true,
 wordIds: [
     {id: "1", name1: "Nam", name2: "I'm from the store", status: 0},
@@ -100,7 +104,7 @@ updateListByListId: action(function (listObject) {
     var base = "http://localhost:3101/lists/"
     var ending = "/words"
     var url = base + listObject.listId + ending;
-    axios.post(url, listObject).then(action( y => this.getListsByUserId(this.userId)));
+    axios.post(url, listObject).then(action( y => {this.setRedirectReady(); this.getListsByUserId(this.userId)}));
     }
     ),
     

@@ -5,7 +5,8 @@ import {
   Route,
   Link,
   Redirect,
-  NavLink
+  NavLink,
+  withRouter,
 } from 'react-router-dom';
 import axios from 'axios';
 import { Provider, observer, inject } from 'mobx-react';
@@ -30,6 +31,7 @@ const BasicExample = () => (
       <Route exact path="/login" component={LoginForm}/>
       <Route exact path="/home/userId/:userId" component={WelcomeComponent}/>
       <Route exact path="/home/lists/:listId/:listName" component={ListComponent}/>
+      <Route exact path="/study/lists/:listId/:listName" component={StudySessionComponent}/>
       <Route exact path="/logout" component={LogoutForm}/>
     </div>
 </section></section>
@@ -138,7 +140,8 @@ this.props.appStore.getListsByUserId(this.props.match.params.userId);
     </div>
     <div className="5u 12u$(xsmall)">
     <ul className="icons">
-             <li><a  onClick={(e) => this.handleClick()} className="icon alt fa-edit"><span className="label">Clear</span></a></li>
+             <li><Link to={`/study/lists/` + this.props.x.listId + "/" + this.props.x.listName} className="icon alt fa-play"><span className="label">Clear</span></Link></li> 
+             <li><Link to={`/home/lists/` + this.props.x.listId + "/" + this.props.x.listName} className="icon alt fa-edit"><span className="label">Clear</span></Link></li>
            </ul>
     </div>
              </div>)}
@@ -163,6 +166,11 @@ this.props.appStore.getListsByUserId(this.props.match.params.userId);
             }
           }))
 
+//           <ul className="icons">
+//           <li><a  onClick={(e) => this.handleClick()} className="icon alt fa-edit"><span className="label">Clear</span></a></li>
+//         </ul>
+//  </div>
+
 
   const AddDeckComponent =  inject('appStore')(observer(class AddDeckComponent extends React.Component {
       constructor(props) {
@@ -184,7 +192,7 @@ this.props.appStore.getListsByUserId(this.props.match.params.userId);
       this.setState({ adding: false });
       this.props.appStore.getListsByUserId(this.props.appStore.userId);    
       }}
-      renderNormal() { return (<div><button onClick={this.handleClick}>Create WL</button></div>) }
+      renderNormal() { return (<div><button onClick={this.handleClick}>Create a new deck</button></div>) }
       renderEdit() {
         return (
           <form onReset={()=> this.handleClick()} onSubmit={(e) => this.handleSave(e)}>
@@ -660,9 +668,8 @@ this.props.appStore.doneLoading = false;
 handleSubmit(event) {
   event.preventDefault();
   var wordArray = [];
-  [0, 3, 6, 9, 12, 15, 18, 21, 24, 27].forEach((a) => {wordArray.push(this.createWord(event, a))
-if (a === 6) {axios.post('http://localhost:3101/words/words', wordArray).then(this.props.appStore.getWordsByListId(this.props.match.params.listId))}  
-});
+  [0, 3, 6, 9, 12, 15, 18, 21, 24, 27].forEach((a) => {wordArray.push(this.createWord(event, a))});
+  axios.post('http://localhost:3101/words/words', wordArray).then(() => this.props.appStore.getWordsByListId(this.props.match.params.listId))
 };
 createWord(event, index) {
 const createWordFactory = ({ vn, en, exampleUse, wordId, status }) => ({
@@ -827,14 +834,14 @@ const AppNavbar= inject('appStore')(observer(class AppNavbar extends Component {
     super(props);
     this.state = {
       renderList: true,
-      helpString: ""
+      editing: false,
     }
   }
   renderNormal() {
     return(
     <nav id="nav">
     <ul  className="appnav">
-   <li><Link to={"/home/" + "userId/" + this.props.appStore.userId}>Home</Link></li>
+   <li><Link to={"/home/" + "userId/" + this.props.appStore.userId}>Overview</Link></li>
     </ul>
     </nav>
   )};
@@ -842,18 +849,91 @@ const AppNavbar= inject('appStore')(observer(class AppNavbar extends Component {
     return (
     <nav id="nav">
     <ul className="appnav">
-   <li><NavLink to={"/home/" + "userId/" + this.props.appStore.userId}>Back to Overview</NavLink></li>
-   <li><h2>{this.props.appStore.currentListInfo ? this.props.appStore.currentListInfo : "unnamed" }</h2></li>
+    <div className="row uniform">
+    <div className="3u 12u$(xsmall)">
+   <li><NavLink to={"/home/" + "userId/" + this.props.appStore.userId}>Back to Overview</NavLink>
+   </li></div>
+   <div className="9u 12u$(xsmall)">
+           <ListNameWithRouter listId={this.props.match.params.ignore}/>
+    </div>
+   </div>
     </ul>
     <ScrollToTopOnMount/>
     </nav>
   )};
   render() {
-  const root = this.props.match.params.root; 
+  const root = this.props.match.params.root;
   if (this.props.match.params.root === "lists")
   return this.renderLists();
   else return this.renderNormal();
 };}));
+
+const ListNameComponent= inject('appStore')(observer(class ListNameComponent extends Component {
+  constructor(props) {
+    super(props);
+    this.state = { editing: false, value: "", redirect: false}
+    this.handleSave = this.handleSave.bind(this);
+    this.handleClick = this.handleClick.bind(this);
+    this.handleCancel = this.handleCancel.bind(this);
+    this.handleChange= this.handleChange.bind(this);
+    this.setLocation = this.setLocation.bind(this);
+  }
+  handleChange(event) {
+    this.setState({value: event.target.value});
+  }
+  handleClick() {
+   this.setState({ editing: !this.state.editing});
+}
+handleCancel() {
+ this.setState({ editing: false});
+}
+setLocation() {
+var locationString = '/home/' + "lists/" + this.props.listId + "/" + this.state.value
+this.props.history.push(locationString);
+this.props.appStore.setCurrentListInfo(this.state.value);
+this.handleClick();
+this.forceUpdate();
+}
+handleSave= (e) =>  {
+e.preventDefault();
+this.props.appStore.updateListByListId({listName: this.state.value, listId: this.props.listId});
+window.location.reload;
+}
+renderNormal() { return (    <ul className="icons">
+<li>{this.props.appStore.currentListInfo ? this.props.appStore.currentListInfo : "unnamed" }<a onClick={() => this.handleClick()} className="icon fa-edit"><span className="label">Clear</span></a></li>
+</ul>) }
+  renderEdit() {
+            return (
+              <form onReset={()=> this.handleCancel()} onSubmit={(e) => {this.handleSave(e); this.setLocation()}}>
+        <span>
+           <input onChange={this.handleChange} type="text" name="demo-name" id="demo-name" defaultValue={this.props.appStore.currentListInfo}/>
+           </span>
+           <span>
+          <button type="submit" className="button special extrasmall">Save</button>
+        <button type="reset" className="button special extrasmall">Cancel</button>
+        </span>
+      </form>
+      )}
+  render() {
+  //   if (this.props.appStore.redirectReady) {
+  //     return  (<Redirect to={{
+  //   pathname: '/home/' + "lists/" + this.props.listId + "/" + this.state.value
+  // }}/>)
+  // }
+            if (this.state.editing)
+              return this.renderEdit();
+            else { return this.renderNormal() }
+          }
+        }))
+//ListComponent renders Name of List (based on appStore Props)
+//Onclick (editing)-> Renders input window (with internal State, new Value)
+// Save -> Use API call to set name
+// Redirect to new listName (needs to, from then, everything else will be set too)
+//cancel -> reset (probably use internal state)
+
+var ListNameWithRouter = withRouter(ListNameComponent);
+
+
 
 class ScrollToTopOnMount extends Component {
   componentDidMount(prevProps) {
@@ -979,5 +1059,80 @@ const FooterSecondSection = props =>               <section>
   <li><a href="#" className="icon fa-instagram alt"><span className="label">Instagram</span></a></li>
 </ul>
 </section>
+
+const StudySessionComponent = inject('appStore')(observer(
+  class StudySessionComponent extends React.Component {
+    constructor(props) {
+      super(props);
+      this.createWord = this.createWord.bind(this);
+      this.handeSubmit = this.handleSubmit.bind(this);
+      this.handleReset = this.handleReset.bind(this);
+     this.state = {redirect: false}
+    }
+      componentWillMount(){
+  this.props.appStore.setCurrentListInfo(this.props.match.params.listName)
+  this.props.appStore.getWordsByListId(this.props.match.params.listId);
+  }
+  handleReset() {
+  this.setState({redirect: true});
+  }
+  componentWillUnmount () {
+  this.props.appStore.doneLoading = false;
+  }
+  handleSubmit(event) {
+    event.preventDefault();
+    var wordArray = [];
+    [0, 3, 6, 9, 12, 15, 18, 21, 24, 27].forEach((a) => {wordArray.push(this.createWord(event, a))
+  if (a === 6) {axios.post('http://localhost:3101/words/words', wordArray).then(this.props.appStore.getWordsByListId(this.props.match.params.listId))}  
+  });
+  };
+  createWord(event, index) {
+  const createWordFactory = ({ vn, en, exampleUse, wordId, status }) => ({
+    vn,
+    en,
+    exampleUse,
+    wordId,
+    status
+  });
+  const myWord = createWordFactory({
+    vn: event.target[index].value, 
+    en:  event.target[index+1].value, 
+    exampleUse:  event.target[index+2].value, 
+    wordId: event.target[index].getAttribute('wordid'), 
+    status: event.target[index].getAttribute('status'),
+  });
+  return myWord;
+  }
+  
+    render() {
+      if (this.state.redirect) {
+        return  <Redirect to={{
+      pathname: '/home/' + "userId/" + this.props.appStore.userId,
+    }}/>  
+    }
+      if (this.props.appStore.doneLoading)
+      return (
+       <form onReset={()=> this.handleReset()} onSubmit={(e) => this.handleSubmit(e)}>
+         <div className="row uniform">
+               <div className="3u 12u$(xsmall)">VN</div>
+        <div className="3u 12u$(xsmall)">EN</div>
+        <div className="4u 12u$(xsmall)">Example Use</div>
+        <div className="2u 12u$(xsmall)">Status</div></div>
+      {this.props.appStore.wordIds.data.map( (c, id) => (
+        <Texting vn={c.vn} en={c.en} exampleUse={c.exampleUse} status={c.status} wordId={c.wordId} arrayid={id} key={id}/>
+      ))}
+         <button type="submit" className="button submit">Save</button>
+         <button type="reset" className="button">Cancel</button>
+    </form>
+      );
+      else {
+        return (<h2>Loading...</h2>)
+      }
+    }
+  }));
+  
+
+
+
 
 export default BasicExample;
