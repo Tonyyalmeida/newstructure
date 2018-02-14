@@ -21,6 +21,7 @@ const BasicExample = () => (
         <LoginNavbar/>
        <Header/>
        <Route path="/home/:root/:ignore" component={AppNavbar}/>
+       <Route path="/study/:root/:ignore" component={AppNavbar}/>
      <div id="main">
      <section id="content" className="main">
      <section>     
@@ -1060,76 +1061,61 @@ const FooterSecondSection = props =>               <section>
 </ul>
 </section>
 
+
+var imageName = require('./images/pic01.jpg')
 const StudySessionComponent = inject('appStore')(observer(
   class StudySessionComponent extends React.Component {
     constructor(props) {
       super(props);
-      this.createWord = this.createWord.bind(this);
-      this.handeSubmit = this.handleSubmit.bind(this);
-      this.handleReset = this.handleReset.bind(this);
-     this.state = {redirect: false}
+      this.decrementIndex= this.decrementIndex.bind(this);
+      this.incrementIndex = this.incrementIndex.bind(this);
+     this.state = {redirect: false, index: 0    }
     }
       componentWillMount(){
   this.props.appStore.setCurrentListInfo(this.props.match.params.listName)
   this.props.appStore.getWordsByListId(this.props.match.params.listId);
   }
-  handleReset() {
-  this.setState({redirect: true});
-  }
   componentWillUnmount () {
   this.props.appStore.doneLoading = false;
   }
-  handleSubmit(event) {
-    event.preventDefault();
-    var wordArray = [];
-    [0, 3, 6, 9, 12, 15, 18, 21, 24, 27].forEach((a) => {wordArray.push(this.createWord(event, a))
-  if (a === 6) {axios.post('http://localhost:3101/words/words', wordArray).then(this.props.appStore.getWordsByListId(this.props.match.params.listId))}  
-  });
-  };
-  createWord(event, index) {
-  const createWordFactory = ({ vn, en, exampleUse, wordId, status }) => ({
-    vn,
-    en,
-    exampleUse,
-    wordId,
-    status
-  });
-  const myWord = createWordFactory({
-    vn: event.target[index].value, 
-    en:  event.target[index+1].value, 
-    exampleUse:  event.target[index+2].value, 
-    wordId: event.target[index].getAttribute('wordid'), 
-    status: event.target[index].getAttribute('status'),
-  });
-  return myWord;
-  }
-  
+  incrementIndex() {this.setState((prevState, props) => ({
+    index: prevState.index + 1
+})); };
+decrementIndex() {this.setState((prevState, props) => ({
+   index: prevState.index - 1
+})); };
     render() {
-      if (this.state.redirect) {
-        return  <Redirect to={{
-      pathname: '/home/' + "userId/" + this.props.appStore.userId,
-    }}/>  
-    }
+      const currentIndex = this.state.index+1;
+      const currentRealIndex = this.state.index;
+      console.log(this.props.appStore.wordIds, this.state.index);
       if (this.props.appStore.doneLoading)
       return (
-       <form onReset={()=> this.handleReset()} onSubmit={(e) => this.handleSubmit(e)}>
-         <div className="row uniform">
-               <div className="3u 12u$(xsmall)">VN</div>
-        <div className="3u 12u$(xsmall)">EN</div>
-        <div className="4u 12u$(xsmall)">Example Use</div>
-        <div className="2u 12u$(xsmall)">Status</div></div>
-      {this.props.appStore.wordIds.data.map( (c, id) => (
-        <Texting vn={c.vn} en={c.en} exampleUse={c.exampleUse} status={c.status} wordId={c.wordId} arrayid={id} key={id}/>
-      ))}
-         <button type="submit" className="button submit">Save</button>
-         <button type="reset" className="button">Cancel</button>
-    </form>
+      <div>
+        {currentIndex} / 10
+      <pre>
+        <code>
+        <div className="spotlight">
+  <div className="content">
+  <h2>{this.props.appStore.wordIds.data[currentRealIndex].vn}</h2>
+  <h2>Vietnamese</h2>
+  <h3>Example Use</h3>
+  <div className="row uniform">
+  <div className="12u">
+  <ul className="actions fit">
+                      <li><a onClick={this.decrementIndex} className="button big special icon fa-thumbs-down">Didn't know</a></li>
+											<li><a onClick={this.incrementIndex} className="button big icon fa-thumbs-up">Got it!</a></li>
+										</ul></div></div>
+  </div>
+</div></code></pre></div>
       );
       else {
         return (<h2>Loading...</h2>)
       }
     }
   }));
+
+
+
   
 
 
