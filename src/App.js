@@ -142,7 +142,7 @@ this.props.appStore.getListsByUserId(this.props.match.params.userId);
     <div className="5u 12u$(xsmall)">
     <ul className="icons">
              <li><Link to={`/study/lists/` + this.props.x.listId + "/" + this.props.x.listName} className="icon alt fa-play"><span className="label">Clear</span></Link></li> 
-             <li><Link to={`/edit/lists/` + this.props.x.listId + "/" + this.props.x.listName} className="icon alt fa-edit"><span className="label">Clear</span></Link></li>
+             <li><Link to={`/edit/lists/` + this.props.x.listId + "/" + this.props.x.listName} className="icon alt fa-list"><span className="label">Clear</span></Link></li>
            </ul>
     </div>
              </div>)}
