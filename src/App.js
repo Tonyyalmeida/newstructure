@@ -27,8 +27,7 @@ const BasicExample = () => (
      <section id="content" className="main">
      <section>     
     <div>
-      <Route exact path="/" component={App}/>
-      <Route path="/about" component={RealApp}/>
+      <Route exact path="/" component={RealApp}/>
       <Route exact path="/signup" component={SignupForm}/>
       <Route exact path="/login" component={LoginForm}/>
       <Route exact path="/home/userId/:userId" component={WelcomeComponent}/>
@@ -428,23 +427,19 @@ class App extends Component {
 const RealApp = inject('appStore')(observer(class RealApp extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {error: false };
   }
-// 
-  componentDidMount () {
-
+  componentWillMount() {
+  if (this.props.appStore.isLoggedIn)
+  this.props.history.push("/home/userId/" + this.props.appStore.userId)
   }
   render() {
     return (
-            <div id="main">
-            
-
-
-
+     <div id="main">
+            <IntroSection/>
             </div>
-    );
+)};  
   }
-}));
+));
 
 // class Welcome extends Component {
 //   render() {
