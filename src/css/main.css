@@ -1838,6 +1838,7 @@
 
 	h1, h2, h3, h4, h5, h6 {
 		color: #ffffff;
+		text-align: center;
 	}
 
 	blockquote {
@@ -2572,8 +2573,8 @@
 			}
 
 				ul.actions.fit li {
-					display: table-cell;
 					padding: 0 0 0 1em;
+					text-align: center;
 				}
 
 					ul.actions.fit li > * {
@@ -3812,3 +3813,59 @@
 			}
 
 		}
+		.hidden {
+			display: block;
+			position: absolute;
+			top: 2.1em;
+			left: 0.1em;
+			background: #abbaab;  /* fallback for old browsers */
+			background: -webkit-linear-gradient(to right, #ffffff, #abbaab);  /* Chrome 10-25, Safari 5.1-6 */
+			background: linear-gradient(to right, #ffffff, #abbaab); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+			min-width: 100% ;
+			min-height: 100%;
+			box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+			padding: 12px 16px;
+			z-index: 1;
+		}
+		
+		.testingcss {
+			position: relative;
+			text-align: center;
+		}
+
+		.toggle-base {
+			height: 110px;
+		  }
+		  
+		  .toggle-enter {
+			animation-name: fade-in;
+			animation-duration: 600ms;
+		  }
+		  .toggle-leave {
+			animation-name: fade-out;
+			animation-duration:600ms;
+		  }
+		  
+		  @keyframes fade-in {
+			from {
+			  opacity: 0.0;
+			  height: 0px;
+			}
+			to {
+			  opacity: 1.0;
+			  height: 110px;
+			}
+		  }
+		  
+		  
+		  @keyframes fade-out {
+			from {
+			  opacity: 1.0;
+			  height: 20px;
+			}
+			to {
+			  opacity: 0.0;
+			  height: 0px;
+			}
+		  }
+		  

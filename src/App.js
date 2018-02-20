@@ -11,6 +11,7 @@ import {
 import axios from 'axios';
 import { Provider, observer, inject } from 'mobx-react';
 import appStore from './stores/appStore';
+import ReactCSSTransitionGroup from 'react-addons-css-transition-group'; // ES6
 
 const stores = { appStore };
 
@@ -1076,7 +1077,9 @@ const StudySessionComponent = inject('appStore')(observer(
       this.decrementIndex= this.decrementIndex.bind(this);
       this.incrementIndex = this.incrementIndex.bind(this);
       this.incrementSuccessCounter = this.incrementSuccessCounter.bind(this);
-     this.state = {redirect: false, index: 0, successCounter: 0, failCounter: 0    }
+      this.toggleHidden = this.toggleHidden.bind(this);
+      this.makeVisible = this.makeVisible.bind(this);
+     this.state = {hidden: true, redirect: false, index: 0, successCounter: 0, failCounter: 0    }
     }
       componentWillMount(){
   this.props.appStore.setCurrentListInfo(this.props.match.params.listName)
@@ -1085,6 +1088,16 @@ const StudySessionComponent = inject('appStore')(observer(
   componentWillUnmount () {
   this.props.appStore.doneLoading = false;
   }
+  toggleHidden () {
+      this.setState((prevState, props) => ({
+        hidden: !(prevState.hidden)
+      }))   
+  }
+ makeVisible () {
+    this.setState((prevState, props) => ({
+      hidden: false
+    }))   
+}
   incrementIndex() {
     this.setState((prevState, props) => ({
     index: prevState.index <= 9 ?  prevState.index + 1 : prevState.index
@@ -1121,27 +1134,18 @@ incrementFailCounter() {
       <pre>
         <code>
         <div className="spotlight">
-  <div className="content">
-  <h2>{this.props.appStore.wordIds.data[this.state.index].vn}</h2>
-  <div className="hidden">
-  <h2>{this.props.appStore.wordIds.data[this.state.index].en}</h2>
-  <h3>{this.props.appStore.wordIds.data[this.state.index].exampleUse}</h3>
-  <div className="row uniform">
-  <div className="12u">
-  <ul className="actions fit">
-                      <li><a onClick={() => {this.incrementIndex(); 
-                        this.props.appStore.decrementStatus(this.state.index);
-                        this.props.appStore.updateWordByWordId(this.state.index);
-                        this.incrementFailCounter();
-                      }
-                      } 
-                        className="button big special icon fa-thumbs-down">Didn't know</a></li>
-                      <li><a onClick={() => {this.incrementIndex();
-                      this.props.appStore.incrementStatus(this.state.index);
-                      this.props.appStore.updateWordByWordId(this.state.index);
-                      this.incrementSuccessCounter();
-                      }} className="button big icon fa-thumbs-up">Got it!</a></li>
-										</ul></div></div>  </div>
+  <div className="content testingcss">
+  <h2 className="align-center">{this.props.appStore.wordIds.data[this.state.index].vn}</h2>
+  {this.state.hidden ? <i onClick={() => this.makeVisible()} className="fa fa-angle-double-down fa-5x align-center"></i> : null}
+  <HiddenWords
+  en={this.props.appStore.wordIds.data[this.state.index].en} 
+  exampleUse={this.props.appStore.wordIds.data[this.state.index].exampleUse}
+  incrementSuccessCounter={this.incrementSuccessCounter}
+  incrementIndex={this.incrementIndex}
+  index={this.state.index}
+  hidden={this.state.hidden}
+  toggleHidden={this.toggleHidden}
+  />
   </div>
 </div></code></pre></div>
       );
@@ -1155,8 +1159,47 @@ incrementFailCounter() {
 // play from edit list screen
 
   
+const HiddenWords = inject('appStore')(observer(
+  class HiddenWords extends React.Component {
+    constructor(props) {
+      super(props);
+    }
+    render() {
+    return(
+      <ReactCSSTransitionGroup
+      transitionName="toggle"
+      transitionEnterTimeout={700}
+      transitionLeaveTimeout={300}>
+        {this.props.hidden ? null: <div className="toggle-base">
+        <div>
+<h2 className="align-center">{this.props.en}</h2>
+<h3 className="align-center">{this.props.exampleUse}</h3>
+    <ul className="actions fit">
+    <div className="row uniform">
+<div className="6u align-center">
+                    <li className="align-center"><a onClick={() => {this.props.incrementIndex(); 
+                      this.props.appStore.decrementStatus(this.props.index);
+                      this.props.appStore.updateWordByWordId(this.props.index);
+                      this.props.toggleHidden();
+                    }
+                    } 
+                      className="button big special icon fa-thumbs-down">Didn't know</a></li>          </div>
+                 <div className="6u align-center">
+                      <li className="align-center"><a onClick={() => {this.props.incrementIndex();
+                    this.props.appStore.incrementStatus(this.props.index);
+                    this.props.appStore.updateWordByWordId(this.props.index);
+                    this.props.incrementSuccessCounter();
+                    this.props.toggleHidden();
+                    }} className="button big icon fa-thumbs-up">Got it!</a></li>
+      </div>        
+</div>
+    </ul></div>   
+        </div>}
+      </ReactCSSTransitionGroup>  
 
-
+)
+}}
+))
 
 
 export default BasicExample;
