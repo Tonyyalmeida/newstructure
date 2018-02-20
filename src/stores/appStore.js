@@ -87,6 +87,12 @@ createList: action(function (listName) {
     axios.post(url, listNameObject)
     .then(action(json => { this.create_ten_wordIds(json.data.listId); this.getListsByUserId(this.userId); }))
 }),
+updateWordByWordId: action(function (wordArrayId) {  
+    var wordObject = this.wordIds.data[wordArrayId]
+    var base = "http://localhost:3101/words/"
+    var url = base + wordObject.wordId;
+    axios.post(url, wordObject);
+}),
 create_ten_wordIds: action(function (listId) {  
     var base = "http://localhost:3101/words/newwords/"
     var url = base + listId

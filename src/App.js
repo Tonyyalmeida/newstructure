@@ -20,7 +20,7 @@ const BasicExample = () => (
         <Wrapper>
         <LoginNavbar/>
        <Header/>
-       <Route path="/home/:root/:ignore" component={AppNavbar}/>
+       <Route path="/edit/:root/:ignore" component={AppNavbar}/>
        <Route path="/study/:root/:ignore" component={AppNavbar}/>
      <div id="main">
      <section id="content" className="main">
@@ -31,7 +31,7 @@ const BasicExample = () => (
       <Route exact path="/signup" component={SignupForm}/>
       <Route exact path="/login" component={LoginForm}/>
       <Route exact path="/home/userId/:userId" component={WelcomeComponent}/>
-      <Route exact path="/home/lists/:listId/:listName" component={ListComponent}/>
+      <Route exact path="/edit/lists/:listId/:listName" component={ListComponent}/>
       <Route exact path="/study/lists/:listId/:listName" component={StudySessionComponent}/>
       <Route exact path="/logout" component={LogoutForm}/>
     </div>
@@ -136,13 +136,13 @@ this.props.appStore.getListsByUserId(this.props.match.params.userId);
     renderNormal() {
     return (<div className="row uniform"key={this.props.id}>
     <div className="5u 12u$(xsmall)">
-    <Link to={`/home/lists/` + this.props.x.listId + "/" + this.props.x.listName}> 
+    <Link to={`/edit/lists/` + this.props.x.listId + "/" + this.props.x.listName}> 
              {this.props.x["listName"]}</Link>
     </div>
     <div className="5u 12u$(xsmall)">
     <ul className="icons">
              <li><Link to={`/study/lists/` + this.props.x.listId + "/" + this.props.x.listName} className="icon alt fa-play"><span className="label">Clear</span></Link></li> 
-             <li><Link to={`/home/lists/` + this.props.x.listId + "/" + this.props.x.listName} className="icon alt fa-edit"><span className="label">Clear</span></Link></li>
+             <li><Link to={`/edit/lists/` + this.props.x.listId + "/" + this.props.x.listName} className="icon alt fa-edit"><span className="label">Clear</span></Link></li>
            </ul>
     </div>
              </div>)}
@@ -691,6 +691,7 @@ return myWord;
 }
 
   render() {
+    console.log(this.props.match.params);
     if (this.state.redirect) {
       return  <Redirect to={{
     pathname: '/home/' + "userId/" + this.props.appStore.userId,
@@ -709,6 +710,11 @@ return myWord;
     ))}
        <button type="submit" className="button submit">Save</button>
        <button type="reset" className="button">Cancel</button>
+  <ul className="icons">
+      <li><Link to={`/study/lists/` + this.props.match.params.listId + "/" + this.props.match.params.listName} 
+      className="icon alt fa-play">
+      <span className="label">Clear</span></Link></li> 
+  </ul>
   </form>
     );
     else {
@@ -1069,7 +1075,8 @@ const StudySessionComponent = inject('appStore')(observer(
       super(props);
       this.decrementIndex= this.decrementIndex.bind(this);
       this.incrementIndex = this.incrementIndex.bind(this);
-     this.state = {redirect: false, index: 0    }
+      this.incrementSuccessCounter = this.incrementSuccessCounter.bind(this);
+     this.state = {redirect: false, index: 0, successCounter: 0, failCounter: 0    }
     }
       componentWillMount(){
   this.props.appStore.setCurrentListInfo(this.props.match.params.listName)
@@ -1078,16 +1085,35 @@ const StudySessionComponent = inject('appStore')(observer(
   componentWillUnmount () {
   this.props.appStore.doneLoading = false;
   }
-  incrementIndex() {this.setState((prevState, props) => ({
-    index: prevState.index + 1
-})); };
+  incrementIndex() {
+    this.setState((prevState, props) => ({
+    index: prevState.index <= 9 ?  prevState.index + 1 : prevState.index
+})); 
+};
 decrementIndex() {this.setState((prevState, props) => ({
-   index: prevState.index - 1
-})); };
+   index: prevState.index > 0 ? prevState.index - 1 : prevState.index
+})); }; // maybe needed for a back button
+incrementSuccessCounter() {
+  this.setState((prevState, props) => ({
+    successCounter: prevState.successCounter + 1
+})); 
+}
+incrementFailCounter() {
+  this.setState((prevState, props) => ({
+    successCounter: prevState.failCounter + 1
+})); 
+}
     render() {
       const currentIndex = this.state.index+1;
       const currentRealIndex = this.state.index;
-      console.log(this.props.appStore.wordIds, this.state.index);
+      if (currentIndex == 11)
+      {
+        return (
+          <div><h2>Done with this Deck</h2>
+          <h3>You knew {this.state.successCounter} out of 10</h3>
+            </div>
+        )
+      }
       if (this.props.appStore.doneLoading)
       return (
       <div>
@@ -1096,15 +1122,26 @@ decrementIndex() {this.setState((prevState, props) => ({
         <code>
         <div className="spotlight">
   <div className="content">
-  <h2>{this.props.appStore.wordIds.data[currentRealIndex].vn}</h2>
-  <h2>Vietnamese</h2>
-  <h3>Example Use</h3>
+  <h2>{this.props.appStore.wordIds.data[this.state.index].vn}</h2>
+  <div className="hidden">
+  <h2>{this.props.appStore.wordIds.data[this.state.index].en}</h2>
+  <h3>{this.props.appStore.wordIds.data[this.state.index].exampleUse}</h3>
   <div className="row uniform">
   <div className="12u">
   <ul className="actions fit">
-                      <li><a onClick={this.decrementIndex} className="button big special icon fa-thumbs-down">Didn't know</a></li>
-											<li><a onClick={this.incrementIndex} className="button big icon fa-thumbs-up">Got it!</a></li>
-										</ul></div></div>
+                      <li><a onClick={() => {this.incrementIndex(); 
+                        this.props.appStore.decrementStatus(this.state.index);
+                        this.props.appStore.updateWordByWordId(this.state.index);
+                        this.incrementFailCounter();
+                      }
+                      } 
+                        className="button big special icon fa-thumbs-down">Didn't know</a></li>
+                      <li><a onClick={() => {this.incrementIndex();
+                      this.props.appStore.incrementStatus(this.state.index);
+                      this.props.appStore.updateWordByWordId(this.state.index);
+                      this.incrementSuccessCounter();
+                      }} className="button big icon fa-thumbs-up">Got it!</a></li>
+										</ul></div></div>  </div>
   </div>
 </div></code></pre></div>
       );
@@ -1114,7 +1151,8 @@ decrementIndex() {this.setState((prevState, props) => ({
     }
   }));
 
-
+// on 10, render "done List Component"
+// play from edit list screen
 
   
 
