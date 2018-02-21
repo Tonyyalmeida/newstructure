@@ -993,44 +993,29 @@ const HiddenWords = inject('appStore')(observer(
 )
 }}
 ))
-
-
-console.log(typeof LoadingHoc);
   const isEmpty = (prop) => (
     prop === null ||
     prop === undefined ||
     (prop.hasOwnProperty('length') && prop.length === 0) ||
     (prop.constructor === Object && Object.keys(prop).length === 0)
   );
-
-
-  const Timer = observer(({ timer }) =>
-    <div>{ timer.elapsedTime }</div>
-)
   
-  const LoadingHoc = (WrappedComponent) => {
+  const LoadingHoc = (loadingProp) => (WrappedComponent) => {
     return inject('appStore')(observer( class LoadingHOC extends Component {
-      render() {
-        return this.props.appStore.doneLoading === false ? <div className="loader"></div> : <WrappedComponent {...this.props}/>;
+            render() {
+              console.log(this.props.appStore[loadingProp].data);
+        return isEmpty(this.props.appStore[loadingProp].data)  ? <div className="loader"></div> : <WrappedComponent {...this.props}/>;
       }
     }))
   }
-//   var LoadingHoc = inject('appStore')(observer(({ WrappedComponent }) => {
-//     return class LoadingHoc extends Component {
-//       render() {
-//         return this.props.appStore.doneLoading === true ? <h2 onClick={() => console.log(this.props.appStore.wordIds)} className="loader">Meins</h2> : <WrappedComponent {...this.props}/>;
-//       }
-//     }
-// }))
 
-  const First = inject('appStore')(observer(class First extends Component {
-    render() {
-      console.log(this.props.appStore.doneLoading.toString())
-      return (<h2>I am the First {this.props.doneLoading.toString()}</h2>)
-    }
-  }))
+  // const First = inject('appStore')(observer(class First extends Component {
+  //   render() {
+  //     return (<h2>I am the First {this.props.doneLoading.toString()}</h2>)
+  //   }
+  // }))
 
-  const FirstHOC = LoadingHoc(AddDeckComponent);
+  const FirstHOC = LoadingHoc("listIds")(AddDeckComponent);
 
 
 export default BasicExample;
