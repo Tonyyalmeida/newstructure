@@ -94,7 +94,7 @@ this.props.appStore.getListsByUserId(this.props.match.params.userId);
 <div>
   <h1>Your Study Decks:</h1>
  {this.props.appStore.listIds.data ? this.props.appStore.listIds.data.map(this.eachListComponent) : null}
-<AddDeckComponent/>
+<FirstHOC doneLoading={this.state.doneLoading}/>
 </div>
     )
   }}))
@@ -181,7 +181,7 @@ this.props.appStore.getListsByUserId(this.props.match.params.userId);
         this.handleClick = this.handleClick.bind(this);
       }
       handleClick() {
-        this.setState({ adding: !this.state.adding })
+        this.setState({ adding: !this.state.adding, hocState: true })
       }
       handleSave(e) {
       e.preventDefault(); 
@@ -441,207 +441,6 @@ const RealApp = inject('appStore')(observer(class RealApp extends React.Componen
   }
 ));
 
-// class Welcome extends Component {
-//   render() {
-//     return (
-//       <div id="main">
-//       <section>
-// 										<h2>Form</h2>
-// 										<form method="post" action="#">
-// 											<div className="row uniform">
-// 												<div className="6u 12u$(xsmall)">
-// 													<input type="text" name="demo-name" id="demo-name" value="" placeholder="Name" />
-// 												</div>
-//                         <div className="6u 12u$(xsmall)">
-//                          <input type="text" name="demo-name" id="demo-name" value="" placeholder="Name" />
-//                         </div>
-//                       </div>
-//             </form>
-//             </section>
-//             </div>
-//     );
-//   }
-// }
-
-// class Welcome extends React.Component {
-//   constructor(props) {
-//     super(props);
-//     this.state = { list: [] };
-//     // this.handleAdd = this.handleAdd.bind(this);
-//     // this.handleEdit = this.handleEdit.bind(this);
-//     // this.eachRecipe = this.eachRecipe.bind(this);
-//     // this.handleDelete = this.handleDelete.bind(this);
-//   }
-//   componentWillMount() {
-//     this.setState({list: [{name: "Carbonara", name2: "Noodles"}, {name: "Pho", name2: "Rice Noodles"}, {name: "Buger", name2: "mustard"}]})
-//     //this.setState({ list: JSON.parse(localList) });
-//   }
-//   // handleAdd(e) {
-//   //   var newRecipe = e;
-//   //   var newList = this.state.list.slice();
-//   //   newList.push(newRecipe);
-//   //   this.setState({ list: newList });
-//   //   localStorage.setItem("RecipeList", JSON.stringify(newList));
-//   // }
-//   // handleDelete(e) {
-//   //   var newList = this.state.list.slice();
-//   //   newList.splice(e, 1);
-//   //   this.setState({ list: newList });
-//   //   localStorage.setItem("RecipeList", JSON.stringify(newList));
-//   // }
-//   // handleEdit(value, index) {
-//   //   var newRecipe = value;
-//   //   var newList = this.state.list.slice();
-//   //   newList[index] = newRecipe;
-//   //   this.setState({ list: newList });
-//   //   localStorage.setItem("RecipeList", JSON.stringify(newList));
-//   // }
-//   eachRecipe(product, id) {
-//     console.log(product.name);
-//     return (<div><Recipe className="normalrecipe" props={product} /> </div>)
-//   }
-//   render() {
-//     var list = this.state.list.map(this.eachRecipe);
-//     return (<div>
-//     <h2>Done</h2>
-//       <form method="post" action="#">{list}</form>
-//       <div className="12u$">
-//       <ul class="actions">
-//        <li><span class="button special disabled small">Save</span></li>
-//        <li><span class="button disabled small">Clear List</span></li>
-//       </ul>
-//      </div>
-//    </div>
-//     )
-//   }
-// }
-
-// class Checkbox extends Component {
-//   state = {
-//     isChecked: false,
-//   }
-
-//   toggleCheckboxChange = () => {
-//     const { handleCheckboxChange, label } = this.props;
-
-//     this.setState(({ isChecked }) => (
-//       {
-//         isChecked: !isChecked,
-//       }
-//     ));
-
-//     handleCheckboxChange(label);
-//   }
-//   render() {
-//     const { label } = this.props;
-//     const { isChecked } = this.state;
-
-//     return (
-//       <div className="checkbox">
-//         <label>
-//           <input
-//             type="checkbox"
-//             value={label}
-//             checked={isChecked}
-//             onChange={this.toggleCheckboxChange}
-//           />
-
-//           {label}
-//         </label>
-//       </div>
-//     );
-//   }
-// }
-
-  
-//   class CheckboxList extends Component {
-//     componentWillMount = () => {
-//       this.selectedCheckboxes = new Set();
-//     }
-  
-//     toggleCheckbox = label => {
-//       if (this.selectedCheckboxes.has(label)) {
-//         this.selectedCheckboxes.delete(label);
-//       } else {
-//         this.selectedCheckboxes.add(label);
-//       }
-//     }
-  
-//     handleFormSubmit = formSubmitEvent => {
-//       formSubmitEvent.preventDefault();
-  
-//       for (const checkbox of this.selectedCheckboxes) {
-//         console.log(checkbox, 'is selected.');
-//       }
-//     }
-  
-//     createCheckbox = label => (
-//       <Checkbox
-//         label={label}
-//         handleCheckboxChange={this.toggleCheckbox}
-//         key={label}
-//       />
-//     )
-  
-//     createCheckboxes = () => (
-//       ['One','Two','Three',].map(this.createCheckbox)
-//     )
-  
-//     render() {
-//       return (
-//         <div className="container">
-//           <div className="row">
-//             <div className="col-sm-12">
-  
-//               <form onSubmit={this.handleFormSubmit}>
-//                 {this.createCheckboxes()}
-  
-//                 <button className="btn btn-default" type="submit">Save</button>
-//               </form>
-  
-//             </div>
-//           </div>
-//         </div>
-//       );
-//     }
-//   }
-
-// const Welcome = inject('appStore')(class Welcome extends React.Component {
-//   constructor(props) {
-//     super(props);
-//     this.state = {
-//       isGoing: true,
-//       numberOfGuests: true
-//     };}
-//   render() {
-//     return (
-//               <NameListComponent/ id=>
-//     )
-       /*<form> 
-      											<div className="row uniform">
-       												<div className="12u 12u$(xsmall)">
-       <input
-            name="isGoing"
-            type="checkbox"
-            id="isGoing"
-            checked={this.state.isGoing}
-            onChange={this.handleInputChange} />
-            <label htmlFor="isGoing">Email me a copy</label>
-            </div>
-            <div className="12u 12u$(xsmall)">
-            <input
-            name="numberOfGuests"
-            type="checkbox"
-            id="numberOfGuests"
-            checked={this.state.numberOfGuests}
-            onChange={this.handleInputChange} />
-            <label htmlFor="numberOfGuests">Email me a copy</label>
-            </div></div>
-            <button onClick={this.consoleMe} ></button>
-      </form>*/
-//   }
-// })
-
 
 const ListComponent = inject('appStore')(observer(
 class ListComponent extends React.Component {
@@ -687,7 +486,6 @@ return myWord;
 }
 
   render() {
-    console.log(this.props.match.params);
     if (this.state.redirect) {
       return  <Redirect to={{
     pathname: '/home/' + "userId/" + this.props.appStore.userId,
@@ -1195,6 +993,44 @@ const HiddenWords = inject('appStore')(observer(
 )
 }}
 ))
+
+
+console.log(typeof LoadingHoc);
+  const isEmpty = (prop) => (
+    prop === null ||
+    prop === undefined ||
+    (prop.hasOwnProperty('length') && prop.length === 0) ||
+    (prop.constructor === Object && Object.keys(prop).length === 0)
+  );
+
+
+  const Timer = observer(({ timer }) =>
+    <div>{ timer.elapsedTime }</div>
+)
+  
+  const LoadingHoc = (WrappedComponent) => {
+    return inject('appStore')(observer( class LoadingHOC extends Component {
+      render() {
+        return this.props.appStore.doneLoading === false ? <div className="loader"></div> : <WrappedComponent {...this.props}/>;
+      }
+    }))
+  }
+//   var LoadingHoc = inject('appStore')(observer(({ WrappedComponent }) => {
+//     return class LoadingHoc extends Component {
+//       render() {
+//         return this.props.appStore.doneLoading === true ? <h2 onClick={() => console.log(this.props.appStore.wordIds)} className="loader">Meins</h2> : <WrappedComponent {...this.props}/>;
+//       }
+//     }
+// }))
+
+  const First = inject('appStore')(observer(class First extends Component {
+    render() {
+      console.log(this.props.appStore.doneLoading.toString())
+      return (<h2>I am the First {this.props.doneLoading.toString()}</h2>)
+    }
+  }))
+
+  const FirstHOC = LoadingHoc(AddDeckComponent);
 
 
 export default BasicExample;
