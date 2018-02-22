@@ -452,6 +452,7 @@ class ListComponent extends React.Component {
    this.state = {redirect: false}
   }
     componentWillMount(){
+this.props.appStore.doneLoading = false;
 this.props.appStore.setCurrentListInfo(this.props.match.params.listName)
 this.props.appStore.getWordsByListId(this.props.match.params.listId);
 }
@@ -664,7 +665,7 @@ const AppNavbar= inject('appStore')(observer(class AppNavbar extends Component {
   )};
   render() {
   const root = this.props.match.params.root;
-  if (this.props.match.params.root === "lists")
+  if (this.props.history.location.pathname.split("/")[0] === "edit")
   return this.renderLists();
   else return this.renderNormal();
 };}));
@@ -689,11 +690,10 @@ handleCancel() {
  this.setState({ editing: false});
 }
 setLocation() {
-var locationString = '/home/' + "lists/" + this.props.listId + "/" + this.state.value
+var locationString = '/edit/' + "lists/" + this.props.listId + "/" + this.state.value
 this.props.history.push(locationString);
 this.props.appStore.setCurrentListInfo(this.state.value);
 this.handleClick();
-this.forceUpdate();
 }
 handleSave= (e) =>  {
 e.preventDefault();
@@ -875,7 +875,8 @@ const StudySessionComponent = inject('appStore')(observer(
      this.state = {hidden: true, redirect: false, index: 0, successCounter: 0, failCounter: 0    }
     }
       componentWillMount(){
-  this.props.appStore.setCurrentListInfo(this.props.match.params.listName)
+  this.props.appStore.doneLoading = false;
+  this.props.appStore.setCurrentListInfo(this.props.match.params.listName);
   this.props.appStore.getWordsByListId(this.props.match.params.listId);
   }
   componentWillUnmount () {
@@ -1003,7 +1004,6 @@ const HiddenWords = inject('appStore')(observer(
   const LoadingHoc = (loadingProp) => (WrappedComponent) => {
     return inject('appStore')(observer( class LoadingHOC extends Component {
             render() {
-              console.log(this.props.appStore[loadingProp].data);
         return isEmpty(this.props.appStore[loadingProp].data)  ? <div className="loader"></div> : <WrappedComponent {...this.props}/>;
       }
     }))
