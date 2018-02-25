@@ -77,7 +77,7 @@ getStudyWordsByListId: action(function (listId) {
     var base = "http://localhost:3101/lists/"
     var ending = "/words"
     var url = base + listId + ending;
-    axios.get(url).then(action(json => { this.setStudyWordIds((json.data.filter((json) => (json.status !== 10 && json.vn && json.en)))); console.log(json.data.filter((json) => (json.status !== 10))) })).then(() => this.doneLoading = true).catch(function(error) {
+    axios.get(url).then(action(json => { this.setStudyWordIds((json.data.filter((json) => (json.status !== 10 && json.vn && json.en)))) })).then(() => this.doneLoading = true).catch(function(error) {
         console.log(error);
     })}),
 createList: action(function (listName) {  

@@ -645,6 +645,7 @@ const AppNavbar= inject('appStore')(observer(class AppNavbar extends Component {
     <ul  className="appnav">
    <li><Link to={"/home/" + "userId/" + this.props.appStore.userId}>Overview</Link></li>
     </ul>
+    <ScrollToTopOnMount/>
     </nav>
   )};
   renderLists() {
@@ -934,12 +935,10 @@ incrementFailCounter() {
     render() {
       const currentIndex = this.state.index+1;
       const currentRealIndex = this.state.index;
-      if (currentIndex == 11)
+      if (currentIndex == this.props.appStore.studyWordIds.length)
       {
         return (
-          <div><h2>Done with this Deck</h2>
-          <h3>You knew {this.state.successCounter} out of 10</h3>
-            </div>
+        <DoneStudyComponent successCounter={this.props.successCounter}/>
         )
       }
       if (true)
@@ -950,7 +949,7 @@ incrementFailCounter() {
         <code>
         <div className="spotlight">
   <div className="content testingcss">
-  <h2 className="align-center">{this.props.appStore.studyWordIds[this.state.index].vn}</h2>
+  <h2 className="align-center">{this.props.appStore.studyWordIds[this.state.index].length ? this.props.appStore.studyWordIds[this.state.index].vn: null}</h2>
   {this.state.hidden ? <i onClick={() => this.makeVisible()} className="fa fa-angle-double-down fa-5x align-center"></i> : null}
   <HiddenWords
   en={this.props.appStore.studyWordIds[this.state.index].en} 
@@ -970,10 +969,23 @@ incrementFailCounter() {
     }
   }));
 
-// on 10, render "done List Component"
-// play from edit list screen
 
-  
+const DoneStudyComponent = inject('appStore')(observer(
+  class DoneStudyComponent extends React.Component {
+    constructor(props) {
+      super(props);
+    }
+    render() {
+    return(
+      <div><h2>Done with this Deck</h2>
+          <h3>You knew {this.props.successCounter} out of 10</h3>
+            </div>)
+}}))
+
+//on end, call all listIds + wordStatus.
+//if all wordStatus == 10, update listStatus to 1;
+
+
 const HiddenWords = inject('appStore')(observer(
   class HiddenWords extends React.Component {
     constructor(props) {
