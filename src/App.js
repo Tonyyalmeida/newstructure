@@ -32,7 +32,7 @@ const BasicExample = () => (
       <Route exact path="/login" component={LoginForm}/>
       <Route exact path="/home/userId/:userId" component={WelcomeComponent}/>
       <Route exact path="/edit/lists/:listId/:listName" component={ListComponent}/>
-      <Route exact path="/study/lists/:listId/:listName" component={StudySessionComponent}/>
+      <Route exact path="/study/lists/:listId/:listName" component={StudySessionComponentContainer}/>
       <Route exact path="/logout" component={LogoutForm}/>
     </div>
 </section></section>
@@ -93,7 +93,7 @@ this.props.appStore.getListsByUserId(this.props.match.params.userId);
     return(
 <div>
   <h1>Your Study Decks:</h1>
- {this.props.appStore.listIds.data ? this.props.appStore.listIds.data.map(this.eachListComponent) : null}
+ {this.props.appStore.listIds ? this.props.appStore.listIds.map(this.eachListComponent) : null}
 <FirstHOC doneLoading={this.state.doneLoading}/>
 </div>
     )
@@ -326,7 +326,7 @@ const redirect = this.state.redirect;
 const successText = this.state.successText;
 if (redirect) {
   return  <Redirect to={{
-    pathname: '/about',
+    pathname: '/login',
     state: { from: successText }
   }}/>
 }
@@ -500,7 +500,7 @@ return myWord;
       <div className="3u 12u$(xsmall)">EN</div>
       <div className="4u 12u$(xsmall)">Example Use</div>
       <div className="2u 12u$(xsmall)">Status</div></div>
-    {this.props.appStore.wordIds.data.map( (c, id) => (
+    {this.props.appStore.wordIds.map( (c, id) => (
       <Texting vn={c.vn} en={c.en} exampleUse={c.exampleUse} status={c.status} wordId={c.wordId} arrayid={id} key={id}/>
     ))}
        <button type="submit" className="button submit">Save</button>
@@ -513,7 +513,7 @@ return myWord;
   </form>
     );
     else {
-      return (<h2>Loading...</h2>)
+      return (<div className="loader">Loading...</div>)
     }
   }
 }));
@@ -863,6 +863,27 @@ const FooterSecondSection = props =>               <section>
 
 
 var imageName = require('./images/pic01.jpg')
+const StudySessionComponentContainer = inject('appStore')(observer(
+  class StudySessionComponentContainer extends React.Component {
+    constructor(props) {
+      super(props);
+    }
+      componentWillMount(){
+  this.props.appStore.doneLoading = false;
+  this.props.appStore.setCurrentListInfo(this.props.match.params.listName);
+  this.props.appStore.getStudyWordsByListId(this.props.match.params.listId);
+  }
+  componentWillUnmount () {
+  this.props.appStore.doneLoading = false;
+  }
+render() {
+  return (
+  <StudySessionComponentWithSpinner/>)
+}
+}
+))
+
+
 const StudySessionComponent = inject('appStore')(observer(
   class StudySessionComponent extends React.Component {
     constructor(props) {
@@ -874,14 +895,14 @@ const StudySessionComponent = inject('appStore')(observer(
       this.makeVisible = this.makeVisible.bind(this);
      this.state = {hidden: true, redirect: false, index: 0, successCounter: 0, failCounter: 0    }
     }
-      componentWillMount(){
-  this.props.appStore.doneLoading = false;
-  this.props.appStore.setCurrentListInfo(this.props.match.params.listName);
-  this.props.appStore.getWordsByListId(this.props.match.params.listId);
-  }
-  componentWillUnmount () {
-  this.props.appStore.doneLoading = false;
-  }
+  //     componentWillMount(){
+  // this.props.appStore.doneLoading = false;
+  // this.props.appStore.setCurrentListInfo(this.props.match.params.listName);
+  // this.props.appStore.getStudyWordsByListId(this.props.match.params.listId);
+  // }
+  // componentWillUnmount () {
+  // this.props.appStore.doneLoading = false;
+  // }
   toggleHidden () {
       this.setState((prevState, props) => ({
         hidden: !(prevState.hidden)
@@ -895,7 +916,7 @@ const StudySessionComponent = inject('appStore')(observer(
   incrementIndex() {
     this.setState((prevState, props) => ({
     index: prevState.index <= 9 ?  prevState.index + 1 : prevState.index
-})); 
+}));
 };
 decrementIndex() {this.setState((prevState, props) => ({
    index: prevState.index > 0 ? prevState.index - 1 : prevState.index
@@ -921,19 +942,19 @@ incrementFailCounter() {
             </div>
         )
       }
-      if (this.props.appStore.doneLoading)
+      if (true)
       return (
       <div>
-        {currentIndex} / 10
+        {currentIndex} / {this.props.appStore.studyWordIds.length}
       <pre>
         <code>
         <div className="spotlight">
   <div className="content testingcss">
-  <h2 className="align-center">{this.props.appStore.wordIds.data[this.state.index].vn}</h2>
+  <h2 className="align-center">{this.props.appStore.studyWordIds[this.state.index].vn}</h2>
   {this.state.hidden ? <i onClick={() => this.makeVisible()} className="fa fa-angle-double-down fa-5x align-center"></i> : null}
   <HiddenWords
-  en={this.props.appStore.wordIds.data[this.state.index].en} 
-  exampleUse={this.props.appStore.wordIds.data[this.state.index].exampleUse}
+  en={this.props.appStore.studyWordIds[this.state.index].en} 
+  exampleUse={this.props.appStore.studyWordIds[this.state.index].exampleUse}
   incrementSuccessCounter={this.incrementSuccessCounter}
   incrementIndex={this.incrementIndex}
   index={this.state.index}
@@ -997,6 +1018,7 @@ const HiddenWords = inject('appStore')(observer(
   const isEmpty = (prop) => (
     prop === null ||
     prop === undefined ||
+    prop[0] === undefined ||
     (prop.hasOwnProperty('length') && prop.length === 0) ||
     (prop.constructor === Object && Object.keys(prop).length === 0)
   );
@@ -1004,7 +1026,7 @@ const HiddenWords = inject('appStore')(observer(
   const LoadingHoc = (loadingProp) => (WrappedComponent) => {
     return inject('appStore')(observer( class LoadingHOC extends Component {
             render() {
-        return isEmpty(this.props.appStore[loadingProp].data)  ? <div className="loader"></div> : <WrappedComponent {...this.props}/>;
+        return isEmpty(this.props.appStore[loadingProp])  ? <div className="loader"></div> : <WrappedComponent {...this.props}/>;
       }
     }))
   }
@@ -1016,6 +1038,7 @@ const HiddenWords = inject('appStore')(observer(
   // }))
 
   const FirstHOC = LoadingHoc("listIds")(AddDeckComponent);
+  const StudySessionComponentWithSpinner = LoadingHoc("studyWordIds")(StudySessionComponent);
 
 
 export default BasicExample;

@@ -17,10 +17,8 @@ setRedirectReady: action(function() {
     this.redirectReady = true;
 }),
 allowEditListName: true,
-wordIds: [
-    {id: "1", name1: "Nam", name2: "I'm from the store", status: 0},
-    {id: "1", name1: "Nam", name2: "I'm from the store", status: 0},
-    ],
+wordIds: [],
+studyWordIds: [],
 setAllowEditListName: action(function() {
         this.allowEditListName = !this.allowEditListName;
     }), 
@@ -37,21 +35,24 @@ setUserId: action(function(userId) {
     this.userId = userId;
 }),
 updateListitem: action(function(wordArrayId, propName, propValue) {
-this.wordIds.data[wordArrayId][propName] = propValue;
+this.wordIds[wordArrayId][propName] = propValue;
 }),
 incrementStatus: action(function(wordArrayId) {
-if (this.wordIds.data[wordArrayId]["status"] < 10)
-this.wordIds.data[wordArrayId]["status"]++;
+if (this.wordIds[wordArrayId]["status"] < 10)
+this.wordIds[wordArrayId]["status"]++;
 }),
 decrementStatus: action(function(wordArrayId) {
-if (this.wordIds.data[wordArrayId]["status"] >= 0)
-this.wordIds.data[wordArrayId]["status"]--;
+if (this.wordIds[wordArrayId]["status"] >= 0)
+this.wordIds[wordArrayId]["status"]--;
 }),
 settopicoToken: action(function(topicoToken) {
     this.topicoToken = topicoToken;
 }),
 setWordIds: action(function(wordIds) {
     this.wordIds = wordIds;
+}),
+setStudyWordIds: action(function(wordIds) {
+    this.studyWordIds = wordIds;
 }),
 toggleIsLoggedInState: action(function () {
 this.isLoggedIn = !this.isLoggedIn;
@@ -69,9 +70,16 @@ getWordsByListId: action(function (listId) {
 var base = "http://localhost:3101/lists/"
 var ending = "/words"
 var url = base + listId + ending;
-axios.get(url).then(action(json => { this.setWordIds(json); })).then(() => this.doneLoading = true).catch(function(error) {
+axios.get(url).then(action(json => { this.setWordIds(json.data); })).then(() => this.doneLoading = true).catch(function(error) {
     console.log(error);
 })}),
+getStudyWordsByListId: action(function (listId) { 
+    var base = "http://localhost:3101/lists/"
+    var ending = "/words"
+    var url = base + listId + ending;
+    axios.get(url).then(action(json => { this.setStudyWordIds((json.data.filter((json) => (json.status !== 10 && json.vn && json.en)))); console.log(json.data.filter((json) => (json.status !== 10))) })).then(() => this.doneLoading = true).catch(function(error) {
+        console.log(error);
+    })}),
 createList: action(function (listName) {  
     var listNameObject = {listName: listName, userId: this.userId}
     var base = "http://localhost:3101/lists/"
@@ -80,7 +88,7 @@ createList: action(function (listName) {
     .then(action(json => { this.create_ten_wordIds(json.data.listId); this.getListsByUserId(this.userId); }))
 }),
 updateWordByWordId: action(function (wordArrayId) {  
-    var wordObject = this.wordIds.data[wordArrayId]
+    var wordObject = this.wordIds[wordArrayId]
     var base = "http://localhost:3101/words/"
     var url = base + wordObject.wordId;
     axios.post(url, wordObject);
@@ -95,7 +103,7 @@ getListsByUserId: action(function (userId) {
 var base = "http://localhost:3101/users/"
 var ending = "/lists"
 var url = base + userId + ending;
-axios.get(url).then(action( y =>{ this.setListIds(y); this.doneLoading = true }));
+axios.get(url).then(action( y =>{ this.setListIds(y.data); this.doneLoading = true }));
 }
 ),
 updateListByListId: action(function (listObject) {   
