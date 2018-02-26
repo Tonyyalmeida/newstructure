@@ -879,7 +879,7 @@ const StudySessionComponentContainer = inject('appStore')(observer(
   }
 render() {
   return (
-  <StudySessionComponentWithSpinner/>)
+  <StudySessionComponentWithSpinner listId={this.props.match.params.listId}/>)
 }
 }
 ))
@@ -938,10 +938,10 @@ incrementFailCounter() {
       if (currentIndex == this.props.appStore.studyWordIds.length)
       {
         return (
-        <DoneStudyComponent successCounter={this.props.successCounter}/>
+        <DoneStudyComponent listId={this.props.listId} successCounter={this.props.successCounter}/>
         )
       }
-      if (true)
+      else if (true)
       return (
       <div>
         {currentIndex} / {this.props.appStore.studyWordIds.length}
@@ -975,7 +975,15 @@ const DoneStudyComponent = inject('appStore')(observer(
     constructor(props) {
       super(props);
     }
+//  checkStudy() {
+//  const isDone = 100;
+//  return this.props.appStore.studywordIds.reduce((element, nextElement) => element + nextElement); 
+//  }
+ componentWillMount() {
+this.props.appStore.getWordsByListId(this.props.listId);
+ }
     render() {
+//  console.log(this.props.appStore.studyWordIds.reduce((element, nextElement) => element + nextElement));
     return(
       <div><h2>Done with this Deck</h2>
           <h3>You knew {this.props.successCounter} out of 10</h3>
@@ -1005,7 +1013,7 @@ const HiddenWords = inject('appStore')(observer(
     <div className="row uniform">
 <div className="6u align-center">
                     <li className="align-center"><a onClick={() => {this.props.incrementIndex(); 
-                      this.props.appStore.decrementStatus(this.props.index);
+                      this.props.appStore.decrementStudyStatus(this.props.index);
                       this.props.appStore.updateWordByWordId(this.props.index);
                       this.props.toggleHidden();
                     }
@@ -1013,7 +1021,7 @@ const HiddenWords = inject('appStore')(observer(
                       className="button big special icon fa-thumbs-down">Didn't know</a></li>          </div>
                  <div className="6u align-center">
                       <li className="align-center"><a onClick={() => {this.props.incrementIndex();
-                    this.props.appStore.incrementStatus(this.props.index);
+                    this.props.appStore.incrementStudyStatus(this.props.index);
                     this.props.appStore.updateWordByWordId(this.props.index);
                     this.props.incrementSuccessCounter();
                     this.props.toggleHidden();

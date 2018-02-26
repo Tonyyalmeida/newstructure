@@ -45,6 +45,14 @@ decrementStatus: action(function(wordArrayId) {
 if (this.wordIds[wordArrayId]["status"] >= 0)
 this.wordIds[wordArrayId]["status"]--;
 }),
+incrementStudyStatus: action(function(wordArrayId) {
+    if (this.studyWordIds[wordArrayId]["status"] < 10)
+    this.studyWordIds[wordArrayId]["status"]++;
+    }),
+decrementStudyStatus: action(function(wordArrayId) {
+    if (this.studyWordIds[wordArrayId]["status"] >= 0)
+    this.studyWordIds[wordArrayId]["status"]--;
+    }),
 settopicoToken: action(function(topicoToken) {
     this.topicoToken = topicoToken;
 }),
@@ -71,7 +79,7 @@ var base = "http://localhost:3101/lists/"
 var ending = "/words"
 var url = base + listId + ending;
 axios.get(url).then(action(json => { this.setWordIds(json.data); })).then(() => this.doneLoading = true).catch(function(error) {
-    console.log(error);
+    console.log(error.response);
 })}),
 getStudyWordsByListId: action(function (listId) { 
     var base = "http://localhost:3101/lists/"
@@ -88,7 +96,7 @@ createList: action(function (listName) {
     .then(action(json => { this.create_ten_wordIds(json.data.listId); this.getListsByUserId(this.userId); }))
 }),
 updateWordByWordId: action(function (wordArrayId) {  
-    var wordObject = this.wordIds[wordArrayId]
+    var wordObject = this.studyWordIds[wordArrayId];
     var base = "http://localhost:3101/words/"
     var url = base + wordObject.wordId;
     axios.post(url, wordObject);
