@@ -938,7 +938,7 @@ incrementFailCounter() {
       if (currentIndex == this.props.appStore.studyWordIds.length)
       {
         return (
-        <DoneStudyComponent listId={this.props.listId} successCounter={this.props.successCounter}/>
+        <DoneStudyComponent listId={this.props.listId} successCounter={this.state.successCounter}/>
         )
       }
       else if (true)
@@ -984,9 +984,10 @@ this.props.appStore.getWordsByListId(this.props.listId);
  }
     render() {
 //  console.log(this.props.appStore.studyWordIds.reduce((element, nextElement) => element + nextElement));
-    return(
+console.log(this.props.successCounter);
+return(
       <div><h2>Done with this Deck</h2>
-          <h3>You knew {this.props.successCounter} out of 10</h3>
+          <h3>Stats this session: You knew {this.props.successCounter} out of 10</h3>
             </div>)
 }}))
 
