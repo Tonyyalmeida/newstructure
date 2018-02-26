@@ -918,6 +918,10 @@ const StudySessionComponent = inject('appStore')(observer(
     this.setState((prevState, props) => ({
     index: prevState.index <= 9 ?  prevState.index + 1 : prevState.index
 }));
+if (this.state.index+1 == this.props.appStore.studyWordIds.length)
+{
+this.props.appStore.getFinalStatusByListId(this.props.listId);
+}
 };
 decrementIndex() {this.setState((prevState, props) => ({
    index: prevState.index > 0 ? prevState.index - 1 : prevState.index
@@ -935,10 +939,10 @@ incrementFailCounter() {
     render() {
       const currentIndex = this.state.index+1;
       const currentRealIndex = this.state.index;
-      if (currentIndex == this.props.appStore.studyWordIds.length)
+      if (currentIndex == this.props.appStore.studyWordIds.length+ 1)
       {
         return (
-        <DoneStudyComponent listId={this.props.listId} successCounter={this.state.successCounter}/>
+        <DoneStudyComponentWithSpinner listId={this.props.listId} successCounter={this.state.successCounter}/>
         )
       }
       else if (true)
@@ -975,19 +979,11 @@ const DoneStudyComponent = inject('appStore')(observer(
     constructor(props) {
       super(props);
     }
-//  checkStudy() {
-//  const isDone = 100;
-//  return this.props.appStore.studywordIds.reduce((element, nextElement) => element + nextElement); 
-//  }
- componentWillMount() {
-this.props.appStore.getWordsByListId(this.props.listId);
- }
     render() {
-//  console.log(this.props.appStore.studyWordIds.reduce((element, nextElement) => element + nextElement));
-console.log(this.props.successCounter);
 return(
       <div><h2>Done with this Deck</h2>
           <h3>Stats this session: You knew {this.props.successCounter} out of 10</h3>
+            <h4>{this.props.appStore.finalStatus}</h4>
             </div>)
 }}))
 
@@ -1047,6 +1043,7 @@ const HiddenWords = inject('appStore')(observer(
   const LoadingHoc = (loadingProp) => (WrappedComponent) => {
     return inject('appStore')(observer( class LoadingHOC extends Component {
             render() {
+              console.log(isEmpty(this.props.appStore[loadingProp]));
         return isEmpty(this.props.appStore[loadingProp])  ? <div className="loader"></div> : <WrappedComponent {...this.props}/>;
       }
     }))
@@ -1059,6 +1056,7 @@ const HiddenWords = inject('appStore')(observer(
   // }))
 
   const FirstHOC = LoadingHoc("listIds")(AddDeckComponent);
+  const DoneStudyComponentWithSpinner = LoadingHoc("finalStatus")(DoneStudyComponent);
   const StudySessionComponentWithSpinner = LoadingHoc("studyWordIds")(StudySessionComponent);
 
 

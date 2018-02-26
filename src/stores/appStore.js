@@ -18,6 +18,7 @@ setRedirectReady: action(function() {
 }),
 allowEditListName: true,
 wordIds: [],
+finalStatus: [],
 studyWordIds: [],
 setAllowEditListName: action(function() {
         this.allowEditListName = !this.allowEditListName;
@@ -50,7 +51,7 @@ incrementStudyStatus: action(function(wordArrayId) {
     this.studyWordIds[wordArrayId]["status"]++;
     }),
 decrementStudyStatus: action(function(wordArrayId) {
-    if (this.studyWordIds[wordArrayId]["status"] >= 0)
+    if (this.studyWordIds[wordArrayId]["status"] > 0)
     this.studyWordIds[wordArrayId]["status"]--;
     }),
 settopicoToken: action(function(topicoToken) {
@@ -81,6 +82,13 @@ var url = base + listId + ending;
 axios.get(url).then(action(json => { this.setWordIds(json.data); })).then(() => this.doneLoading = true).catch(function(error) {
     console.log(error.response);
 })}),
+getFinalStatusByListId: action(function (listId) {  
+    var base = "http://localhost:3101/lists/"
+    var ending = "/words"
+    var url = base + listId + ending;
+    axios.get(url).then(action(json => { this.setWordIds(json.data); })).then(() => this.finalStatus = [this.wordIds.reduce((sum, element) => sum + element.status, 0)]).then(() => this.doneLoading = true).catch(function(error) {
+        console.log(error.response);
+    })}),
 getStudyWordsByListId: action(function (listId) { 
     var base = "http://localhost:3101/lists/"
     var ending = "/words"
