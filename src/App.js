@@ -915,13 +915,12 @@ const StudySessionComponent = inject('appStore')(observer(
     }))   
 }
   incrementIndex() {
-    this.setState((prevState, props) => ({
-    index: prevState.index <= 9 ?  prevState.index + 1 : prevState.index
-}));
-if (this.state.index+1 == this.props.appStore.studyWordIds.length)
-{
-this.props.appStore.getFinalStatusByListId(this.props.listId);
-}
+  const currentIndex = this.state.index;
+  const newIndex = currentIndex + 1;
+  if (newIndex < this.props.appStore.studyWordIds.length)
+  {
+    this.setState({index: newIndex})
+  }
 };
 decrementIndex() {this.setState((prevState, props) => ({
    index: prevState.index > 0 ? prevState.index - 1 : prevState.index
@@ -939,7 +938,7 @@ incrementFailCounter() {
     render() {
       const currentIndex = this.state.index+1;
       const currentRealIndex = this.state.index;
-      if (currentIndex == this.props.appStore.studyWordIds.length+ 1)
+      if (this.props.appStore.renderDone)
       {
         return (
         <DoneStudyComponentWithSpinner listId={this.props.listId} successCounter={this.state.successCounter}/>
@@ -956,6 +955,7 @@ incrementFailCounter() {
   <h2 className="align-center">{this.props.appStore.studyWordIds[this.state.index].length ? this.props.appStore.studyWordIds[this.state.index].vn: null}</h2>
   {this.state.hidden ? <i onClick={() => this.makeVisible()} className="fa fa-angle-double-down fa-5x align-center"></i> : null}
   <HiddenWords
+  lastOne={this.state.index == this.props.appStore.studyWordIds.length - 1 ? true : false}
   en={this.props.appStore.studyWordIds[this.state.index].en} 
   exampleUse={this.props.appStore.studyWordIds[this.state.index].exampleUse}
   incrementSuccessCounter={this.incrementSuccessCounter}
@@ -1019,7 +1019,10 @@ const HiddenWords = inject('appStore')(observer(
                  <div className="6u align-center">
                       <li className="align-center"><a onClick={() => {this.props.incrementIndex();
                     this.props.appStore.incrementStudyStatus(this.props.index);
-                    this.props.appStore.updateWordByWordId(this.props.index);
+                    if (this.props.lastOne) {this.props.appStore.updateLastWordByWordId(this.props.index);}
+                    else {
+                    this.props.appStore.updateWordByWordId(this.props.index)
+                    }
                     this.props.incrementSuccessCounter();
                     this.props.toggleHidden();
                     }} className="button big icon fa-thumbs-up">Got it!</a></li>

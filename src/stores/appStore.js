@@ -19,6 +19,10 @@ setRedirectReady: action(function() {
 allowEditListName: true,
 wordIds: [],
 finalStatus: [],
+renderDone: false,
+setRenderDone: action(function (status) {
+this.renderDone = status;
+}),
 studyWordIds: [],
 setAllowEditListName: action(function() {
         this.allowEditListName = !this.allowEditListName;
@@ -86,7 +90,7 @@ getFinalStatusByListId: action(function (listId) {
     var base = "http://localhost:3101/lists/"
     var ending = "/words"
     var url = base + listId + ending;
-    axios.get(url).then(action(json => { this.setWordIds(json.data); })).then(() => this.finalStatus = [this.wordIds.reduce((sum, element) => sum + element.status, 0)]).then(() => this.doneLoading = true).catch(function(error) {
+    axios.get(url).then(action(json => {this.setRenderDone(false); this.setWordIds(json.data); })).then(() => this.finalStatus = [this.wordIds.reduce((sum, element) => sum + element.status, 0)]).then(() => this.doneLoading = true).then(() => this.setRenderDone(true)).catch(function(error) {
         console.log(error.response);
     })}),
 getStudyWordsByListId: action(function (listId) { 
@@ -108,6 +112,12 @@ updateWordByWordId: action(function (wordArrayId) {
     var base = "http://localhost:3101/words/"
     var url = base + wordObject.wordId;
     axios.post(url, wordObject);
+}),
+updateLastWordByWordId: action(function (wordArrayId) {  
+    var wordObject = this.studyWordIds[wordArrayId];
+    var base = "http://localhost:3101/words/"
+    var url = base + wordObject.wordId;
+    axios.post(url, wordObject).then(action ((returnedWordObject) => {this.getFinalStatusByListId(returnedWordObject.data.doc.listId)} ))
 }),
 create_ten_wordIds: action(function (listId) {  
     var base = "http://localhost:3101/words/newwords/"
