@@ -871,11 +871,13 @@ const StudySessionComponentContainer = inject('appStore')(observer(
     }
       componentWillMount(){
   this.props.appStore.doneLoading = false;
+  this.props.appStore.setRenderDone(false);
   this.props.appStore.setCurrentListInfo(this.props.match.params.listName);
   this.props.appStore.getStudyWordsByListId(this.props.match.params.listId);
   }
   componentWillUnmount () {
   this.props.appStore.doneLoading = false;
+  this.props.appStore.setRenderDone(false);
   }
 render() {
   return (
@@ -896,6 +898,7 @@ const StudySessionComponent = inject('appStore')(observer(
       this.makeVisible = this.makeVisible.bind(this);
      this.state = {hidden: true, redirect: false, index: 0, successCounter: 0, failCounter: 0    }
     }
+
   //     componentWillMount(){
   // this.props.appStore.doneLoading = false;
   // this.props.appStore.setCurrentListInfo(this.props.match.params.listName);
@@ -984,6 +987,7 @@ return(
       <div><h2>Done with this Deck</h2>
           <h3>Stats this session: You knew {this.props.successCounter} out of 10</h3>
             <h4>{this.props.appStore.finalStatus}</h4>
+      {this.props.appStore.finalStatus == 100 ? <h2>Congrats, you just finished this list!</h2>: null}  
             </div>)
 }}))
 
@@ -1011,7 +1015,10 @@ const HiddenWords = inject('appStore')(observer(
 <div className="6u align-center">
                     <li className="align-center"><a onClick={() => {this.props.incrementIndex(); 
                       this.props.appStore.decrementStudyStatus(this.props.index);
-                      this.props.appStore.updateWordByWordId(this.props.index);
+                      if (this.props.lastOne) {this.props.appStore.updateLastWordByWordId(this.props.index);}
+                    else {
+                    this.props.appStore.updateWordByWordId(this.props.index)
+                    }
                       this.props.toggleHidden();
                     }
                     } 
