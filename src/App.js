@@ -31,7 +31,7 @@ const BasicExample = () => (
       <Route exact path="/signup" component={SignupForm}/>
       <Route exact path="/login" component={LoginForm}/>
       <Route exact path="/home/userId/:userId" component={WelcomeComponent}/>
-      <Route exact path="/edit/lists/:listId/:listName" component={ListComponent}/>
+      <Route exact path="/edit/lists/:listId/:listName" component={ListComponentContainer}/>
       <Route exact path="/study/lists/:listId/:listName" component={StudySessionComponentContainer}/>
       <Route exact path="/logout" component={LogoutForm}/>
     </div>
@@ -82,6 +82,7 @@ const WelcomeComponent = inject('appStore')(observer(class WelcomeComponent exte
     super(props);
     this.state =  {doneLoading : false}
     this.eachListComponent = this.eachListComponent.bind(this);
+    this.eachClosedListComponent = this.eachClosedListComponent.bind(this);
 }
   componentWillMount() {
 this.props.appStore.getListsByUserId(this.props.match.params.userId);    
@@ -89,16 +90,42 @@ this.props.appStore.getListsByUserId(this.props.match.params.userId);
   eachListComponent(x, id) {
     return (<WelcomeListComponent x={x} id={id} key={id}/>)
   }
+  eachClosedListComponent(x, id) {
+    return (<ClosedListComponent x={x} id={id} key={id}/>)
+  }
   render() {
+  const openLists = this.props.appStore.listIds.filter((list) => list.listStatus !== 1);
+  const closedLists = this.props.appStore.listIds.filter((list) => list.listStatus == 1);
     return(
 <div>
   <h1>Your Study Decks:</h1>
- {this.props.appStore.listIds ? this.props.appStore.listIds.map(this.eachListComponent) : null}
+ {openLists ? openLists.map(this.eachListComponent) : null}
+ <hr/>
+ {closedLists ? closedLists.map(this.eachClosedListComponent) : null}
+ 
 <FirstHOC doneLoading={this.state.doneLoading}/>
 </div>
     )
   }}))
-
+  //render function define two objects
+  //return two differet components (e.g. eachDoneComponent)
+  const ClosedListComponent = inject('appStore')(observer(class ClosedListComponent extends React.Component {
+    constructor(props) {
+      super(props);
+    }
+    render() {
+    return (<div className="row uniform"key={this.props.id}>
+    <div className="5u 12u$(xsmall)">
+    <Link to={`/edit/lists/` + this.props.x.listId + "/" + this.props.x.listName}> 
+             {this.props.x["listName"]}</Link>
+    </div>
+    <div className="5u 12u$(xsmall)">
+    <ul className="icons">
+             <li><Link to={`/edit/lists/` + this.props.x.listId + "/" + this.props.x.listName} className="icon alt fa-list"><span className="label">Clear</span></Link></li>
+           </ul>
+    </div>
+             </div>)}
+          }))
 
   //smart component, like adddeckcomponent with conditional rendering (but its a list componetn? -> OK I guess)
   const WelcomeListComponent = inject('appStore')(observer(class WelcomeListComponent extends React.Component {
@@ -137,12 +164,12 @@ this.props.appStore.getListsByUserId(this.props.match.params.userId);
     return (<div className="row uniform"key={this.props.id}>
     <div className="5u 12u$(xsmall)">
     <Link to={`/edit/lists/` + this.props.x.listId + "/" + this.props.x.listName}> 
-             {this.props.x["listName"]}</Link>
+             {this.props.x["listName"]} {this.props.x["listStatus"]}</Link>
     </div>
     <div className="5u 12u$(xsmall)">
     <ul className="icons">
-             <li><Link to={`/study/lists/` + this.props.x.listId + "/" + this.props.x.listName} className="icon alt fa-play"><span className="label">Clear</span></Link></li> 
              <li><Link to={`/edit/lists/` + this.props.x.listId + "/" + this.props.x.listName} className="icon alt fa-list"><span className="label">Clear</span></Link></li>
+             <li><Link to={`/study/lists/` + this.props.x.listId + "/" + this.props.x.listName} className="icon alt fa-play"><span className="label">Clear</span></Link></li> 
            </ul>
     </div>
              </div>)}
@@ -441,6 +468,25 @@ const RealApp = inject('appStore')(observer(class RealApp extends React.Componen
   }
 ));
 
+const ListComponentContainer = inject('appStore')(observer(
+  class ListComponentContainer extends React.Component {
+    constructor(props) {
+      super(props);
+    }
+    componentWillMount(){
+      this.props.appStore.doneLoading = false;
+      this.props.appStore.setCurrentListInfo(this.props.match.params.listName)
+      this.props.appStore.getWordsByListId(this.props.match.params.listId);
+      this.props.appStore.getListStatusByListId(this.props.match.params.listId);
+      }
+  render () {
+    return(
+      <ListComponentWithSpinner/>
+    ) 
+  }
+  
+  }))
+
 
 const ListComponent = inject('appStore')(observer(
 class ListComponent extends React.Component {
@@ -452,9 +498,11 @@ class ListComponent extends React.Component {
    this.state = {redirect: false}
   }
     componentWillMount(){
-this.props.appStore.doneLoading = false;
-this.props.appStore.setCurrentListInfo(this.props.match.params.listName)
-this.props.appStore.getWordsByListId(this.props.match.params.listId);
+// this.props.appStore.doneLoading = false;
+// this.props.appStore.setCurrentListInfo(this.props.match.params.listName)
+// this.props.appStore.getWordsByListId(this.props.match.params.listId);
+// this.props.appStore.getListStatusByListId(this.props.match.params.listId);
+//should actually be a promise.all
 }
 handleReset() {
 this.setState({redirect: true});
@@ -464,9 +512,10 @@ this.props.appStore.doneLoading = false;
 }
 handleSubmit(event) {
   event.preventDefault();
+  this.props.appStore.updateListStatusByListId(this.props.appStore.currentListId[0]);
   var wordArray = [];
-  [0, 3, 6, 9, 12, 15, 18, 21, 24, 27].forEach((a) => {wordArray.push(this.createWord(event, a))});
-  axios.post('http://localhost:3101/words/words', wordArray).then(() => this.props.appStore.getWordsByListId(this.props.match.params.listId))
+  [1, 4, 7, 10, 13, 16, 19, 22, 25, 28].forEach((a) => {wordArray.push(this.createWord(event, a))});
+  axios.post('http://localhost:3101/words/words', wordArray).then(() => this.props.appStore.getWordsByListId(this.props.appStore.currentListId[0].listId))
 };
 createWord(event, index) {
 const createWordFactory = ({ vn, en, exampleUse, wordId, status }) => ({
@@ -485,7 +534,6 @@ const myWord = createWordFactory({
 });
 return myWord;
 }
-
   render() {
     if (this.state.redirect) {
       return  <Redirect to={{
@@ -493,8 +541,11 @@ return myWord;
   }}/>  
   }
     if (this.props.appStore.doneLoading)
+   { console.log(this.props.appStore.currentListId[0].listStatus);
     return (
-     <form onReset={()=> this.handleReset()} onSubmit={(e) => this.handleSubmit(e)}>
+     <form onReset={()=> this.handleReset()} onSubmit={(e) => {this.handleSubmit(e)}}>
+      <input type="checkbox" id="subscribeNews" name="subscribe" value="false" onChange={()=> this.props.appStore.currentListId[0].listStatus = !this.props.appStore.currentListId[0].listStatus} checked={this.props.appStore.currentListId[0].listStatus == 0 || this.props.appStore.currentListId[0].listStatus === undefined ? false : true}/>
+    <label htmlFor="subscribeNews">Done Studying this List?</label>
        <div className="row uniform">
              <div className="3u 12u$(xsmall)">VN</div>
       <div className="3u 12u$(xsmall)">EN</div>
@@ -506,13 +557,14 @@ return myWord;
        <button type="submit" className="button submit">Save</button>
        <button type="reset" className="button">Cancel</button>
   <ul className="icons">
-      <li><Link to={`/study/lists/` + this.props.match.params.listId + "/" + this.props.match.params.listName} 
+      <li><Link to={`/study/lists/` + this.props.appStore.currentListId.listId + "/" + this.props.appStore.currentListId.listName} 
       className="icon alt fa-play">
       <span className="label">Clear</span></Link></li> 
   </ul>
   </form>
     );
-    else {
+
+  } else {
       return (<div className="loader">Loading...</div>)
     }
   }
@@ -666,7 +718,8 @@ const AppNavbar= inject('appStore')(observer(class AppNavbar extends Component {
   )};
   render() {
   const root = this.props.match.params.root;
-  if (this.props.history.location.pathname.split("/")[0] === "edit")
+  console.log(this.props.history.location.pathname.split("/"));
+  if (this.props.history.location.pathname.split("/")[1] === "edit")
   return this.renderLists();
   else return this.renderNormal();
 };}));
@@ -941,7 +994,9 @@ incrementFailCounter() {
     render() {
       const currentIndex = this.state.index+1;
       const currentRealIndex = this.state.index;
-      if (this.props.appStore.renderDone)
+      if (this.props.appStore.studyWordIds === "false")
+      return (<h2>This list is done</h2>) 
+      else if (this.props.appStore.renderDone)
       {
         return (
         <DoneStudyComponentWithSpinner listId={this.props.listId} successCounter={this.state.successCounter}/>
@@ -985,7 +1040,7 @@ const DoneStudyComponent = inject('appStore')(observer(
     render() {
 return(
       <div><h2>Done with this Deck</h2>
-          <h3>Stats this session: You knew {this.props.successCounter} out of 10</h3>
+          <h3>Stats this session: You knew {this.props.successCounter} out of {this.props.appStore.studyWordIds.length}</h3>
             <h4>{this.props.appStore.finalStatus}</h4>
       {this.props.appStore.finalStatus == 100 ? <h2>Congrats, you just finished this list!</h2>: null}  
             </div>)
@@ -1051,7 +1106,7 @@ const HiddenWords = inject('appStore')(observer(
   );
   
   const LoadingHoc = (loadingProp) => (WrappedComponent) => {
-    return inject('appStore')(observer( class LoadingHOC extends Component {
+    return inject('appStore')(observer( class LoadingHoc extends Component {
             render() {
               console.log(isEmpty(this.props.appStore[loadingProp]));
         return isEmpty(this.props.appStore[loadingProp])  ? <div className="loader"></div> : <WrappedComponent {...this.props}/>;
@@ -1059,6 +1114,13 @@ const HiddenWords = inject('appStore')(observer(
     }))
   }
 
+  const DoubleHoc = (loadingProp1, loadingProp2) => (WrappedComponent) => {
+    return inject('appStore')(observer( class DoubleHoc extends Component {
+            render() {
+        return isEmpty(this.props.appStore[loadingProp1])  || isEmpty(this.props.appStore[loadingProp2])  ? <div className="loader"></div> : <WrappedComponent {...this.props}/>;
+      }
+    }))
+  }
   // const First = inject('appStore')(observer(class First extends Component {
   //   render() {
   //     return (<h2>I am the First {this.props.doneLoading.toString()}</h2>)
@@ -1066,6 +1128,7 @@ const HiddenWords = inject('appStore')(observer(
   // }))
 
   const FirstHOC = LoadingHoc("listIds")(AddDeckComponent);
+  const ListComponentWithSpinner = DoubleHoc("wordIds", "currentListId" )(ListComponent);
   const DoneStudyComponentWithSpinner = LoadingHoc("finalStatus")(DoneStudyComponent);
   const StudySessionComponentWithSpinner = LoadingHoc("studyWordIds")(StudySessionComponent);
 
