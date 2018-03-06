@@ -1117,10 +1117,25 @@ const HiddenWords = inject('appStore')(observer(
   const DoubleHoc = (loadingProp1, loadingProp2) => (WrappedComponent) => {
     return inject('appStore')(observer( class DoubleHoc extends Component {
             render() {
-        return isEmpty(this.props.appStore[loadingProp1])  || isEmpty(this.props.appStore[loadingProp2])  ? <div className="loader"></div> : <WrappedComponent {...this.props}/>;
+        // if (isEmpty(this.props.appStore[loadingProp1])  || isEmpty(this.props.appStore[loadingProp2]))  
+        // {
+        //    if (this.props.appStore.doneLoading) {
+        //   return <EmptyComponent/>
+        //   }
+        //    else {
+        //    return <div className="loader"></div>
+        //   }}
+        //   else {
+        //   return <WrappedComponent {...this.props}/>
+        //   }
+      
+        // }?
+    return this.props.appStore.doneLoading ?  ((isEmpty(this.props.appStore[loadingProp1])  || isEmpty(this.props.appStore[loadingProp2])) ? <EmptyComponent/> : <WrappedComponent {...this.props}/>) : <div className="loader"></div>
       }
     }))
   }
+
+  const EmptyComponent = props => <h2>This is empty</h2>
   // const First = inject('appStore')(observer(class First extends Component {
   //   render() {
   //     return (<h2>I am the First {this.props.doneLoading.toString()}</h2>)
