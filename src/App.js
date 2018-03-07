@@ -352,6 +352,7 @@ const StudySessionComponentContainer = inject('appStore')(observer(
   this.props.appStore.doneLoading = false;
   this.props.appStore.setRenderDone(false);
   this.props.appStore.setCurrentListInfo(this.props.match.params.listName);
+  console.log(this.props.match);
   this.props.appStore.getStudyWordsByListId(this.props.match.params.listId);
   }
   componentWillUnmount () {
@@ -550,7 +551,7 @@ const HiddenWords = inject('appStore')(observer(
 
   const EmptyComponent = props => <div><h2>Oops, looks like something went wrong.</h2><h3>Please try again later</h3></div>
 
-  const ListComponentWithSpinner = DoubleHoc("wordIds", "currentListId" )(ListComponent);
+  //onst ListComponentWithSpinner = DoubleHoc("wordIds", "currentListId" )(ListComponent);
   const DoneStudyComponentWithSpinner = LoadingHoc("finalStatus")(DoneStudyComponent);
   const StudySessionComponentWithSpinner = LoadingHoc("studyWordIds")(StudySessionComponent);
 

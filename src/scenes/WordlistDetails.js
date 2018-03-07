@@ -66,7 +66,7 @@ const WordlistDetailsComponent = inject('appStore')(observer(
          <button type="submit" className="button submit">Save</button>
          <button type="reset" className="button">Cancel</button>
     <ul className="icons">
-        <li><Link to={`/study/lists/` + this.props.appStore.currentListId.listId + "/" + this.props.appStore.currentListId.listName} 
+        <li><Link to={`/study/lists/` + this.props.appStore.currentListId[0].listId + "/" + this.props.appStore.currentListId[0].listName} 
         className="icon alt fa-play">
         <span className="label">Clear</span></Link></li> 
     </ul>

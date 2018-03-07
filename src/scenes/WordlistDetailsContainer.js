@@ -10,9 +10,11 @@ const WordlistDetailsContainer = inject('appStore')(observer(
     }
     componentWillMount(){
       this.props.appStore.doneLoading = false;
-      this.props.appStore.setCurrentListInfo(this.props.match.params.listName)
-      this.props.appStore.getWordsByListId(this.props.match.params.listId);
-      this.props.appStore.getListStatusByListId(this.props.match.params.listId);
+      this.props.appStore.setCurrentListInfo(this.props.match.params.listId);
+      this.props.appStore.getNeededInfo(this.props.match.params.listId);
+      console.log('here?')
+   //   this.props.appStore.getWordsByListId(this.props.match.params.listId);
+      // this.props.appStore.getListStatusByListId(this.props.match.params.listId);
       }
   render () {
     return(
