@@ -19,6 +19,7 @@ import LogoutForm from "./scenes/LogoutForm";
 import LoginForm from "./scenes/LoginForm";
 import SignupForm from "./scenes/SignupForm";
 import AllListsOverview from "./scenes/AllListsOverview";
+import WordlistDetailsContainer from "./scenes/WordlistDetailsContainer";
 
 const stores = { appStore };
 
@@ -38,7 +39,7 @@ const BasicExample = () => (
       <Route exact path="/signup" component={SignupForm}/>
       <Route exact path="/login" component={LoginForm}/>
       <Route exact path="/home/userId/:userId" component={AllListsOverview}/>
-      <Route exact path="/edit/lists/:listId/:listName" component={ListComponentContainer}/>
+      <Route exact path="/edit/lists/:listId/:listName" component={WordlistDetailsContainer}/>
       <Route exact path="/study/lists/:listId/:listName" component={StudySessionComponentContainer}/>
       <Route exact path="/logout" component={LogoutForm}/>
     </div>
@@ -50,153 +51,107 @@ const BasicExample = () => (
   </Provider>
 )
 
-const ListComponentContainer = inject('appStore')(observer(
-  class ListComponentContainer extends React.Component {
-    constructor(props) {
-      super(props);
-    }
-    componentWillMount(){
-      this.props.appStore.doneLoading = false;
-      this.props.appStore.setCurrentListInfo(this.props.match.params.listName)
-      this.props.appStore.getWordsByListId(this.props.match.params.listId);
-      this.props.appStore.getListStatusByListId(this.props.match.params.listId);
-      }
-  render () {
-    return(
-      <ListComponentWithSpinner/>
-    ) 
-  }
-  
-  }))
+// const ListComponentContainer = inject('appStore')(observer(
+//   class ListComponentContainer extends React.Component {
+//     constructor(props) {
+//       super(props);
+//     }
+//     componentWillMount(){
+//       this.props.appStore.doneLoading = false;
+//       this.props.appStore.setCurrentListInfo(this.props.match.params.listName)
+//       this.props.appStore.getWordsByListId(this.props.match.params.listId);
+//       this.props.appStore.getListStatusByListId(this.props.match.params.listId);
+//       }
+//   render () {
+//     return(
+//       <ListComponentWithSpinner/>
+//     ) 
+//   }
+//   }))
 
 
-const ListComponent = inject('appStore')(observer(
-class ListComponent extends React.Component {
-  constructor(props) {
-    super(props);
-    this.createWord = this.createWord.bind(this);
-    this.handeSubmit = this.handleSubmit.bind(this);
-    this.handleReset = this.handleReset.bind(this);
-   this.state = {redirect: false}
-  }
-    componentWillMount(){
+// const ListComponent = inject('appStore')(observer(
+// class ListComponent extends React.Component {
+//   constructor(props) {
+//     super(props);
+//     this.createWord = this.createWord.bind(this);
+//     this.handeSubmit = this.handleSubmit.bind(this);
+//     this.handleReset = this.handleReset.bind(this);
+//    this.state = {redirect: false}
+//   }
+//     componentWillMount(){
+// // this.props.appStore.doneLoading = false;
+// // this.props.appStore.setCurrentListInfo(this.props.match.params.listName)
+// // this.props.appStore.getWordsByListId(this.props.match.params.listId);
+// // this.props.appStore.getListStatusByListId(this.props.match.params.listId);
+// //should actually be a promise.all
+// }
+// handleReset() {
+// this.setState({redirect: true});
+// }
+// componentWillUnmount () {
 // this.props.appStore.doneLoading = false;
-// this.props.appStore.setCurrentListInfo(this.props.match.params.listName)
-// this.props.appStore.getWordsByListId(this.props.match.params.listId);
-// this.props.appStore.getListStatusByListId(this.props.match.params.listId);
-//should actually be a promise.all
-}
-handleReset() {
-this.setState({redirect: true});
-}
-componentWillUnmount () {
-this.props.appStore.doneLoading = false;
-}
-handleSubmit(event) {
-  event.preventDefault();
-  this.props.appStore.updateListStatusByListId(this.props.appStore.currentListId[0]);
-  var wordArray = [];
-  [1, 4, 7, 10, 13, 16, 19, 22, 25, 28].forEach((a) => {wordArray.push(this.createWord(event, a))});
-  axios.post('http://localhost:3101/words/words', wordArray).then(() => this.props.appStore.getWordsByListId(this.props.appStore.currentListId[0].listId))
-};
-createWord(event, index) {
-const createWordFactory = ({ vn, en, exampleUse, wordId, status }) => ({
-  vn,
-  en,
-  exampleUse,
-  wordId,
-  status
-});
-const myWord = createWordFactory({
-  vn: event.target[index].value, 
-  en:  event.target[index+1].value, 
-  exampleUse:  event.target[index+2].value, 
-  wordId: event.target[index].getAttribute('wordid'), 
-  status: event.target[index].getAttribute('status'),
-});
-return myWord;
-}
-  render() {
-    if (this.state.redirect) {
-      return  <Redirect to={{
-    pathname: '/home/' + "userId/" + this.props.appStore.userId,
-  }}/>  
-  }
-    if (this.props.appStore.doneLoading)
-   { console.log(this.props.appStore.currentListId[0].listStatus);
-    return (
-     <form onReset={()=> this.handleReset()} onSubmit={(e) => {this.handleSubmit(e)}}>
-      <input type="checkbox" id="subscribeNews" name="subscribe" value="false" onChange={()=> this.props.appStore.currentListId[0].listStatus = !this.props.appStore.currentListId[0].listStatus} checked={this.props.appStore.currentListId[0].listStatus == 0 || this.props.appStore.currentListId[0].listStatus === undefined ? false : true}/>
-    <label htmlFor="subscribeNews">Done Studying this List?</label>
-       <div className="row uniform">
-             <div className="3u 12u$(xsmall)">VN</div>
-      <div className="3u 12u$(xsmall)">EN</div>
-      <div className="4u 12u$(xsmall)">Example Use</div>
-      <div className="2u 12u$(xsmall)">Status</div></div>
-    {this.props.appStore.wordIds.map( (c, id) => (
-      <Texting vn={c.vn} en={c.en} exampleUse={c.exampleUse} status={c.status} wordId={c.wordId} arrayid={id} key={id}/>
-    ))}
-       <button type="submit" className="button submit">Save</button>
-       <button type="reset" className="button">Cancel</button>
-  <ul className="icons">
-      <li><Link to={`/study/lists/` + this.props.appStore.currentListId.listId + "/" + this.props.appStore.currentListId.listName} 
-      className="icon alt fa-play">
-      <span className="label">Clear</span></Link></li> 
-  </ul>
-  </form>
-    );
+// }
+// handleSubmit(event) {
+//   event.preventDefault();
+//   this.props.appStore.updateListStatusByListId(this.props.appStore.currentListId[0]);
+//   var wordArray = [];
+//   [1, 4, 7, 10, 13, 16, 19, 22, 25, 28].forEach((a) => {wordArray.push(this.createWord(event, a))});
+//   axios.post('http://localhost:3101/words/words', wordArray).then(() => this.props.appStore.getWordsByListId(this.props.appStore.currentListId[0].listId))
+// };
+// createWord(event, index) {
+// const createWordFactory = ({ vn, en, exampleUse, wordId, status }) => ({
+//   vn,
+//   en,
+//   exampleUse,
+//   wordId,
+//   status
+// });
+// const myWord = createWordFactory({
+//   vn: event.target[index].value, 
+//   en:  event.target[index+1].value, 
+//   exampleUse:  event.target[index+2].value, 
+//   wordId: event.target[index].getAttribute('wordid'), 
+//   status: event.target[index].getAttribute('status'),
+// });
+// return myWord;
+// }
+//   render() {
+//     if (this.state.redirect) {
+//       return  <Redirect to={{
+//     pathname: '/home/' + "userId/" + this.props.appStore.userId,
+//   }}/>  
+//   }
+//     if (this.props.appStore.doneLoading)
+//    { console.log(this.props.appStore.currentListId[0].listStatus);
+//     return (
+//      <form onReset={()=> this.handleReset()} onSubmit={(e) => {this.handleSubmit(e)}}>
+//       <input type="checkbox" id="subscribeNews" name="subscribe" value="false" onChange={()=> this.props.appStore.currentListId[0].listStatus = !this.props.appStore.currentListId[0].listStatus} checked={this.props.appStore.currentListId[0].listStatus == 0 || this.props.appStore.currentListId[0].listStatus === undefined ? false : true}/>
+//     <label htmlFor="subscribeNews">Done Studying this List?</label>
+//        <div className="row uniform">
+//              <div className="3u 12u$(xsmall)">VN</div>
+//       <div className="3u 12u$(xsmall)">EN</div>
+//       <div className="4u 12u$(xsmall)">Example Use</div>
+//       <div className="2u 12u$(xsmall)">Status</div></div>
+//     {this.props.appStore.wordIds.map( (c, id) => (
+//       <Texting vn={c.vn} en={c.en} exampleUse={c.exampleUse} status={c.status} wordId={c.wordId} arrayid={id} key={id}/>
+//     ))}
+//        <button type="submit" className="button submit">Save</button>
+//        <button type="reset" className="button">Cancel</button>
+//   <ul className="icons">
+//       <li><Link to={`/study/lists/` + this.props.appStore.currentListId.listId + "/" + this.props.appStore.currentListId.listName} 
+//       className="icon alt fa-play">
+//       <span className="label">Clear</span></Link></li> 
+//   </ul>
+//   </form>
+//     );
 
-  } else {
-      return (<div className="loader">Loading...</div>)
-    }
-  }
-}));
+//   } else {
+//       return (<div className="loader">Loading...</div>)
+//     }
+//   }
+// }));
 
-const Texting = inject('appStore')(observer(
-  class Texting extends Component {
-  render() {
-    return(
-<div className="row uniform">
-    <div className="3u 12u$(xsmall)">
-       <input type="text" status={this.props.status} wordid={this.props.wordId}  name="demo-name" id="demo-name" defaultValue={this.props.vn} placeholder="VN" />
-    </div>
-    <div className="3u 12u$(xsmall)">
-     <input type="text" name="demo-name" id="demo-name" defaultValue={this.props.en} placeholder="EN" />
-    </div>
-    <div className="4u 12u$(xsmall)">
-    <input type="text" name="demo-name" id="demo-name" defaultValue={this.props.exampleUse} rows="1"></input>
-  </div>
-  <div className="2u 12u$(xsmall)">
-  <ul className="icons">
-    <li><a onClick={(e) => this.props.appStore.decrementStatus(e.target.getAttribute("arrayid"))} arrayid={this.props.arrayid} className="icon fa-minus-circle"></a></li>
-    <li>{this.props.status}</li>
-		<li><a onClick={(e) => this.props.appStore.incrementStatus(e.target.getAttribute("arrayid"))} arrayid={this.props.arrayid} className="icon fa-plus-circle"></a></li>
-  </ul>
-  </div>
-  </div>
-)}}))
-
-
-const Recipe = props => 
-<div className="row uniform">
-<div class="1u 12u$(small)">
-												</div>
-    <div className="3u 12u$(xsmall)">
-       <input type="text" name="demo-name" id="demo-name" defaultValue={props.props.name} placeholder="Name" />
-    </div>
-    <div className="3u 12u$(xsmall)">
-     <input type="text" name="demo-name" id="demo-name" defaultValue={props.props.name2} placeholder="Name" />
-    </div>
-    <div className="4u 12u$">
-    <input type="text" name="demo-name" id="demo-name" placeholder="Description" rows="1"></input>
-  </div>
-  <ul class="icons">
-													<li><a href="#" class="icon alt fa-remove"><span class="label">Clear</span></a></li>
-                        </ul>
-</div>
-// check icon, clear a row
-
-//Recipe will have a button
 
 const Wrapper = props => <div id="wrapper">{props.children}</div>
 
@@ -588,30 +543,12 @@ const HiddenWords = inject('appStore')(observer(
   const DoubleHoc = (loadingProp1, loadingProp2) => (WrappedComponent) => {
     return inject('appStore')(observer( class DoubleHoc extends Component {
             render() {
-        // if (isEmpty(this.props.appStore[loadingProp1])  || isEmpty(this.props.appStore[loadingProp2]))  
-        // {
-        //    if (this.props.appStore.doneLoading) {
-        //   return <EmptyComponent/>
-        //   }
-        //    else {
-        //    return <div className="loader"></div>
-        //   }}
-        //   else {
-        //   return <WrappedComponent {...this.props}/>
-        //   }
-      
-        // }?
     return this.props.appStore.doneLoading ?  ((isEmpty(this.props.appStore[loadingProp1])  || isEmpty(this.props.appStore[loadingProp2])) ? <EmptyComponent/> : <WrappedComponent {...this.props}/>) : <div className="loader"></div>
       }
     }))
   }
 
   const EmptyComponent = props => <div><h2>Oops, looks like something went wrong.</h2><h3>Please try again later</h3></div>
-  // const First = inject('appStore')(observer(class First extends Component {
-  //   render() {
-  //     return (<h2>I am the First {this.props.doneLoading.toString()}</h2>)
-  //   }
-  // }))
 
   const ListComponentWithSpinner = DoubleHoc("wordIds", "currentListId" )(ListComponent);
   const DoneStudyComponentWithSpinner = LoadingHoc("finalStatus")(DoneStudyComponent);
