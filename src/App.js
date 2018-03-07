@@ -20,7 +20,7 @@ const BasicExample = () => (
         <Router>
         <Wrapper>
         <LoginNavbar/>
-       <Header/>
+       <Route exact path="/" component={Header}/>
        <Route path="/edit/:root/:ignore" component={AppNavbar}/>
        <Route path="/study/:root/:ignore" component={AppNavbar}/>
      <div id="main">
@@ -164,7 +164,7 @@ this.props.appStore.getListsByUserId(this.props.match.params.userId);
     return (<div className="row uniform"key={this.props.id}>
     <div className="5u 12u$(xsmall)">
     <Link to={`/edit/lists/` + this.props.x.listId + "/" + this.props.x.listName}> 
-             {this.props.x["listName"]} {this.props.x["listStatus"]}</Link>
+             {this.props.x["listName"]}</Link>
     </div>
     <div className="5u 12u$(xsmall)">
     <ul className="icons">
@@ -1135,7 +1135,7 @@ const HiddenWords = inject('appStore')(observer(
     }))
   }
 
-  const EmptyComponent = props => <h2>This is empty</h2>
+  const EmptyComponent = props => <div><h2>Oops, looks like something went wrong.</h2><h3>Please try again later</h3></div>
   // const First = inject('appStore')(observer(class First extends Component {
   //   render() {
   //     return (<h2>I am the First {this.props.doneLoading.toString()}</h2>)
