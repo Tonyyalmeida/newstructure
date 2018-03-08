@@ -1,12 +1,12 @@
 import React from 'react';
 import { observer, inject } from 'mobx-react';
 import { LoadingDoubleHoc }  from "../services/LoadingDoubleHoc";
-import { Link,  Redirect} from 'react-router-dom';
+import { Link,  Redirect, withRouter} from 'react-router-dom';
 import axios from 'axios';
 import WordDetailsRow from "../components/WordDetailsRow";
 
-const WordlistDetailsComponent = inject('appStore')(observer(
-  class WordlistDetailsComponent extends React.Component {
+const WordlistDetailsComponentOriginal = inject('appStore')(observer(
+  class WordlistDetailsComponentOriginal extends React.Component {
     constructor(props) {
       super(props);
       this.createWord = this.createWord.bind(this);
@@ -76,7 +76,7 @@ const WordlistDetailsComponent = inject('appStore')(observer(
     }
   }));
 
-
+const WordlistDetailsComponent = withRouter(WordlistDetailsComponentOriginal);
 const WordlistDetails = LoadingDoubleHoc("wordIds", "currentListId" )(WordlistDetailsComponent);
 
 
