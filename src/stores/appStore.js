@@ -80,6 +80,13 @@ setFalseLoggedInState: action(function () {
 consoleMe: action(function (e) {
 console.log();
 }),
+getNeededInfo: action (function (listId) {
+    var base = "http://localhost:3101/lists/"
+    var ending = "/words"
+    var url = base + listId + ending;
+    axios.get(url).then(action(json => { this.setWordIds(json.data); })).then(() => this.getListStatusByListId (listId) ).then(() => this.doneLoading = true).catch(function(error) {
+        console.log(error.response);
+    })}), 
 getWordsByListId: action(function (listId) {  
 var base = "http://localhost:3101/lists/"
 var ending = "/words"
@@ -104,7 +111,7 @@ getStudyWordsByListId: action(function (listId) {
     var base = "http://localhost:3101/lists/"
     var ending = "/words"
     var url = base + listId + ending;
-    axios.get(url).then(action(json => { this.setStudyWordIds((json.data.filter((json) => (json.status !== 10 && json.vn && json.en)))) })).then(this.setStudyWordIds([{tata: "sa"}])).then(() => {this.doneLoading = true; console.log(this.studyWordIds)}).catch(function(error) {
+    axios.get(url).then(action(json => { this.setStudyWordIds((json.data.filter((json) => (json.status !== 10 && json.vn && json.en)))) })).then(() => {this.doneLoading = true; console.log(this.studyWordIds)}).catch(function(error) {
         console.log(error);
     })}),
 createList: action(function (listName) {  
