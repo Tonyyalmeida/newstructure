@@ -1,10 +1,25 @@
 import React from 'react';
 
-const Footer = props => <footer id="footer">
-<FooterFirstSection/>
-<FooterSecondSection/>
-<p className="copyright">&copy; 2018 - Made in Saigon</p>
-</footer>
+// const Footer = props => <footer id="footer">
+// <FooterFirstSection/>
+// <FooterSecondSection/>
+// <p className="copyright">&copy; 2018 - Made in Saigon</p>
+// </footer>
+
+
+const Footer = () => (
+  <footer className="footer">
+    <div className="container">
+      <div className="content has-text-centered">
+        <p>
+          Built on <strong>React</strong> with <strong>Express, MobX and Bulma</strong> in Saigon <a href="https://github.com/aaronklaser">Aaron Klaser</a>
+          <br />
+          Copyright 2018
+        </p>
+      </div>
+    </div>
+  </footer>
+)
 
 const FooterFirstSection = props =>              <section>
 <h2>About Us</h2>

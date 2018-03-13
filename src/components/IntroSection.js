@@ -20,16 +20,6 @@ const IntroSection = inject('appStore')(observer(class IntroSection extends Reac
   }
 ));
 
-const Intro = props => <section id="intro" className="main">
-<div className="spotlight">
-  <div className="content">
-    <header className="major">
-      <h2>Motivation</h2>
-    </header>
-    <p>Studying Flashcards is already challinging enough - we don't need complex and bloated apps to do so. We believe that learning flashcards should be a simple and enjoyable experience </p>
-  </div>
-  <span className="icon major style1 fa-code"></span>
-</div>
-</section>
+const Intro = props => <h2>sds</h2>
 
 export default IntroSection

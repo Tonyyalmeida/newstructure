@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import './css/main.css';
+//import './css/main.css';
 import {
   BrowserRouter as Router,
   Route,
@@ -12,7 +12,7 @@ import axios from 'axios';
 import { Provider, observer, inject } from 'mobx-react';
 import appStore from './stores/appStore';
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group'; // ES6
-import Header from './components/Header';
+import {Header} from './components/Header';
 import Footer from "./components/Footer";
 import IntroSection from "./components/IntroSection";
 import LogoutForm from "./scenes/LogoutForm";
@@ -23,7 +23,8 @@ import WordlistDetailsContainer from "./scenes/WordlistDetailsContainer";
 import LoginNavBar from "./components/LoginNavBar";
 import AppNavBar from "./components/AppNavBar";
 import ScrollToTopOnMount from "./services/ScrollToTopOnMount";
-import StudySessionComponentContainer  from "./scenes/StudySessionComponentContainer" 
+import StudySessionComponentContainer  from "./scenes/StudySessionComponentContainer";
+import 'bulma/css/bulma.css'
 
 
 const stores = { appStore };
@@ -31,7 +32,7 @@ const stores = { appStore };
 const BasicExample = () => (
   <Provider {...stores}>
         <Router>
-        <Wrapper>
+        <div>
         <LoginNavBar/>
        <Route exact path="/" component={Header}/>
        <Route path="/edit/:root/:ignore" component={AppNavBar}/>
@@ -51,12 +52,12 @@ const BasicExample = () => (
 </section></section>
 </div>
 <Footer/>
- </Wrapper>
+</div>
    </Router>
   </Provider>
 )
 
-const Wrapper = props => <div id="wrapper">{props.children}</div>
+//const Wrapper = props => <div id="wrapper">{props.children}</div>
 
 
 export default BasicExample;

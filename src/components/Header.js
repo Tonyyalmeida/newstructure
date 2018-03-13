@@ -1,9 +1,17 @@
 import React from 'react';
 
-const Header = props => <header id="header" className="alt">
-<span className="logo"><img src="images/logo.svg" alt="" /></span>
-<h1>Topico</h1>
-<p>Just another simple Flashcard App</p>
-</header>
+export const Header = props => (
+<section className="hero is-medium is-primary is-bold">
+<div className="hero-body">
+  <div className="container">
+    <h1 className="title">
+      Topico
+    </h1>
+    <h2 className="subtitle">
+      Just another Flashcard app
+    </h2>
+  </div>
+</div>
+</section>)
 
 export default Header
