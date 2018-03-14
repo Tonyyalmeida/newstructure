@@ -72,8 +72,8 @@ const userId = this.props.appStore.userId;
 return (
   <section className="section is medium">
   <div className="container is large">
-  <div class="columns">
-  <div class="column is-half is-offset-one-quarter">
+  <div className="columns">
+  <div className="column is-half is-offset-one-quarter">
   <h1 className="title">Login</h1>
   <form onSubmit={this.handleSubmit}>
     <div className="field">

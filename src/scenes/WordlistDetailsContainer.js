@@ -13,6 +13,10 @@ const WordlistDetailsContainer = inject('appStore')(observer(
       this.props.appStore.setCurrentListInfo(this.props.match.params.listId);
       this.props.appStore.getNeededInfo(this.props.match.params.listId);
       }
+      componentWillUpdate(nextProps, nextState) {
+        this.props.appStore.doneLoading = false;
+        this.props.appStore.getNeededInfo(this.props.match.params.listId);
+      }
   render () {
     return(
       <WordlistDetails/>

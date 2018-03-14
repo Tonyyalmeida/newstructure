@@ -1,5 +1,4 @@
-import React, { Component } from 'react';
-import { Provider, observer, inject } from 'mobx-react';
+import React from 'react';
 import { Redirect} from 'react-router-dom';
 import axios from 'axios';
 

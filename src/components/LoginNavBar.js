@@ -65,11 +65,12 @@ class Heading123 extends React.Component {
 
   render() {
     return (
-      <nav className="navbar"
-          aria-label="main navigation"
-          style={{
-            borderBottom: 'solid 1px #dddddd',
-          }}>
+      <nav className="navbar is-light"
+      style={{
+        borderBottom: 'solid 1px #dddddd',
+      }}    
+      aria-label="main navigation"
+          >
         <div className="navbar-brand">
           <Link className="navbar-item" to="/">
             <img
@@ -166,7 +167,7 @@ class HeadingLoggedIn extends React.Component {
 
   render() {
     return (
-      <nav className="navbar"
+      <nav className="navbar is-light"
           aria-label="main navigation"
           style={{
             borderBottom: 'solid 1px #dddddd',

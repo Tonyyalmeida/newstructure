@@ -84,6 +84,7 @@ getNeededInfo: action (function (listId) {
     var base = "http://localhost:3101/lists/"
     var ending = "/words"
     var url = base + listId + ending;
+    this.doneLoading = false;
     axios.get(url).then(action(json => { this.setWordIds(json.data); })).then(() => this.getListStatusByListId (listId) ).then(() => this.doneLoading = true).catch(function(error) {
         console.log(error.response);
     })}), 

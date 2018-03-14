@@ -13,27 +13,49 @@ const AllListsOverview = inject('appStore')(observer(class AllListsOverview exte
     this.eachClosedListComponent = this.eachClosedListComponent.bind(this);
 }
   componentWillMount() {
+    console.log(this.props.match.params.userId);
 this.props.appStore.getListsByUserId(this.props.match.params.userId);    
   }
   eachListComponent(x, id) {
     return (<WordlistRow x={x} id={id} key={id}/>)
   }
   eachClosedListComponent(x, id) {
-    return (<WordlistRowClosed x={x} id={id} key={id}/>)
+    return (<WordlistRow x={x} id={id} key={id}/>)
   }
   render() {
   const openLists = this.props.appStore.listIds.filter((list) => list.listStatus !== 1);
   const closedLists = this.props.appStore.listIds.filter((list) => list.listStatus == 1);
-    return(
-<div>
-  <h1>Your Study Decks:</h1>
- {openLists ? openLists.map(this.eachListComponent) : null}
- <hr/>
- {closedLists ? closedLists.map(this.eachClosedListComponent) : null}
+return (
+<aside className="menu">
+          <p className="menu-label">
+          <br/>
+           Open Word Deckjkjs
+          </p>
+          <ul className="menu-list">
+          {openLists ? openLists.map(this.eachListComponent) : null}
+          </ul>
+            <p className="menu-label">
+            Closed Word Decks
+           </p>
+          <ul className="menu-list">
+          {closedLists ? closedLists.map(this.eachClosedListComponent) : null}
+          </ul>
+        </aside>
+        )
+
+
+//   const openLists = this.props.appStore.listIds.filter((list) => list.listStatus !== 1);
+//   const closedLists = this.props.appStore.listIds.filter((list) => list.listStatus == 1);
+//     return(
+// <div>
+//   <h1>Your Study Decks:</h1>
+//  {openLists ? openLists.map(this.eachListComponent) : null}
+//  <hr/>
+//  {closedLists ? closedLists.map(this.eachClosedListComponent) : null}
  
-<CreateWordlistHOC doneLoading={this.state.doneLoading}/>
-</div>
-    )
+// <CreateWordlistHOC doneLoading={this.state.doneLoading}/>
+// </div>
+//    )
   }}))
 
 
