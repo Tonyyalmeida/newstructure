@@ -29,7 +29,7 @@ return (
 <aside className="menu">
           <p className="menu-label">
           <br/>
-           Open Word Deckjkjs
+           Open Word Decks
           </p>
           <ul className="menu-list">
           {openLists ? openLists.map(this.eachListComponent) : null}

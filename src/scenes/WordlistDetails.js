@@ -52,25 +52,54 @@ const WordlistDetailsComponentOriginal = inject('appStore')(observer(
     }
       else {
       return (
+        <div>
+        <nav className="breadcrumb" aria-label="breadcrumbs">
+  <ul>
+    <li className="is-active"><a style={{fontWeight:"800"}}aria-current="page">{this.props.appStore.currentListId[0].listName}</a></li>
+    <li><a aria-current="page">Edit</a></li>
+  </ul>
+</nav>
+<div className="tile is-ancestor">
+  <div className="tile is-vertical is-8">
+    <div className="tile">
+      <div className="tile is-parent is-vertical">
+        <article className="tile is-child notification is-primary">
+    <div className="button is-light">
+    <span className="icon is-small">
+      <i className="fas fa-edit"></i>
+    </span>  
+  </div>  <span>Edit List Name</span>
+  <br/>  <br/>
+  <div className="field">
+  <input id="switchMedium" type="checkbox" name="switchMedium" className="switch is-medium"/>
+  <label htmlFor="switchMedium">Status: Open</label>
+</div>
+        </article>
+        </div></div></div></div>
+
+     
        <form onReset={()=> this.handleReset()} onSubmit={(e) => {this.handleSubmit(e)}}>
-        <input type="checkbox" id="subscribeNews" name="subscribe" value="false" onChange={()=> this.props.appStore.currentListId[0].listStatus = !this.props.appStore.currentListId[0].listStatus} checked={this.props.appStore.currentListId[0].listStatus == 0 || this.props.appStore.currentListId[0].listStatus === undefined ? false : true}/>
-      <label htmlFor="subscribeNews">Done Studying this List?</label>
-         <div className="row uniform">
-               <div className="3u 12u$(xsmall)">VN</div>
-        <div className="3u 12u$(xsmall)">EN</div>
-        <div className="4u 12u$(xsmall)">Example Use</div>
-        <div className="2u 12u$(xsmall)">Status</div></div>
+       <div className="columns">
+               <div className="column is-one-quarter">VN</div>
+        <div className="column is-one-quarter">EN</div>
+        <div className="column is-one-quarter">Example Use</div>
+        <div className="column is-one-quarter">Status</div>
+        </div>
       {this.props.appStore.wordIds.map( (c, id) => (
         <WordDetailsRow vn={c.vn} en={c.en} exampleUse={c.exampleUse} status={c.status} wordId={c.wordId} arrayid={id} key={id}/>
       ))}
          <button type="submit" className="button submit">Save</button>
          <button type="reset" className="button">Cancel</button>
     <ul className="icons">
-        <li><Link to={`/study/lists/` + this.props.appStore.currentListId[0].listId + "/" + this.props.appStore.currentListId[0].listName} 
+        <li><Link 
+        to={"/home/userId/" + this.props.appStore.userId + "/lists/" + this.props.appStore.currentListId[0].listId + "study"}
         className="icon alt fa-play">
-        <span className="label">Clear</span></Link></li> 
+        <span className="label"></span></Link></li> 
     </ul>
     </form>
+
+
+    </div>
       );
     }
     }

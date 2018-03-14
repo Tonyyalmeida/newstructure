@@ -18,7 +18,8 @@ import WordlistDetailsContainer from "./scenes/WordlistDetailsContainer";
 import LoginNavBar from "./components/LoginNavBar";
 import AppNavBar from "./components/AppNavBar";
 import StudySessionComponentContainer  from "./scenes/StudySessionComponentContainer";
-import 'bulma/css/bulma.css'
+import 'bulma/css/bulma.css';
+import 'bulma-switch/dist/bulma-switch.min.css';
 
 
 const stores = { appStore };
@@ -31,10 +32,11 @@ const BasicExample = () => (
        <Route exact path="/" component={Header}/>
        <Route path="/edit/:root/:ignore" component={AppNavBar}/>
        <Route path="/study/:root/:ignore" component={AppNavBar}/>
-     <section>
+     <section className="section">
      <div className="container">
   <div className="columns">
   <div className="column is-3">
+  {/* //style={{borderRight: "1px solid rgb(221, 221, 221)"}}> */}
   <Route path="/home/userId/:userId" component={AllListsOverview}/>
         </div>
         <div className="column is-1" />
@@ -45,7 +47,7 @@ const BasicExample = () => (
       <Route exact path="/login" component={LoginForm}/>
    {/* //   <Route exact path="/home/userId/:userId" component={AllListsOverview}/> */}
       <Route exact path="/home/userId/:userId/lists/:listId/edit" component={WordlistDetailsContainer}/>
-      <Route exact path="/study/lists/:listId/:listName" component={StudySessionComponentContainer}/>
+      <Route exact path="/home/userId/:userId/lists/:listId/study" component={StudySessionComponentContainer}/>
       <Route exact path="/logout" component={LogoutForm}/>
     </div>
         </div>
