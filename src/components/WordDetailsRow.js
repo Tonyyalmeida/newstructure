@@ -7,19 +7,22 @@ const WordDetailsRow = inject('appStore')(observer(
   render() {
     return(
 <div className="columns">
-    <div className="column is-one-quarter">
+    <div className="column is-2">
     <div className="field"><div className="control">
        <input className="input" type="text" status={this.props.status} wordid={this.props.wordId}  name="demo-name" id="demo-name" defaultValue={this.props.vn} placeholder="VN" />
     </div></div>
     
     </div>
-    <div className="column is-one-quarter">
+    <div className="column is-2">
      <input className="input" type="text" name="demo-name" id="demo-name" defaultValue={this.props.en} placeholder="EN" />
     </div>
-    <div className="column is-one-quarter">
+    <div className="column is-3">
     <input className="input" type="text" name="demo-name" id="demo-name" defaultValue={this.props.exampleUse} rows="1"></input>
   </div>
-  <div className="column is-one-quarter">
+  <div className="column is-3">
+    <input className="input" type="text" name="demo-name" id="demo-name" defaultValue={"hallo"} rows="1"></input>
+  </div>
+  <div className="column is-2">
   <span className="icon">
   <i className="fas fa-minus-circle"></i>
 </span><span>{this.props.status}</span>

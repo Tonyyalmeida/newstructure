@@ -80,10 +80,11 @@ const WordlistDetailsComponentOriginal = inject('appStore')(observer(
      
        <form onReset={()=> this.handleReset()} onSubmit={(e) => {this.handleSubmit(e)}}>
        <div className="columns">
-               <div className="column is-one-quarter">VN</div>
-        <div className="column is-one-quarter">EN</div>
-        <div className="column is-one-quarter">Example Use</div>
-        <div className="column is-one-quarter">Status</div>
+               <div className="column is-2">VN</div>
+        <div className="column is-2">EN</div>
+        <div className="column is-3">Example Use</div>
+        <div className="column is-3">Example Use</div>
+        <div className="column is-2">Status</div>
         </div>
       {this.props.appStore.wordIds.map( (c, id) => (
         <WordDetailsRow vn={c.vn} en={c.en} exampleUse={c.exampleUse} status={c.status} wordId={c.wordId} arrayid={id} key={id}/>

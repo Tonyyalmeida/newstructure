@@ -39,8 +39,8 @@ const BasicExample = () => (
   {/* //style={{borderRight: "1px solid rgb(221, 221, 221)"}}> */}
   <Route path="/home/userId/:userId" component={AllListsOverview}/>
         </div>
-        <div className="column is-1" />
-        <div className="column is-9">
+  
+        <div className="column is-10">
         <div>
       <Route exact path="/" component={IntroSection}/>
       <Route exact path="/signup" component={SignupForm}/>
