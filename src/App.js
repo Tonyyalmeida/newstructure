@@ -33,15 +33,12 @@ const BasicExample = () => (
        <Route path="/edit/:root/:ignore" component={AppNavBar}/>
        <Route path="/study/:root/:ignore" component={AppNavBar}/>
      <section className="section">
-     <div className="container">
   <div className="columns">
-  <div className="column is-3">
+  <div className="column is-2">
   {/* //style={{borderRight: "1px solid rgb(221, 221, 221)"}}> */}
   <Route path="/home/userId/:userId" component={AllListsOverview}/>
         </div>
-  
         <div className="column is-10">
-        <div>
       <Route exact path="/" component={IntroSection}/>
       <Route exact path="/signup" component={SignupForm}/>
       <Route exact path="/login" component={LoginForm}/>
@@ -49,9 +46,8 @@ const BasicExample = () => (
       <Route exact path="/home/userId/:userId/lists/:listId/edit" component={WordlistDetailsContainer}/>
       <Route exact path="/home/userId/:userId/lists/:listId/study" component={StudySessionComponentContainer}/>
       <Route exact path="/logout" component={LogoutForm}/>
-    </div>
         </div>
-        </div></div>
+        </div>
 </section>
 <Footer/>
 </div>

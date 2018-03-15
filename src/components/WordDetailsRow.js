@@ -11,24 +11,20 @@ const WordDetailsRow = inject('appStore')(observer(
     <div className="field"><div className="control">
        <input className="input" type="text" status={this.props.status} wordid={this.props.wordId}  name="demo-name" id="demo-name" defaultValue={this.props.vn} placeholder="VN" />
     </div></div>
-    
     </div>
+    <div className="column is-3">
+    <input className="input" type="text" name="demo-name" id="demo-name" defaultValue={this.props.exampleUseEn ? this.props.exampleUseEn : this.props.exampleUse } rows="1"></input>
+  </div>
     <div className="column is-2">
      <input className="input" type="text" name="demo-name" id="demo-name" defaultValue={this.props.en} placeholder="EN" />
     </div>
-    <div className="column is-3">
-    <input className="input" type="text" name="demo-name" id="demo-name" defaultValue={this.props.exampleUse} rows="1"></input>
+  <div className="column is-3">
+    <input className="input" type="text" name="demo-name" id="demo-name" defaultValue={this.props.exampleUseVn ? this.props.exampleUseVn : "hallo"} rows="1"></input>
   </div>
   <div className="column is-3">
-    <input className="input" type="text" name="demo-name" id="demo-name" defaultValue={"hallo"} rows="1"></input>
-  </div>
-  <div className="column is-2">
-  <span className="icon">
-  <i className="fas fa-minus-circle"></i>
-</span><span>{this.props.status}</span>
-<span className="icon">
-  <i className="fas fa-plus-circle"></i>
-</span>
+  <a arrayid={this.props.arrayid}  onClick={(e) => this.props.appStore.decrementStatus(e.target.getAttribute("arrayid"))}className="button is-danger is-rounded">-</a>
+<span><a className="button is-text">{this.props.status}</a></span>
+<a arrayid={this.props.arrayid}  onClick={(e) => this.props.appStore.incrementStatus(e.target.getAttribute("arrayid"))}className="button is-success  is-rounded">+</a>
 
   {/* <ul className="icons">
     <li><a onClick={(e) => this.props.appStore.decrementStatus(e.target.getAttribute("arrayid"))} arrayid={this.props.arrayid} className="icon fa-minus-circle"></a></li>

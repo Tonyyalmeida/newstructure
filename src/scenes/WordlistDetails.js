@@ -24,7 +24,8 @@ const WordlistDetailsComponentOriginal = inject('appStore')(observer(
     event.preventDefault();
     this.props.appStore.updateListStatusByListId(this.props.appStore.currentListId[0]);
     var wordArray = [];
-    [1, 4, 7, 10, 13, 16, 19, 22, 25, 28].forEach((a) => {wordArray.push(this.createWord(event, a))});
+    console.log(event.target[0].value,event.target[0].getAttribute('wordid'),  event.target[0].getAttribute('status'), event.target[1].value,  event.target[2].value,event.target[3].value );
+    [0, 4, 8, 12, 16, 20, 24, 28, 32, 36].forEach((a) => {wordArray.push(this.createWord(event, a))});
     axios.post('http://localhost:3101/words/words', wordArray).then(() => this.props.appStore.getWordsByListId(this.props.appStore.currentListId[0].listId))
   };
   createWord(event, index) {
@@ -67,30 +68,42 @@ const WordlistDetailsComponentOriginal = inject('appStore')(observer(
     <div className="button is-light">
     <span className="icon is-small">
       <i className="fas fa-edit"></i>
-    </span>  
-  </div>  <span>Edit List Name</span>
+    </span>    <span>Edit List Name</span>
+  </div>  <br/><br/>
+  <Link to={"/home/userId/" + this.props.appStore.userId +  "/lists/" + this.props.appStore.currentListId[0].listId + "/study"} className="button is-light">
+    <span className="icon is-small">
+      <i className="fas fa-play"></i>
+    </span><span>Study this List</span>
+  </Link> 
   <br/>  <br/>
   <div className="field">
-  <input id="switchMedium" type="checkbox" name="switchMedium" className="switch is-medium"/>
-  <label htmlFor="switchMedium">Status: Open</label>
+  <input id="switchColorWarning" onChange={()=> this.props.appStore.currentListId[0].listStatus = !this.props.appStore.currentListId[0].listStatus} 
+  checked={this.props.appStore.currentListId[0].listStatus == 0 || this.props.appStore.currentListId[0].listStatus === undefined ? false : true} type="checkbox" name="switchColorWarning" className="switch is-medium is-dark"/>
+  <label htmlFor="switchColorWarning">Status: {this.props.appStore.currentListId[0].listStatus == 0 || this.props.appStore.currentListId[0].listStatus === undefined ?"Closed":  "Open" } </label>
 </div>
         </article>
-        </div></div></div></div>
+        </div></div></div></div><hr/>
 
-     
+    
        <form onReset={()=> this.handleReset()} onSubmit={(e) => {this.handleSubmit(e)}}>
        <div className="columns">
                <div className="column is-2">VN</div>
+               <div className="column is-3">Example VN</div>
         <div className="column is-2">EN</div>
-        <div className="column is-3">Example Use</div>
-        <div className="column is-3">Example Use</div>
+        <div className="column is-3">Example EN</div>
         <div className="column is-2">Status</div>
         </div>
       {this.props.appStore.wordIds.map( (c, id) => (
-        <WordDetailsRow vn={c.vn} en={c.en} exampleUse={c.exampleUse} status={c.status} wordId={c.wordId} arrayid={id} key={id}/>
+        <WordDetailsRow vn={c.vn} en={c.en} exampleUseVn={c.exampleUseVn ? c.exampleUseVn : "hallota" } exampleUseEn={c.exampleUseEn ? c.exampleUseEn : c.exampleUse } status={c.status} wordId={c.wordId} arrayid={id} key={id}/>
       ))}
-         <button type="submit" className="button submit">Save</button>
-         <button type="reset" className="button">Cancel</button>
+      <div className="field is-grouped">
+  <p className="control">
+  <button type="submit" className="button submit is-link">Save</button>
+  </p>
+  <p className="control">
+  <button type="reset" className="button is-light">Cancel</button>
+  </p>
+  </div>
     <ul className="icons">
         <li><Link 
         to={"/home/userId/" + this.props.appStore.userId + "/lists/" + this.props.appStore.currentListId[0].listId + "study"}

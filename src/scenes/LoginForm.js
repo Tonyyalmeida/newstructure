@@ -73,7 +73,7 @@ return (
   <section className="section is medium">
   <div className="container is large">
   <div className="columns">
-  <div className="column is-half is-offset-one-quarter">
+  <div className="column is-half">
   <h1 className="title">Login</h1>
   <form onSubmit={this.handleSubmit}>
     <div className="field">
