@@ -12,11 +12,22 @@ const WordlistDetailsComponentOriginal = inject('appStore')(observer(
       this.createWord = this.createWord.bind(this);
       this.handeSubmit = this.handleSubmit.bind(this);
       this.handleReset = this.handleReset.bind(this);
-     this.state = {redirect: false}
+     this.state = {redirect: false, editing: false}
     }
   handleReset() {
   this.setState({redirect: true});
+  }  
+  toggleNav = () => {
+    this.setState(prevState => ({
+      editing: !prevState.editing
+    }))
   }
+  // componentWillMount () {
+  // this.props.appStore.getNeededInfo(this.props.listId);
+  //   }
+    componentWillUpdate () {
+      this.props.appStore.currenListId = [];
+        }
   componentWillUnmount () {
   this.props.appStore.doneLoading = false;
   }
@@ -56,7 +67,7 @@ const WordlistDetailsComponentOriginal = inject('appStore')(observer(
         <div>
         <nav className="breadcrumb" aria-label="breadcrumbs">
   <ul>
-    <li className="is-active"><a style={{fontWeight:"800"}}aria-current="page">{this.props.appStore.currentListId[0].listName}</a></li>
+    <li className="is-active"><a style={{fontWeight:"800"}} aria-current="page">{this.props.appStore.currentListId[0] ? this.props.appStore.currentListId[0].listName : "placeholder"}</a></li>
     <li><a aria-current="page">Edit</a></li>
   </ul>
 </nav>
@@ -65,11 +76,18 @@ const WordlistDetailsComponentOriginal = inject('appStore')(observer(
     <div className="tile">
       <div className="tile is-parent is-vertical">
         <article className="tile is-child notification is-primary">
-    <div className="button is-light">
+      {this.state.editing ? (  <form onSubmit={(e) => {e.preventDefault();this.props.appStore.updateListNameByListId(this.props.appStore.currentListId[0].listId, e.target[0].value.toString(0));this.toggleNav ()}} >  <div className="field"><div className="control">
+       <input className="input" type="text" name="demo-name1" id="demo-name1" defaultValue={this.props.appStore.currentListId[0].listName} placeholder="VN" />
+    </div>  <div className="field is-grouped"> <p className="control">
+  <button type="submit" className="button submit is-link">Save</button></p><p className="control">
+  <button type="reset" className="button is-light">Cancel</button>
+  </p></div>
+    </div> </form>  ): <div onClick={this.toggleNav} className="button is-light">
     <span className="icon is-small">
       <i className="fas fa-edit"></i>
     </span>    <span>Edit List Name</span>
-  </div>  <br/><br/>
+      </div>  }
+  <br/><br/>
   <Link to={"/home/userId/" + this.props.appStore.userId +  "/lists/" + this.props.appStore.currentListId[0].listId + "/study"} className="button is-light">
     <span className="icon is-small">
       <i className="fas fa-play"></i>

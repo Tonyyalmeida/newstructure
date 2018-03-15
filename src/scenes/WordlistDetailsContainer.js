@@ -9,16 +9,20 @@ const WordlistDetailsContainer = inject('appStore')(observer(
       super(props);
     }
     componentWillMount(){
-   //   this.props.appStore.doneLoading = true;
+      this.props.appStore.currenListId = [];
+      this.props.appStore.doneLoading = false;
       this.props.appStore.setCurrentListInfo(this.props.match.params.listId);
       this.props.appStore.getNeededInfo(this.props.match.params.listId);
-      }
+    }
       componentWillUpdate(nextProps, nextState) {
-        this.props.appStore.getNeededInfo(this.props.match.params.listId);
+        this.props.appStore.currenListId = [];
+        this.props.appStore.doneLoading = false;
+        this.props.appStore.setCurrentListInfo(nextProps.match.params.listId);
+        this.props.appStore.getNeededInfo(nextProps.match.params.listId);
       }
   render () {
     return(
-      <WordlistDetails/>
+      <WordlistDetails wordId={this.props.match.params.listId}/>
     ) 
   }
   }))

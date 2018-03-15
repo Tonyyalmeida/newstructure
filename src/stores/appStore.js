@@ -13,6 +13,7 @@ doneLoading: false,
 listIds: [],
 currentListId: [],
 currentListInfo: "",
+currentListName: "",
 redirectReady: false,
 setRedirectReady: action(function() {
     this.redirectReady = true;
@@ -24,6 +25,9 @@ renderDone: false,
 setRenderDone: action(function (status) {
 this.renderDone = status;
 }),
+setCurrentListName: action(function (listName) {
+    this.currentListName = listName;
+    }),
 studyWordIds: [],
 setAllowEditListName: action(function() {
         this.allowEditListName = !this.allowEditListName;
@@ -33,6 +37,9 @@ setUserName: action(function(username) {
 }),
 setCurrentListInfo: action(function(currentListInfo) {
     this.currentListInfo = currentListInfo;
+}),
+setCurrentListId: action(function(currentListId) {
+    this.currentListId = currentListId;
 }),
 setListIds: action(function(listIds) {
     this.listIds = listIds;
@@ -98,7 +105,7 @@ axios.get(url).then(action(json => { this.setWordIds(json.data); })).then(() => 
 getListStatusByListId: action(function (listId) {  
     var base = "http://localhost:3101/lists/status/"
     var url = base + listId
-    axios.get(url).then(action(json => { this.currentListId = json.data[0]})).then(() => this.doneLoading = true).catch(function(error) {
+    axios.get(url).then(action(json => {this.setCurrentListId(json.data[0]); this.setCurrentListName(json.data[0][0].listName)})).then(() => this.doneLoading = true).catch(function(error) {
         console.log(error.response);
     })}),
 getFinalStatusByListId: action(function (listId) {  
@@ -150,9 +157,18 @@ axios.get(url).then(action( y =>{ this.setListIds(y.data); this.doneLoading = tr
 updateListStatusByListId: action(function (listObject) {   
     var base = "http://localhost:3101/lists/status/";
     var url = base + listObject.listId;
-    axios.post(url, listObject).then(action( y => {this.getListsByUserId(this.userId)}));
+    axios.post(url, listObject).then(action( y => {this.getListStatusByListId(listObject.listId)}));   //this.getListsByUserId(this.userId)
     }
     ),
+    updateListNameByListId: action(function (listId, listName) {
+        let listObject1 = Object.assign({}, this.currentListId[0]);
+        listObject1.listName = listName;
+        console.log(listObject1.listName);
+        var base = "http://localhost:3101/lists/status/";
+        var url = base + listId;
+        axios.post(url, listObject1).then(action( y => {this.getListStatusByListId(listObject1.listId)}));   //this.getListsByUserId(this.userId)
+        }
+        ),
 updateListByListId: action(function (listObject) {   
     var base = "http://localhost:3101/lists/"
     var ending = "/words"
