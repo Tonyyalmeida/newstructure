@@ -23,8 +23,8 @@ this.props.appStore.getListsByUserId(this.props.match.params.userId);
     return (<WordlistRow x={x} id={id} key={id}/>)
   }
   render() {
-  const openLists = this.props.appStore.listIds.filter((list) => list.listStatus !== 1);
-  const closedLists = this.props.appStore.listIds.filter((list) => list.listStatus == 1);
+  const openLists = this.props.appStore.listIds.filter((list) => list.listStatus == "undefined" || list.listStatus == 0 || list.listStatus == '0' );
+  const closedLists = this.props.appStore.listIds.filter((list) => list.listStatus == "1");
 return (
 <aside className="menu">
           <p className="menu-label">

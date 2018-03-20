@@ -157,8 +157,15 @@ axios.get(url).then(action( y =>{ this.setListIds(y.data); this.doneLoading = tr
 updateListStatusByListId: action(function (listObject) {   
     var base = "http://localhost:3101/lists/status/";
     var url = base + listObject.listId;
+    this.doneLoading = false;
     axios.post(url, listObject).then(action( y => {this.getListStatusByListId(listObject.listId)}));   //this.getListsByUserId(this.userId)
-    }
+    }),
+    updateListStatusByListIdAndRefresh: action(function (listObject) {   
+        var base = "http://localhost:3101/lists/status/";
+        var url = base + listObject.listId;
+        this.doneLoading = false;
+        axios.post(url, listObject).then(action( y => {this.getListStatusByListId(listObject.listId)})).then(() => this.getListsByUserId(this.userId));   //this.getListsByUserId(this.userId)
+        }
     ),
     updateListNameByListId: action(function (listId, listName) {
         let listObject1 = Object.assign({}, this.currentListId[0]);

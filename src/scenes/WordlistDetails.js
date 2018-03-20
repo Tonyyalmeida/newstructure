@@ -76,7 +76,7 @@ const WordlistDetailsComponentOriginal = inject('appStore')(observer(
     <div className="tile">
       <div className="tile is-parent is-vertical">
         <article className="tile is-child notification is-primary">
-      {this.state.editing ? (  <form onSubmit={(e) => {e.preventDefault();this.props.appStore.updateListNameByListId(this.props.appStore.currentListId[0].listId, e.target[0].value.toString(0));this.toggleNav ()}} >  <div className="field"><div className="control">
+      {this.state.editing ? (  <form onSubmit={(e) => {e.preventDefault(); this.props.appStore.currentListId[0].listName = e.target[0].value; this.props.appStore.updateListNameByListId(this.props.appStore.currentListId[0].listId, e.target[0].value.toString(0));this.toggleNav ()}} >  <div className="field"><div className="control">
        <input className="input" type="text" name="demo-name1" id="demo-name1" defaultValue={this.props.appStore.currentListId[0].listName} placeholder="VN" />
     </div>  <div className="field is-grouped"> <p className="control">
   <button type="submit" className="button submit is-link">Save</button></p><p className="control">
@@ -95,9 +95,10 @@ const WordlistDetailsComponentOriginal = inject('appStore')(observer(
   </Link> 
   <br/>  <br/>
   <div className="field">
-  <input id="switchColorWarning" onChange={()=> this.props.appStore.currentListId[0].listStatus = !this.props.appStore.currentListId[0].listStatus} 
-  checked={this.props.appStore.currentListId[0].listStatus == 0 || this.props.appStore.currentListId[0].listStatus === undefined ? false : true} type="checkbox" name="switchColorWarning" className="switch is-medium is-dark"/>
-  <label htmlFor="switchColorWarning">Status: {this.props.appStore.currentListId[0].listStatus == 0 || this.props.appStore.currentListId[0].listStatus === undefined ?"Closed":  "Open" } </label>
+  <input id="switchColorWarning" onChange={()=> {this.props.appStore.currentListId[0].listStatus == "0" ?  this.props.appStore.currentListId[0].listStatus = "1" : this.props.appStore.currentListId[0].listStatus = "0";  this.props.appStore.updateListStatusByListIdAndRefresh(this.props.appStore.currentListId[0]); }} 
+  checked={this.props.appStore.currentListId[0].listStatus == "0" || this.props.appStore.currentListId[0].listStatus === undefined ? false : true}
+   type="checkbox" name="switchColorWarning" className="switch is-medium is-dark"/>
+  <label htmlFor="switchColorWarning">Status: {this.props.appStore.currentListId[0].listStatus == "0" || this.props.appStore.currentListId[0].listStatus === undefined ? "Open":  "Closed" } </label>
 </div>
         </article>
         </div></div></div></div><hr/>
