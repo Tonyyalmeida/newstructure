@@ -11,6 +11,9 @@ const LoginForm = inject('appStore')(observer(class LoginForm extends React.Comp
     this.handleSubmit = this.handleSubmit.bind(this);
     this.setCookie = this.setCookie.bind(this);
   }
+  componentWillMount() {
+ this.props.location.state ? this.setState({successText: this.props.location.state.from[0]}) : null;
+  }
  setCookie(cname, cvalue) {
     var exdays = 3;
     var d = new Date();
@@ -62,13 +65,6 @@ const isError = this.state.error;
 const redirect = this.state.redirect;
 const successText = this.state.successText;
 const userId = this.props.appStore.userId;
-// if (redirect) {
-//   return  <Redirect to={{
-//     pathname: '/home/' + "userId/" + userId,
-//     state: { from: successText }
-//   }}/>
-// }
-// else {
 return (
   <section className="section is medium">
   <div className="container is large">
@@ -97,6 +93,7 @@ return (
     <button type="submit" className="button is-link">Submit</button>
   </div></div></form>
   {isError ? <ErrorField msg={this.state.errorText}/> : null  }
+  {successText ? <SuccessField msg={successText}/> : null  }
   </div>
   </div>
 </div>
@@ -109,7 +106,9 @@ return (
 const ErrorField = props =>
 <p className="help is-danger"> {props.msg}
 </p>
-
+const SuccessField = props =>
+<p className="help is-success"> {props.msg}
+</p>
 
 //      <div id="main">
 //      <section id="content" classNameName="main">

@@ -16,15 +16,15 @@ const WordlistDetailsComponentOriginal = inject('appStore')(observer(
     }
   handleReset() {
   this.setState({redirect: true});
-  }  
+  }
+  handleResetEdit() {
+    this.setState({editing: false});
+    }  
   toggleNav = () => {
     this.setState(prevState => ({
       editing: !prevState.editing
     }))
   }
-  // componentWillMount () {
-  // this.props.appStore.getNeededInfo(this.props.listId);
-  //   }
     componentWillUpdate () {
       this.props.appStore.currenListId = [];
         }
@@ -59,7 +59,7 @@ const WordlistDetailsComponentOriginal = inject('appStore')(observer(
     render() {
       if (this.state.redirect) {
         return  <Redirect to={{
-      pathname: '/home/' + "userId/" + this.props.appStore.userId,
+      pathname: '/home/' + "userId/" + this.props.appStore.userId + "/lists/" + this.props.appStore.currentListId[0].listId + '/edit'
     }}/>  
     }
       else {
@@ -76,7 +76,7 @@ const WordlistDetailsComponentOriginal = inject('appStore')(observer(
     <div className="tile">
       <div className="tile is-parent is-vertical">
         <article className="tile is-child notification is-primary">
-      {this.state.editing ? (  <form onSubmit={(e) => {e.preventDefault(); this.props.appStore.currentListId[0].listName = e.target[0].value; this.props.appStore.updateListNameByListId(this.props.appStore.currentListId[0].listId, e.target[0].value.toString(0));this.toggleNav ()}} >  <div className="field"><div className="control">
+      {this.state.editing ? (  <form onReset={(e) => {e.preventDefault();this.handleResetEdit()}} onSubmit={(e) => {e.preventDefault(); this.props.appStore.currentListId[0].listName = e.target[0].value; this.props.appStore.updateListNameByListIdAndRefresh(this.props.appStore.currentListId[0].listId, e.target[0].value.toString(0));this.toggleNav ()}} >  <div className="field"><div className="control">
        <input className="input" type="text" name="demo-name1" id="demo-name1" defaultValue={this.props.appStore.currentListId[0].listName} placeholder="VN" />
     </div>  <div className="field is-grouped"> <p className="control">
   <button type="submit" className="button submit is-link">Save</button></p><p className="control">

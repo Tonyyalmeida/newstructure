@@ -129,24 +129,6 @@ class Heading123 extends React.Component {
               </div>
             </div> */}
           </div>
-          <div className="navbar-end">
-            <a className="navbar-item" href="https://github.com/aaronklaser">
-              <span className="icon">
-                <i className="fab fa-lg fa-github"></i>
-              </span>
-            </a>
-            <a className="navbar-item" href="https://twitter.com/awklaser">
-              <span className="icon has-text-info" style={{ color: '#0084FF' }}>
-                <i className="fab fa-lg fa-twitter"></i>
-              </span>
-            </a>
-            <a className="navbar-item" href="http://resume.aaronklaser.com">
-              Resume
-              <span className="icon" style={{ color: '#0077B5', marginLeft: 5 }}>
-                <i className="fab fa-lg fa-linkedin"></i>
-              </span>
-            </a>
-          </div>
         </div>
       </nav>
     )

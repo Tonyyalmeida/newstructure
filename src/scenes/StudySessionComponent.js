@@ -48,15 +48,17 @@ incrementFailCounter() {
     render() {
       const currentIndex = this.state.index+1;
       const currentRealIndex = this.state.index;
-      if (this.props.appStore.studyWordIds === "false")
-      return (<h2>This list is done</h2>) 
-      else if (this.props.appStore.renderDone)
-      {
-        return (
-        <DoneStudyComponentWithSpinner listId={this.props.listId} successCounter={this.state.successCounter}/>
-        )
-      }
-      else if (true)
+      const lastOne = this.state.index == this.props.appStore.studyWordIds.length - 1 ? true : false;
+      // if (this.props.appStore.studyWordIds === "false")
+      // return (<h2>This list is done</h2>) 
+      // else if (this.props.appStore.renderDone)
+      // {
+      //   return (
+      //   <DoneStudyComponentWithSpinner listId={this.props.listId} successCounter={this.state.successCounter}/>
+      //   )
+      // } else
+      if (this.props.appStore.renderDone) {return (<DoneStudyComponentWithSpinner listId={this.props.listId} successCounter={this.state.successCounter}/>)} 
+else 
       return (
       <div>
         {currentIndex} / {this.props.appStore.studyWordIds.length}
@@ -64,10 +66,15 @@ incrementFailCounter() {
         <code>
         <div className="spotlight">
   <div className="content testingcss">
+  <div className="section">
   <h2 className="align-center">{this.props.appStore.studyWordIds.length ? this.props.appStore.studyWordIds[this.state.index].vn : null}</h2>
-  {this.state.hidden ? <i onClick={() => this.makeVisible()} className="fa fa-angle-double-down fa-5x align-center"></i> : null}
+  {this.state.hidden ? <a onClick={() => this.makeVisible()}className="button">
+    <span className="icon">
+    <i className="fas fa-angle-double-down"></i>
+    </span>
+  </a> : null}
   <HiddenWords
-  lastOne={this.state.index == this.props.appStore.studyWordIds.length - 1 ? true : false}
+  lastOne={lastOne}
   en={this.props.appStore.studyWordIds[this.state.index].en} 
   exampleUse={this.props.appStore.studyWordIds[this.state.index].exampleUse}
   incrementSuccessCounter={this.incrementSuccessCounter}
@@ -77,11 +84,8 @@ incrementFailCounter() {
   toggleHidden={this.toggleHidden}
   />
   </div>
-</div></code></pre></div>
+</div></div></code></pre></div>
       );
-      else {
-        return (<h2>Loading...</h2>)
-      }
     }
   }));
 
@@ -106,19 +110,17 @@ incrementFailCounter() {
         super(props);
       }
       render() {
+        console.log(this.props);
       return(
         <ReactCSSTransitionGroup
         transitionName="toggle"
         transitionEnterTimeout={700}
         transitionLeaveTimeout={300}>
           {this.props.hidden ? null: <div className="toggle-base">
-          <div>
-  <h2 className="align-center">{this.props.en}</h2>
-  <h3 className="align-center">{this.props.exampleUse}</h3>
-      <ul className="actions fit">
-      <div className="row uniform">
-  <div className="6u align-center">
-                      <li className="align-center"><a onClick={() => {this.props.incrementIndex(); 
+  <h2>{this.props.en}</h2>
+  <h3>{this.props.exampleUse}</h3>
+      <div>
+                      <a className="button is-danger" onClick={() => {this.props.incrementIndex(); 
                         this.props.appStore.decrementStudyStatus(this.props.index);
                         if (this.props.lastOne) {this.props.appStore.updateLastWordByWordId(this.props.index);}
                       else {
@@ -126,10 +128,12 @@ incrementFailCounter() {
                       }
                         this.props.toggleHidden();
                       }
-                      } 
-                        className="button big special icon fa-thumbs-down">Didn't know</a></li>          </div>
-                   <div className="6u align-center">
-                        <li className="align-center"><a onClick={() => {this.props.incrementIndex();
+                      } > <span className="icon is-small">
+                            <i className="fas fa-thumbs-down"></i>
+                            </span> <span>Didn't know</span></a>
+   
+   
+                            <a className="button is-success" onClick={() => {this.props.incrementIndex();
                       this.props.appStore.incrementStudyStatus(this.props.index);
                       if (this.props.lastOne) {this.props.appStore.updateLastWordByWordId(this.props.index);}
                       else {
@@ -137,10 +141,12 @@ incrementFailCounter() {
                       }
                       this.props.incrementSuccessCounter();
                       this.props.toggleHidden();
-                      }} className="button big icon fa-thumbs-up">Got it!</a></li>
-        </div>        
-  </div>
-      </ul></div>   
+                            }}> <span className="icon is-small">
+                                  <i className="fas fa-thumbs-up"></i>
+                                  </span> <span>Got this!</span></a>
+        </div>
+        <br/>
+        <br/>
           </div>}
         </ReactCSSTransitionGroup>  
   

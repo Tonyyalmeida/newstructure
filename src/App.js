@@ -18,7 +18,9 @@ import WordlistDetailsContainer from "./scenes/WordlistDetailsContainer";
 import LoginNavBar from "./components/LoginNavBar";
 import AppNavBar from "./components/AppNavBar";
 import StudySessionComponentContainer  from "./scenes/StudySessionComponentContainer";
+import WelcomeComponent from "./scenes/WelcomeComponent";
 import 'bulma/css/bulma.css';
+import './css/main.css';
 import 'bulma-switch/dist/bulma-switch.min.css';
 
 
@@ -39,6 +41,7 @@ const BasicExample = () => (
   <Route path="/home/userId/:userId" component={AllListsOverview}/>
         </div>
         <div className="column is-10">
+      <Route exact path="/home/userId/:userId" component={WelcomeComponent}/>
       <Route exact path="/" component={IntroSection}/>
       <Route exact path="/signup" component={SignupForm}/>
       <Route exact path="/login" component={LoginForm}/>
