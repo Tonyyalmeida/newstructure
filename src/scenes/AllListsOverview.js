@@ -35,14 +35,14 @@ return (
 <aside className="menu">
           <p className="menu-label">
           <br/>
-           Open Word Decks ({openLists ? openLists.length : 0})
+           Open Word Decks ({openLists ?this.props.appStore.numberOfOpenLists : 0})
           </p>
           <ul className="menu-list">
           {openLists ? openLists.map(this.eachListComponent) : null}
           </ul>
          <CreateWordlist/>
             <p className="menu-label">
-            Closed Word Decks ({closedLists ? closedLists.length : 0})
+            Closed Word Decks ({closedLists ? this.props.appStore.numberOfClosedLists : 0})
            </p>
           <ul className="menu-list">
           {closedLists ? closedLists.map(this.eachClosedListComponent) : null}
