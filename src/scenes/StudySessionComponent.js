@@ -49,25 +49,17 @@ incrementFailCounter() {
       const currentIndex = this.state.index+1;
       const currentRealIndex = this.state.index;
       const lastOne = this.state.index == this.props.appStore.studyWordIds.length - 1 ? true : false;
-      // if (this.props.appStore.studyWordIds === "false")
-      // return (<h2>This list is done</h2>) 
-      // else if (this.props.appStore.renderDone)
-      // {
-      //   return (
-      //   <DoneStudyComponentWithSpinner listId={this.props.listId} successCounter={this.state.successCounter}/>
-      //   )
-      // } else
       if (this.props.appStore.renderDone) {return (<DoneStudyComponentWithSpinner listId={this.props.listId} successCounter={this.state.successCounter}/>)} 
 else 
       return (
       <div>
         {currentIndex} / {this.props.appStore.studyWordIds.length}
-      <pre>
-        <code>
+        <div className="box">
         <div className="spotlight">
   <div className="content testingcss">
   <div className="section">
   <h2 className="align-center">{this.props.appStore.studyWordIds.length ? this.props.appStore.studyWordIds[this.state.index].vn : null}</h2>
+  <h2 style={{fontStyle:"oblique"}}>{this.props.appStore.studyWordIds.length ? this.props.appStore.studyWordIds[this.state.index].exampleUseVn : null}</h2>
   {this.state.hidden ? <a onClick={() => this.makeVisible()}className="button">
     <span className="icon">
     <i className="fas fa-angle-double-down"></i>
@@ -76,7 +68,8 @@ else
   <HiddenWords
   lastOne={lastOne}
   en={this.props.appStore.studyWordIds[this.state.index].en} 
-  exampleUse={this.props.appStore.studyWordIds[this.state.index].exampleUse}
+  exampleUseEn={this.props.appStore.studyWordIds[this.state.index].exampleUseEn}
+  exampleUseVn={this.props.appStore.studyWordIds[this.state.index].exampleUseVn}
   incrementSuccessCounter={this.incrementSuccessCounter}
   incrementIndex={this.incrementIndex}
   index={this.state.index}
@@ -84,7 +77,7 @@ else
   toggleHidden={this.toggleHidden}
   />
   </div>
-</div></div></code></pre></div>
+</div></div></div></div>
       );
     }
   }));
@@ -98,7 +91,8 @@ else
   return(
         <div><h2>Done with this Deck</h2>
             <h3>Stats this session: You knew {this.props.successCounter} out of {this.props.appStore.studyWordIds.length}</h3>
-              <h4>{this.props.appStore.finalStatus}</h4>
+              <h4>Overall Status of this List: {this.props.appStore.finalStatus}</h4>
+              <button onClick={() => console.log(this.props.appStore.finalStatus,  this.props.appStore.wordIds)}>123</button>
         {this.props.appStore.finalStatus == 100 ? <h2>Congrats, you just finished this list!</h2>: null}  
               </div>)
   }}))
@@ -110,7 +104,6 @@ else
         super(props);
       }
       render() {
-        console.log(this.props);
       return(
         <ReactCSSTransitionGroup
         transitionName="toggle"
@@ -118,7 +111,7 @@ else
         transitionLeaveTimeout={300}>
           {this.props.hidden ? null: <div className="toggle-base">
   <h2>{this.props.en}</h2>
-  <h3>{this.props.exampleUse}</h3>
+  <h2 style={{fontStyle:"oblique"}}>{this.props.exampleUseEn}</h2>
       <div>
                       <a className="button is-danger" onClick={() => {this.props.incrementIndex(); 
                         this.props.appStore.decrementStudyStatus(this.props.index);
@@ -163,7 +156,7 @@ else
 //     );
 
   
-const DoneStudyComponentWithSpinner = LoadingHoc("finalStatus")(DoneStudyComponent);
+const DoneStudyComponentWithSpinner = (DoneStudyComponent);
 const StudySessionComponent = LoadingHoc("studyWordIds")(StudySessionComponent1);
 
 

@@ -40,17 +40,19 @@ const WordlistDetailsComponentOriginal = inject('appStore')(observer(
     axios.post('http://localhost:3101/words/words', wordArray).then(() => this.props.appStore.getWordsByListId(this.props.appStore.currentListId[0].listId))
   };
   createWord(event, index) {
-  const createWordFactory = ({ vn, en, exampleUse, wordId, status }) => ({
+  const createWordFactory = ({ vn, en, exampleUseVn, exampleUseEn, wordId, status }) => ({
     vn,
     en,
-    exampleUse,
+    exampleUseVn,
+    exampleUseEn,
     wordId,
     status
   });
   const myWord = createWordFactory({
-    vn: event.target[index].value, 
-    en:  event.target[index+1].value, 
-    exampleUse:  event.target[index+2].value, 
+    vn: event.target[index].value,
+    exampleUseVn:  event.target[index+1].value,    
+    en:  event.target[index+2].value, 
+    exampleUseEn:  event.target[index+3].value,    
     wordId: event.target[index].getAttribute('wordid'), 
     status: event.target[index].getAttribute('status'),
   });
@@ -113,7 +115,7 @@ const WordlistDetailsComponentOriginal = inject('appStore')(observer(
         <div className="column is-2">Status</div>
         </div>
       {this.props.appStore.wordIds.map( (c, id) => (
-        <WordDetailsRow vn={c.vn} en={c.en} exampleUseVn={c.exampleUseVn ? c.exampleUseVn : "hallota" } exampleUseEn={c.exampleUseEn ? c.exampleUseEn : c.exampleUse } status={c.status} wordId={c.wordId} arrayid={id} key={id}/>
+        <WordDetailsRow vn={c.vn} en={c.en} exampleUseVn={c.exampleUseVn ? c.exampleUseVn : "" } exampleUseEn={c.exampleUseEn ? c.exampleUseEn : c.exampleUse } status={c.status} wordId={c.wordId} arrayid={id} key={id}/>
       ))}
       <div className="field is-grouped">
   <p className="control">

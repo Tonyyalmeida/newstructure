@@ -4,6 +4,7 @@ import { LoadingDoubleHoc }  from "../services/LoadingDoubleHoc";
 import { Link,  Redirect, withRouter} from 'react-router-dom';
 import axios from 'axios';
 import WordDetailsRow from "../components/WordDetailsRow";
+import CreateWordlist from "../components/CreateWordlist";
 
 const WelcomeComponent = inject('appStore')(observer(
   class WelcomeComponent extends React.Component {
@@ -22,10 +23,10 @@ const WelcomeComponent = inject('appStore')(observer(
 </nav>
 <div className="tile is-ancestor">
 
-<div class="tile is-vertical is-9">
-  <div class="tile is-parent">
-        <article class="tile is-child notification is-primary">
-          <p class="title">Welcome {this.props.appStore.userName}!</p>
+<div className="tile is-vertical is-9">
+  <div className="tile is-parent">
+        <article className="tile is-child notification is-primary">
+          <p className="title">Welcome {this.props.appStore.userName}!</p>
           <p>Topico will help you to accomplishment your goals!</p>
         </article>
       </div>
