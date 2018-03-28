@@ -3,14 +3,27 @@ import { observer, inject } from 'mobx-react';
 import WordlistRow from "../components/WordlistRow";
 import WordlistRowClosed from "../components/WordlistRowClosed";
 import CreateWordlist from "../components/CreateWordlist";
+import ReactCSSTransitionGroup from 'react-addons-css-transition-group'; // ES6
 //import { LoadingHoc }  from "../services/LoadingHoc";
 
 const AllListsOverview = inject('appStore')(observer(class AllListsOverview extends React.Component {
   constructor(props) {
     super(props);
-    this.state =  {doneLoading : false}
+    this.state =  {doneLoading : false, hiddenClose: true, hiddenOpen: true}
     this.eachListComponent = this.eachListComponent.bind(this);
+    this.toggleHiddenClose = this.toggleHiddenClose.bind(this);
+    this.toggleHiddenOpen = this.toggleHiddenOpen.bind(this);
     this.eachClosedListComponent = this.eachClosedListComponent.bind(this);
+}
+toggleHiddenClose () {
+  this.setState((prevState, props) => ({
+    hiddenClose: !(prevState.hiddenClose)
+  }))   
+}
+toggleHiddenOpen () {
+  this.setState((prevState, props) => ({
+    hiddenOpen: !(prevState.hiddenOpen)
+  }))   
 }
   componentWillMount() {
 this.props.appStore.getListsByUserId(this.props.match.params.userId);    
@@ -33,37 +46,47 @@ this.props.appStore.getListsByUserId(this.props.match.params.userId);
   const closedLists = this.props.appStore.listIds.filter((list) => list.listStatus == "1");
 return (
 <aside className="menu">
-          <p className="menu-label">
-          <br/>
-           Open Word Decks ({openLists ?this.props.appStore.numberOfOpenLists : 0})
-          </p>
-          <ul className="menu-list">
-          {openLists ? openLists.map(this.eachListComponent) : null}
-          </ul>
+<a style={{fontWeight: 600}} onClick={this.toggleHiddenOpen} className="navbar-link">
+Open Word Decks ({openLists ? this.props.appStore.numberOfOpenLists : 0})
+</a>
+<HiddenLists list={openLists} hidden={this.state.hiddenOpen}/>
          <CreateWordlist/>
-            <p className="menu-label">
+            <a style={{fontWeight: 600}} onClick={this.toggleHiddenClose} className="navbar-link">
             Closed Word Decks ({closedLists ? this.props.appStore.numberOfClosedLists : 0})
-           </p>
-          <ul className="menu-list">
-          {closedLists ? closedLists.map(this.eachClosedListComponent) : null}
-          </ul>
+           </a>
+           <HiddenLists list={closedLists} hidden={this.state.hiddenClose}/>
         </aside>
         )
-
-
-//   const openLists = this.props.appStore.listIds.filter((list) => list.listStatus !== 1);
-//   const closedLists = this.props.appStore.listIds.filter((list) => list.listStatus == 1);
-//     return(
-// <div>
-//   <h1>Your Study Decks:</h1>
-//  {openLists ? openLists.map(this.eachListComponent) : null}
-//  <hr/>
-//  {closedLists ? closedLists.map(this.eachClosedListComponent) : null}
- 
-// <CreateWordlistHOC doneLoading={this.state.doneLoading}/>
-// </div>
-//    )
   }}))
+
+
+  const HiddenLists = inject('appStore')(observer(
+    class HiddenLists extends React.Component {
+      constructor(props) {
+        super(props);
+        this.eachClosedListComponent = this.eachClosedListComponent.bind(this);
+      }
+      eachClosedListComponent(x, id) {
+        return (<WordlistRow x={x} id={id} key={id}/>)
+      }
+      render() {
+      const lists = this.props.list
+      return(
+        <ReactCSSTransitionGroup
+        transitionName="toggle2"
+        transitionEnterTimeout={700}
+        transitionLeaveTimeout={300}>
+          {this.props.hidden ? null: <div className="toggle2-base">
+          <ul className="menu-list">
+          {lists ? lists.map(this.eachClosedListComponent) : null}
+          </ul>
+          </div>}
+        </ReactCSSTransitionGroup>  
+  
+  )
+  }}
+  ))
+
 
 
 export default AllListsOverview

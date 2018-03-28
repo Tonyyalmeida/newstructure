@@ -78,7 +78,7 @@ const WordlistDetailsComponentOriginal = inject('appStore')(observer(
         <div>
         <nav className="breadcrumb" aria-label="breadcrumbs">
   <ul>
-    <li className="is-active"><a style={{fontWeight:"800"}} aria-current="page">{this.props.appStore.currentListId[0] ? this.props.appStore.currentListId[0].listName : "placeholder"}</a></li>
+    <li className="tooltip" data-tooltip="baba"><a style={{fontWeight:"800"}} aria-current="page">{this.props.appStore.currentListId[0] ? this.props.appStore.currentListId[0].listName : "placeholder"}</a></li>
     <li><a aria-current="page">Edit</a></li>
   </ul>
 </nav>
@@ -116,7 +116,7 @@ const WordlistDetailsComponentOriginal = inject('appStore')(observer(
   <div className="field">
   <input id="switchColorWarning" onChange={()=> {this.props.appStore.currentListId[0].listStatus == "0" ?  this.props.appStore.currentListId[0].listStatus = "1" : this.props.appStore.currentListId[0].listStatus = "0";  this.props.appStore.updateListStatusByListIdAndRefresh(this.props.appStore.currentListId[0]); }} 
   checked={this.props.appStore.currentListId[0].listStatus == "0" || this.props.appStore.currentListId[0].listStatus === undefined ? false : true}
-   type="checkbox" name="switchColorWarning" className="switch is-medium is-dark"/>
+   type="checkbox" name="switchColorWarning" className="tooltip switch is-medium is-dark" data-tooltip="Yoyo"/>
   <label htmlFor="switchColorWarning">Status: {this.props.appStore.currentListId[0].listStatus == "0" || this.props.appStore.currentListId[0].listStatus === undefined ? "Open":  "Closed" } </label>
 </div>
         </article>

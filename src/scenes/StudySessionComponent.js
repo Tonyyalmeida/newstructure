@@ -1,6 +1,6 @@
 import React from 'react';
 import { observer, inject } from 'mobx-react';
-import { LoadingHoc }  from "../services/LoadingHoc";
+import { LoadingHocWithEmpty }  from "../services/LoadingHocWithEmpty";
 import { withRouter} from 'react-router-dom';
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group'; // ES6
 
@@ -188,7 +188,7 @@ incrementFailCounter() {
   
 const DoneStudyComponentWithSpinner = (DoneStudyComponent);
 const StudySessionComponent2 = withRouter(StudySessionComponent1);
-const StudySessionComponent = LoadingHoc("studyWordIds")(StudySessionComponent2);
+const StudySessionComponent = LoadingHocWithEmpty("studyWordIds")(StudySessionComponent2);
 
 
 

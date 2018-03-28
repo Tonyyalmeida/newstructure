@@ -202,9 +202,6 @@ class HeadingLoggedIn extends React.Component {
           </div>
           <div className="navbar-end">
             <Link to="/logout" className="navbar-item" href="https://github.com/aaronklaser">
-              <span className="icon">
-                <i className="fab fa-lg fa-github"></i>
-              </span>
               Logout
             </Link>
           </div>

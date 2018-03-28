@@ -34,7 +34,7 @@ const BasicExample = () => (
        <Route exact path="/" component={Header}/>
        <Route path="/edit/:root/:ignore" component={AppNavBar}/>
        <Route path="/study/:root/:ignore" component={AppNavBar}/>
-     <section className="section">
+     <section style={{minHeight: 800}}className="section">
   <div className="columns">
   <div className="column is-2">
   {/* //style={{borderRight: "1px solid rgb(221, 221, 221)"}}> */}
