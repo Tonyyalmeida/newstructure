@@ -12,7 +12,8 @@ const WordlistDetailsComponentOriginal = inject('appStore')(observer(
       this.createWord = this.createWord.bind(this);
       this.handeSubmit = this.handleSubmit.bind(this);
       this.handleReset = this.handleReset.bind(this);
-     this.state = {redirect: false, editing: false}
+      this.toggleFromStudy = this.toggleFromStudy.bind(this);
+     this.state = {redirect: false, editing: false, fromStudy: false, successCounter: 0, lengthCounter: 0}
     }
   handleReset() {
   this.setState({redirect: true});
@@ -25,8 +26,14 @@ const WordlistDetailsComponentOriginal = inject('appStore')(observer(
       editing: !prevState.editing
     }))
   }
+  toggleFromStudy = () => {
+    this.setState(prevState => ({
+      fromStudy: !prevState.fromStudy
+    }))
+  }
   componentWillMount () {
-   console.log(this.props.history.location);
+  if (this.props.history.location.state) 
+  this.setState({fromStudy: this.props.history.location.state.done, lengthCounter:this.props.history.location.state.lengthCounter,  successCounter: this.props.history.location.state.successCounter});
       }
     componentWillUpdate () {
       this.props.appStore.currenListId = [];
@@ -75,6 +82,14 @@ const WordlistDetailsComponentOriginal = inject('appStore')(observer(
     <li><a aria-current="page">Edit</a></li>
   </ul>
 </nav>
+{this.state.fromStudy ? <div className="columns">
+<div className="column is-8">
+<div className="notification is-info">
+  <button onClick={this.toggleFromStudy} className="delete"></button>
+  <p className="title">Finished!</p>
+  <p>You knew {this.state.successCounter} out of {this.props.appStore.studyWordIds.length}</p>
+  <p>If you feel you know this list by heart, you can close this list.</p>
+</div></div></div> : null}
 <div className="tile is-ancestor">
   <div className="tile is-vertical is-8">
     <div className="tile">

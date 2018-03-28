@@ -36,7 +36,8 @@ const StudySessionComponent1 = inject('appStore')(observer(
 componentWillUpdate (nextProps, nextState) {
   if (nextProps.appStore.renderDone)
   {  
-  this.props.history.push('/home/' + "userId/" + this.props.appStore.userId + "/lists/" + this.props.appStore.currentListInfo + '/edit',  {done: true, successCounter: this.state.successCounter});
+  this.props.history.push('/home/' + "userId/" + this.props.appStore.userId + "/lists/" + this.props.appStore.currentListInfo + '/edit', 
+   {done: true, successCounter: this.state.successCounter, lengthCounter: this.props.appStore.studyWordIds.length});
   this.props.appStore.setRenderDone(false);
   }
   }
