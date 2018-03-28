@@ -25,6 +25,9 @@ const WordlistDetailsComponentOriginal = inject('appStore')(observer(
       editing: !prevState.editing
     }))
   }
+  componentWillMount () {
+   console.log(this.props.history.location);
+      }
     componentWillUpdate () {
       this.props.appStore.currenListId = [];
         }
@@ -35,7 +38,6 @@ const WordlistDetailsComponentOriginal = inject('appStore')(observer(
     event.preventDefault();
     this.props.appStore.updateListStatusByListId(this.props.appStore.currentListId[0]);
     var wordArray = [];
-    console.log(event.target[0].value,event.target[0].getAttribute('wordid'),  event.target[0].getAttribute('status'), event.target[1].value,  event.target[2].value,event.target[3].value );
     [0, 4, 8, 12, 16, 20, 24, 28, 32, 36].forEach((a) => {wordArray.push(this.createWord(event, a))});
     axios.post('http://localhost:3101/words/words', wordArray).then(() => this.props.appStore.getWordsByListId(this.props.appStore.currentListId[0].listId))
   };
@@ -49,10 +51,10 @@ const WordlistDetailsComponentOriginal = inject('appStore')(observer(
     status
   });
   const myWord = createWordFactory({
-    vn: event.target[index].value,
-    exampleUseVn:  event.target[index+1].value,    
-    en:  event.target[index+2].value, 
-    exampleUseEn:  event.target[index+3].value,    
+    en: event.target[index].value,
+    exampleUseEn:  event.target[index+1].value,    
+    vn:  event.target[index+2].value, 
+    exampleUseVn:  event.target[index+3].value,    
     wordId: event.target[index].getAttribute('wordid'), 
     status: event.target[index].getAttribute('status'),
   });
@@ -108,10 +110,10 @@ const WordlistDetailsComponentOriginal = inject('appStore')(observer(
     
        <form onReset={()=> this.handleReset()} onSubmit={(e) => {this.handleSubmit(e)}}>
        <div className="columns">
-               <div className="column is-2">VN</div>
-               <div className="column is-3">Example VN</div>
-        <div className="column is-2">EN</div>
-        <div className="column is-3">Example EN</div>
+               <div className="column is-2">EN</div>
+               <div className="column is-3">Example EN</div>
+        <div className="column is-2">VN</div>
+        <div className="column is-3">Example VN</div>
         <div className="column is-2">Status</div>
         </div>
       {this.props.appStore.wordIds.map( (c, id) => (

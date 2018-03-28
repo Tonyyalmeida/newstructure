@@ -22,7 +22,6 @@ const WelcomeComponent = inject('appStore')(observer(
   </ul>
 </nav>
 <div className="tile is-ancestor">
-
 <div className="tile is-vertical is-9">
   <div className="tile is-parent">
         <article className="tile is-child notification is-primary">
