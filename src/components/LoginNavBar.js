@@ -40,7 +40,7 @@ if (token !== "") {
   )};
   renderLogin() {
     return (
-<HeadingLoggedIn/>
+<HeadingLoggedIn userId={this.props.appStore.userId}/>
   )};
   render() {
   const loggedIn = this.props.appStore.isLoggedIn;
@@ -99,6 +99,8 @@ class Heading123 extends React.Component {
               </span> */}
               Home
             </Link>
+            </div>
+            <div className="navbar-end">
             <Link to="login" className="navbar-item">
               {/* <span className="icon" style={{ marginRight: 5 }}>
                 <i className="fab fa-lg fa-medium"></i>
@@ -136,7 +138,6 @@ class Heading123 extends React.Component {
 }
 
 class HeadingLoggedIn extends React.Component {
-
   state = {
     isActive: false,
   }
@@ -176,7 +177,7 @@ class HeadingLoggedIn extends React.Component {
         </div>
         <div className={ this.state.isActive ? 'navbar-menu is-active' : 'navbar-menu'}>
           <div className="navbar-start">
-            <Link to="/" className="navbar-item">
+            <Link to={"/home/userId/" + this.props.userId} className="navbar-item">
               {/* <span className="icon has-text-primary" style={{ marginRight: 5 }}>
                 <i className="fas fa-code"></i>
               </span> */}
@@ -201,7 +202,7 @@ class HeadingLoggedIn extends React.Component {
             </div> */}
           </div>
           <div className="navbar-end">
-            <Link to="/logout" className="navbar-item" href="https://github.com/aaronklaser">
+            <Link to={{pathname: "/login", state: { logout: true }}} className="navbar-item">
               Logout
             </Link>
           </div>

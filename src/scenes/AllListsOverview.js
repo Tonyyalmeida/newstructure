@@ -9,7 +9,7 @@ import ReactCSSTransitionGroup from 'react-addons-css-transition-group'; // ES6
 const AllListsOverview = inject('appStore')(observer(class AllListsOverview extends React.Component {
   constructor(props) {
     super(props);
-    this.state =  {doneLoading : false, hiddenClose: true, hiddenOpen: true}
+    this.state =  {doneLoading : false, hiddenClose: false, hiddenOpen: false}
     this.eachListComponent = this.eachListComponent.bind(this);
     this.toggleHiddenClose = this.toggleHiddenClose.bind(this);
     this.toggleHiddenOpen = this.toggleHiddenOpen.bind(this);

@@ -7,10 +7,10 @@ const IntroSection = inject('appStore')(observer(class IntroSection extends Reac
   constructor(props) {
     super(props);
   }
-  componentWillMount() {
-  if (this.props.appStore.isLoggedIn)
-  this.props.history.push("/home/userId/" + this.props.appStore.userId)
-  }
+  // componentWillMount() {
+  // if (this.props.appStore.isLoggedIn)
+  // this.props.history.push("/home/userId/" + this.props.appStore.userId)
+  // }
   render() {
     return (
      <div id="main">
@@ -20,6 +20,6 @@ const IntroSection = inject('appStore')(observer(class IntroSection extends Reac
   }
 ));
 
-const Intro = props => <h2>sds</h2>
+const Intro = props => <h2 className="title">Hello world!</h2>
 
 export default IntroSection

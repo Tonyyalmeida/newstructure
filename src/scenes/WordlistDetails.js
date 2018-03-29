@@ -78,7 +78,7 @@ const WordlistDetailsComponentOriginal = inject('appStore')(observer(
         <div>
         <nav className="breadcrumb" aria-label="breadcrumbs">
   <ul>
-    <li className="tooltip" data-tooltip="baba"><a style={{fontWeight:"800"}} aria-current="page">{this.props.appStore.currentListId[0] ? this.props.appStore.currentListId[0].listName : "placeholder"}</a></li>
+    <li className="is-active"><a style={{fontWeight:"800"}} aria-current="page">{this.props.appStore.currentListId[0] ? this.props.appStore.currentListId[0].listName : "placeholder"}</a></li>
     <li><a aria-current="page">Edit</a></li>
   </ul>
 </nav>
@@ -113,11 +113,12 @@ const WordlistDetailsComponentOriginal = inject('appStore')(observer(
     </span><span>Study this List</span>
   </Link> 
   <br/>  <br/>
-  <div className="field">
+  <div className="field"><span className="tooltip is-tooltip-bottom is-tooltip-multiline" data-tooltip="Status of this list. Should be set to close when you know all words in this list">
   <input id="switchColorWarning" onChange={()=> {this.props.appStore.currentListId[0].listStatus == "0" ?  this.props.appStore.currentListId[0].listStatus = "1" : this.props.appStore.currentListId[0].listStatus = "0";  this.props.appStore.updateListStatusByListIdAndRefresh(this.props.appStore.currentListId[0]); }} 
   checked={this.props.appStore.currentListId[0].listStatus == "0" || this.props.appStore.currentListId[0].listStatus === undefined ? false : true}
-   type="checkbox" name="switchColorWarning" className="tooltip switch is-medium is-dark" data-tooltip="Yoyo"/>
+   type="checkbox" name="switchColorWarning" className="switch is-medium is-dark"/>
   <label htmlFor="switchColorWarning">Status: {this.props.appStore.currentListId[0].listStatus == "0" || this.props.appStore.currentListId[0].listStatus === undefined ? "Open":  "Closed" } </label>
+</span>
 </div>
         </article>
         </div></div></div></div><hr/>
@@ -129,7 +130,7 @@ const WordlistDetailsComponentOriginal = inject('appStore')(observer(
                <div className="column is-3">Example EN</div>
         <div className="column is-2">VN</div>
         <div className="column is-3">Example VN</div>
-        <div className="column is-2">Status</div>
+        <div className="column is-2 tooltip is-tooltip-left is-tooltip-multiline" data-tooltip="The Status shows how well you know a word already. When studying a list, the number get incremeneted if you have successfully checked off a word. Everytime you don't know a word, the number gets decremented.">Status</div>
         </div>
       {this.props.appStore.wordIds.map( (c, id) => (
         <WordDetailsRow vn={c.vn} en={c.en} exampleUseVn={c.exampleUseVn ? c.exampleUseVn : "" } exampleUseEn={c.exampleUseEn ? c.exampleUseEn : c.exampleUse } status={c.status} wordId={c.wordId} arrayid={id} key={id}/>

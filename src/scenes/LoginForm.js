@@ -10,10 +10,26 @@ const LoginForm = inject('appStore')(observer(class LoginForm extends React.Comp
     this.state = {error: false, errorText: "", redirect: false, successText: ''};
     this.handleSubmit = this.handleSubmit.bind(this);
     this.setCookie = this.setCookie.bind(this);
+    this.handleLogout =    this.handleLogout.bind(this);
   }
   componentWillMount() {
- this.props.location.state ? this.setState({successText: this.props.location.state.from[0]}) : null;
+ if (this.props.location.state)
+{
+ if (this.props.location.state.logout)
+ {
+  this.handleLogout();
+ }
+ else{
+this.setState({successText: this.props.location.state.from})
+}}
   }
+handleLogout() { 
+  this.props.appStore.setFalseLoggedInState();
+    document.cookie = "topicoToken=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+    document.cookie = "userName=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+    document.cookie = "userId=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+this.setState({successText: "You just logged out"});
+    };
  setCookie(cname, cvalue) {
     var exdays = 3;
     var d = new Date();

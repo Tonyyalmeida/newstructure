@@ -18,7 +18,7 @@ class SignupForm extends React.Component {
    this.setState({error: true, errorText: response.data.messages.map(x => x.msg)});
     }
     else {
-    this.setState({redirect: true, successText: response.data.messages});
+    this.setState({redirect: true, successText: response.data.messages[0]});
     }
   });
   }

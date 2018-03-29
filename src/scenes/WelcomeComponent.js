@@ -13,7 +13,6 @@ const WelcomeComponent = inject('appStore')(observer(
      this.state = {redirect: false, editing: false}
     }
     render() {
-      console.log(this.props.appStore.numberOfClosedLists);
       return (
         <div>
         <nav className="breadcrumb" aria-label="breadcrumbs">
