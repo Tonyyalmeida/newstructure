@@ -1,13 +1,12 @@
 import React from 'react';
 import {observer, inject } from 'mobx-react';
-import { Redirect} from 'react-router-dom';
 import axios from 'axios';
 
 
 const LoginForm = inject('appStore')(observer(class LoginForm extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {error: false, errorText: "", redirect: false, successText: ''};
+    this.state = {error: false, errorText: "", successText: ''};
     this.handleSubmit = this.handleSubmit.bind(this);
     this.setCookie = this.setCookie.bind(this);
     this.handleLogout =    this.handleLogout.bind(this);
@@ -39,7 +38,7 @@ this.setState({successText: "You just logged out"});
 };
   handleSubmit(event) {
   event.preventDefault();    
-  var formData = { username: event.target.username.value, password: event.target.password1.value};
+  var formData = { email: event.target.username.value, password: event.target.password1.value};
   this.props.appStore.setUserName(event.target.username.value);
     axios.post('http://localhost:3101/login', formData)
   .then( (response) => {
@@ -56,7 +55,7 @@ this.setState({successText: "You just logged out"});
     var d = new Date();
     d.setTime(d.getTime() + (exdays*24*60*60*1000));
     var expires = "expires="+ d.toUTCString();
-    document.cookie = "topicoToken" + "=" + response.data.token + ";" + expires + ";path=/";
+    document.cookie = "topicoToken=" + response.data.token + ";" + expires + ";path=/";
     document.cookie =  "userName=" + this.props.appStore.userName  + ";" + expires + ";path=/";
     document.cookie =  "userId=" + this.props.appStore.userId  + ";" + expires + ";path=/";
     this.props.appStore.setTrueLoggedInState();
@@ -78,9 +77,7 @@ this.setState({successText: "You just logged out"});
   }
 render() {
 const isError = this.state.error;
-const redirect = this.state.redirect;
 const successText = this.state.successText;
-const userId = this.props.appStore.userId;
 return (
   <section className="section is medium">
   <div className="container is large">
@@ -89,9 +86,8 @@ return (
   <h1 className="title">Login</h1>
   <form onSubmit={this.handleSubmit}>
     <div className="field">
-    <label className="label">Email</label>
     <div className="control has-icons-left has-icons-right">
-      <input className="input" name="username" type="text" placeholder="username"/>
+      <input className="input" name="username" type="text" placeholder="Email"/>
       <span className="icon is-small is-left">
         <i className="fas fa-envelope"></i>
       </span></div>
@@ -125,21 +121,4 @@ const ErrorField = props =>
 const SuccessField = props =>
 <p className="help is-success"> {props.msg}
 </p>
-
-//      <div id="main">
-//      <section id="content" classNameName="main">
-//      <section>     
-//      <form onSubmit={this.handleSubmit}>
-//      Username<input type="text" name="username"/>
-//      Password<input type="password" name="password1"/>
-//      <br/>
-//      <div classNameName="6u 12u$(medium)">
-//      <ul className="actions">
-//        <button type="submit" className="button submit">Login</button>
-//      </ul>
-//    </div></form>
-//    {isError ? <ErrorField msg={this.state.errorText}/> : null  }
-// </section></section>
-// </div>
-
 export default LoginForm

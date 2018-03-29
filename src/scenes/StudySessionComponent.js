@@ -36,7 +36,7 @@ const StudySessionComponent1 = inject('appStore')(observer(
 componentWillUpdate (nextProps, nextState) {
   if (nextProps.appStore.renderDone)
   {  
-  this.props.history.push('/home/' + "userId/" + this.props.appStore.userId + "/lists/" + this.props.appStore.currentListInfo + '/edit', 
+  this.props.history.push("/home/userId/" + this.props.appStore.userId + "/lists/" + this.props.appStore.currentListInfo + '/edit', 
    {done: true, successCounter: this.state.successCounter, lengthCounter: this.props.appStore.studyWordIds.length});
   this.props.appStore.setRenderDone(false);
   }
@@ -56,8 +56,7 @@ incrementFailCounter() {
 }
     render() {
       const currentIndex = this.state.index+1;
-      const currentRealIndex = this.state.index;
-      const lastOne = this.state.index == this.props.appStore.studyWordIds.length - 1 ? true : false;
+      const lastOne = this.state.index === this.props.appStore.studyWordIds.length - 1 ? true : false;
       return (
       <div>
                 <nav className="breadcrumb" aria-label="breadcrumbs">
@@ -94,48 +93,9 @@ incrementFailCounter() {
     }
   }));
 
-  const DoneStudyComponent = inject('appStore')(observer(
-    class DoneStudyComponent extends React.Component {
-      constructor(props) {
-        super(props);
-      }
-      render() {
-  return(
-<div className="tile is-ancestor is-10">
-  <div className="tile is-parent is-5">
-        <article className="tile is-child notification is-primary">
-          <p className="title">Finished</p>
-          <p>You knew {this.props.successCounter} out of {this.props.appStore.studyWordIds.length}</p>
-        </article>
-      </div>
-    <div className="tile is-parent is-5">
-      <article className="tile is-child is-warning notification">
-      <p className="title">Overall Score:</p>
-<p>{this.props.appStore.finalStatus}</p>
-</article>
-      
-</div>
-        </div>
-
-
-    // //
-    //     <div><h2>Done with this Deck</h2>
-    //         <h3>Stats this session: You knew {this.props.successCounter} out of {this.props.appStore.studyWordIds.length}</h3>
-    //           <h4>Overall Status of this List: {this.props.appStore.finalStatus}</h4>
-    //           <button onClick={() => console.log(this.props.appStore.finalStatus,  this.props.appStore.wordIds)}>123</button>
-    //     {this.props.appStore.finalStatus == 100 ? <h2>Congrats, you just finished this list!</h2>: null}  
-    //           </div>
-              
-            
-            )
-  }}))
-
 
   const HiddenWords = inject('appStore')(observer(
     class HiddenWords extends React.Component {
-      constructor(props) {
-        super(props);
-      }
       render() {
       return(
         <ReactCSSTransitionGroup
@@ -177,16 +137,7 @@ incrementFailCounter() {
   }}
   ))
 
-// const isEmpty = (prop) => (
-//       prop === null ||
-//       prop === undefined ||
-//       prop[0] === undefined ||
-//       (prop.hasOwnProperty('length') && prop.length === 0) ||
-//       (prop.constructor === Object && Object.keys(prop).length === 0)
-//     );
-
   
-const DoneStudyComponentWithSpinner = (DoneStudyComponent);
 const StudySessionComponent2 = withRouter(StudySessionComponent1);
 const StudySessionComponent = LoadingHocWithEmpty("studyWordIds")(StudySessionComponent2);
 

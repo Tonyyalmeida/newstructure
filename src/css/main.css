@@ -2,7 +2,6 @@
     position: relative;
     text-align: center;
 }
-
 .toggle-base {
     height: 160px;
   }
@@ -82,3 +81,9 @@
       height: 0%;
     }
   }
+
+
+  @media (max-width: 767px) {
+
+    .tableheaders { display: none; }
+    }

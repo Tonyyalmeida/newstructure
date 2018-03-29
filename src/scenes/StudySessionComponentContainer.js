@@ -5,9 +5,6 @@ import StudySessionComponent from "../scenes/StudySessionComponent";
 
 const StudySessionComponentContainer = inject('appStore')(observer(
   class StudySessionComponentContainer extends React.Component {
-    constructor(props) {
-      super(props);
-    }
       componentWillMount(){
   this.props.appStore.doneLoading = false;
   this.props.appStore.setRenderDone(false);

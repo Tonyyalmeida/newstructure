@@ -70,7 +70,7 @@ const WordlistDetailsComponentOriginal = inject('appStore')(observer(
     render() {
       if (this.state.redirect) {
         return  <Redirect to={{
-      pathname: '/home/' + "userId/" + this.props.appStore.userId + "/lists/" + this.props.appStore.currentListId[0].listId + '/edit'
+      pathname: '/home/userId/' + this.props.appStore.userId + "/lists/" + this.props.appStore.currentListId[0].listId + '/edit'
     }}/>  
     }
       else {
@@ -114,10 +114,10 @@ const WordlistDetailsComponentOriginal = inject('appStore')(observer(
   </Link> 
   <br/>  <br/>
   <div className="field"><span className="tooltip is-tooltip-bottom is-tooltip-multiline" data-tooltip="Status of this list. Should be set to close when you know all words in this list">
-  <input id="switchColorWarning" onChange={()=> {this.props.appStore.currentListId[0].listStatus == "0" ?  this.props.appStore.currentListId[0].listStatus = "1" : this.props.appStore.currentListId[0].listStatus = "0";  this.props.appStore.updateListStatusByListIdAndRefresh(this.props.appStore.currentListId[0]); }} 
-  checked={this.props.appStore.currentListId[0].listStatus == "0" || this.props.appStore.currentListId[0].listStatus === undefined ? false : true}
+  <input id="switchColorWarning" onChange={()=> {this.props.appStore.currentListId[0].listStatus === "0" ?  this.props.appStore.currentListId[0].listStatus = "1" : this.props.appStore.currentListId[0].listStatus = "0";  this.props.appStore.updateListStatusByListIdAndRefresh(this.props.appStore.currentListId[0]); }} 
+  checked={this.props.appStore.currentListId[0].listStatus === "0" || this.props.appStore.currentListId[0].listStatus === undefined ? false : true}
    type="checkbox" name="switchColorWarning" className="switch is-medium is-dark"/>
-  <label htmlFor="switchColorWarning">Status: {this.props.appStore.currentListId[0].listStatus == "0" || this.props.appStore.currentListId[0].listStatus === undefined ? "Open":  "Closed" } </label>
+  <label htmlFor="switchColorWarning">Status: {this.props.appStore.currentListId[0].listStatus === "0" || this.props.appStore.currentListId[0].listStatus === undefined ? "Open":  "Closed" } </label>
 </span>
 </div>
         </article>
@@ -125,9 +125,9 @@ const WordlistDetailsComponentOriginal = inject('appStore')(observer(
 
     
        <form onReset={()=> this.handleReset()} onSubmit={(e) => {this.handleSubmit(e)}}>
-       <div className="columns">
+       <div className="columns tableheaders">
                <div className="column is-2">EN</div>
-               <div className="column is-3">Example EN</div>
+               <div className="column is-3" >Example EN</div>
         <div className="column is-2">VN</div>
         <div className="column is-3">Example VN</div>
         <div className="column is-2 tooltip is-tooltip-left is-tooltip-multiline" data-tooltip="The Status shows how well you know a word already. When studying a list, the number get incremeneted if you have successfully checked off a word. Everytime you don't know a word, the number gets decremented.">Status</div>

@@ -1,6 +1,5 @@
 import React from 'react';
 import { observer, inject } from 'mobx-react';
-import { LoadingHoc }  from "../services/LoadingHoc";
 
 
 const CreateWordlist =  inject('appStore')(observer(class CreateWordlist extends React.Component {

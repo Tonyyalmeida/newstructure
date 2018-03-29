@@ -1,6 +1,6 @@
 import React, { Component}from 'react';
 import { observer, inject } from 'mobx-react';
-import { Link,  Redirect} from 'react-router-dom';
+import { Link} from 'react-router-dom';
 
 const LoginNavBar= inject('appStore')(observer(class LoginNavBar extends Component {
   constructor(props) {
@@ -13,10 +13,10 @@ const LoginNavBar= inject('appStore')(observer(class LoginNavBar extends Compone
     var ca = decodedCookie.split(';');
     for(var i = 0; i <ca.length; i++) {
         var c = ca[i];
-        while (c.charAt(0) == ' ') {
+        while (c.charAt(0) === ' ') {
             c = c.substring(1);
         }
-        if (c.indexOf(name) == 0) {
+        if (c.indexOf(name) === 0) {
             return c.substring(name.length, c.length);
         }
     }

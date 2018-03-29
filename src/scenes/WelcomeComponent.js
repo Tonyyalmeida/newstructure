@@ -1,9 +1,5 @@
 import React from 'react';
 import { observer, inject } from 'mobx-react';
-import { LoadingDoubleHoc }  from "../services/LoadingDoubleHoc";
-import { Link,  Redirect, withRouter} from 'react-router-dom';
-import axios from 'axios';
-import WordDetailsRow from "../components/WordDetailsRow";
 import CreateWordlist from "../components/CreateWordlist";
 
 const WelcomeComponent = inject('appStore')(observer(
@@ -35,7 +31,7 @@ const WelcomeComponent = inject('appStore')(observer(
 Repetition is the mother of learning, the father of action, which makes it the architect of accomplishment."</p>
 <br/>
 </div>
-      
+ <span style={{float: "right"}}><CreateWordlist/>     </span>
       </article></div> 
 
 
@@ -49,10 +45,5 @@ Repetition is the mother of learning, the father of action, which makes it the a
       )
     }
     }));
-
-// const WordlistDetailsComponent = withRouter(WordlistDetailsComponentOriginal);
-// const WordlistDetails = LoadingDoubleHoc("wordIds", "currentListId" )(WordlistDetailsComponent);
-{/* <p className="title">{this.props.appStore.numberOfClosedLists}</p>
-<p className="title">{this.props.appStore.numberOfOpenLists}</p> */}
 
 export default WelcomeComponent

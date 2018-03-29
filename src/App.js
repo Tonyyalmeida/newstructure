@@ -16,7 +16,6 @@ import SignupForm from "./scenes/SignupForm";
 import AllListsOverview from "./scenes/AllListsOverview";
 import WordlistDetailsContainer from "./scenes/WordlistDetailsContainer";
 import LoginNavBar from "./components/LoginNavBar";
-import AppNavBar from "./components/AppNavBar";
 import StudySessionComponentContainer  from "./scenes/StudySessionComponentContainer";
 import WelcomeComponent from "./scenes/WelcomeComponent";
 import 'bulma/css/bulma.css';
@@ -34,7 +33,7 @@ const BasicExample = () => (
         <LoginNavBar/>
        <Route exact path="/" component={Header}/>
      <section style={{minHeight: 800}}className="section">
-  <div className="columns">
+  <div className="columns is-mobile">
   <div className="column is-2">
   <Route path="/home/userId/:userId" component={AllListsOverview}/>
         </div>

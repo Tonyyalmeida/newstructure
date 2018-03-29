@@ -5,9 +5,6 @@ import WordlistDetails from "../scenes/WordlistDetails";
 
 const WordlistDetailsContainer = inject('appStore')(observer(
   class WordlistDetailsContainer extends React.Component {
-    constructor(props) {
-      super(props);
-    }
     componentWillMount(){
       this.props.appStore.currenListId = [];
       this.props.appStore.doneLoading = false;

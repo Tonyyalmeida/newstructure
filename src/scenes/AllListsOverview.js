@@ -1,7 +1,6 @@
 import React from 'react';
 import { observer, inject } from 'mobx-react';
 import WordlistRow from "../components/WordlistRow";
-import WordlistRowClosed from "../components/WordlistRowClosed";
 import CreateWordlist from "../components/CreateWordlist";
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group'; // ES6
 //import { LoadingHoc }  from "../services/LoadingHoc";
@@ -31,7 +30,7 @@ this.props.appStore.getListsByUserId(this.props.match.params.userId);
   componentWillUpdate(nextProps, nextState) {
   if (nextProps.appStore.doneCreatingList)
   {  
-  this.props.history.push('/home/' + "userId/" + this.props.appStore.userId + "/lists/" + this.props.appStore.currentListInfo + '/edit');
+  this.props.history.push('/home/userId/' + this.props.appStore.userId + "/lists/" + this.props.appStore.currentListInfo + '/edit');
   this.props.appStore.setDoneCreatingList(false);
   }
   }
@@ -42,8 +41,8 @@ this.props.appStore.getListsByUserId(this.props.match.params.userId);
     return (<WordlistRow x={x} id={id} key={id}/>)
   }
   render() {
-  const openLists = this.props.appStore.listIds.filter((list) => list.listStatus == "undefined" || list.listStatus == 0 || list.listStatus == '0' );
-  const closedLists = this.props.appStore.listIds.filter((list) => list.listStatus == "1");
+  const openLists = this.props.appStore.listIds.filter((list) => list.listStatus === "undefined" || list.listStatus === 0 || list.listStatus === '0' );
+  const closedLists = this.props.appStore.listIds.filter((list) => list.listStatus === "1");
 return (
 <aside className="menu">
 <a style={{fontWeight: 600}} onClick={this.toggleHiddenOpen} className="navbar-link">

@@ -17,12 +17,11 @@ export const LoadingHocWithEmpty = (loadingProp1) => (WrappedComponent) => {
   }))
 }
 
-const EmptyComponent = props => <article class="message is-danger">
-<div class="message-header">
+const EmptyComponent = props => <article className="message is-danger">
+<div className="message-header">
   <p>Oops, looks like something went wrong.</p>
-  <button class="delete" aria-label="delete"></button>
 </div>
-<div class="message-body"><p>
+<div className="message-body"><p>
 Maybe there are no Words in the List you want to study</p>
 </div>
 </article>
