@@ -92,14 +92,6 @@ class Heading123 extends React.Component {
           </button>
         </div>
         <div className={ this.state.isActive ? 'navbar-menu is-active' : 'navbar-menu'}>
-          <div className="navbar-start">
-            <Link to="/" className="navbar-item">
-              {/* <span className="icon has-text-primary" style={{ marginRight: 5 }}>
-                <i className="fas fa-code"></i>
-              </span> */}
-              Home
-            </Link>
-            </div>
             <div className="navbar-end">
             <Link to="login" className="navbar-item">
               {/* <span className="icon" style={{ marginRight: 5 }}>

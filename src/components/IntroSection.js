@@ -2,7 +2,6 @@ import React from 'react';
 import { observer, inject } from 'mobx-react';
 
 
-
 const IntroSection = inject('appStore')(observer(class IntroSection extends React.Component {
   // componentWillMount() {
   // if (this.props.appStore.isLoggedIn)
@@ -10,9 +9,7 @@ const IntroSection = inject('appStore')(observer(class IntroSection extends Reac
   // }
   render() {
     return (
-     <div id="main">
-            <Intro/>
-            </div>
+null
 )};  
   }
 ));
