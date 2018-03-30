@@ -27,11 +27,11 @@ const token = this.getCookie("topicoToken");
 const userName = this.getCookie('userName');
 const userId = this.getCookie("userId");
 if (token !== "") {
- //   this.props.appStore.setUserName;
     this.props.appStore.settopicoToken(token);
     this.props.appStore.setTrueLoggedInState();
     this.props.appStore.setUserName(userName);
     this.props.appStore.setUserId(userId);
+    this.props.appStore.setUserIdFromCookie(userId);
 }
 }
   renderNormal() {

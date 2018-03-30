@@ -25,9 +25,11 @@ toggleHiddenOpen () {
   }))   
 }
   componentWillMount() {
+//this.props.appStore.setUserId(this.props.match.params.userId);
 this.props.appStore.getListsByUserId(this.props.match.params.userId);    
   }
   componentWillUpdate(nextProps, nextState) {
+  //nextProps.appStore.setUserId(this.props.match.params.userId);
   if (nextProps.appStore.doneCreatingList)
   {  
   this.props.history.push('/home/userId/' + this.props.appStore.userId + "/lists/" + this.props.appStore.currentListInfo + '/edit');

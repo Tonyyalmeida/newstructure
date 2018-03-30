@@ -13,6 +13,7 @@ import IntroSection from "./components/IntroSection";
 import LogoutForm from "./scenes/LogoutForm";
 import LoginForm from "./scenes/LoginForm";
 import SignupForm from "./scenes/SignupForm";
+import SecurityScanner from "./services/SecurityScanner";
 import AllListsOverview from "./scenes/AllListsOverview";
 import WordlistDetailsContainer from "./scenes/WordlistDetailsContainer";
 import LoginNavBar from "./components/LoginNavBar";
@@ -36,6 +37,7 @@ const BasicExample = () => (
   <div className="columns is-mobile">
   <div className="column is-2">
   <Route path="/home/userId/:userId" component={AllListsOverview}/>
+  <Route path="/home/userId/:userId" component={SecurityScanner}/>
         </div>
         <div className="column is-10">
       <Route exact path="/home/userId/:userId" component={WelcomeComponent}/>

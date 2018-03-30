@@ -14,6 +14,4 @@ null
   }
 ));
 
-const Intro = props => <h2 className="title">Hello world!</h2>
-
 export default IntroSection

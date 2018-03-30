@@ -12,6 +12,10 @@ userId: "",
 doneLoading: false,
 listIds: [],
 currentListId: [],
+userIdFromCookie: "",
+isRealUser: computed(function () {
+    return (this.userIdFromCookie.toString() === this.userId)
+}), 
 numberOfClosedLists: computed(function() { 
 return this.listIds.filter((list) => list.listStatus === "1").length;
 }) ,
@@ -58,6 +62,9 @@ setListIds: action(function(listIds) {
 }),
 setUserId: action(function(userId) {
     this.userId = userId;
+}),
+setUserIdFromCookie: action(function(userId) {
+    this.userIdFromCookie = userId;
 }),
 updateListitem: action(function(wordArrayId, propName, propValue) {
 this.wordIds[wordArrayId][propName] = propValue;

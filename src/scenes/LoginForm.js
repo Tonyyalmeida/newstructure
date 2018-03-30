@@ -17,10 +17,13 @@ const LoginForm = inject('appStore')(observer(class LoginForm extends React.Comp
  if (this.props.location.state.logout)
  {
   this.handleLogout();
+  if (this.props.location.state.error) {this.setState({errorText: this.props.location.state.errorText, error: true});
+}
  }
- else{
-this.setState({successText: this.props.location.state.from})
-}}
+ else {
+this.setState({successText: this.props.location.state.from});
+}
+}
   }
 handleLogout() { 
   this.props.appStore.setFalseLoggedInState();
@@ -48,7 +51,8 @@ this.setState({successText: "You just logged out"});
     }
     else {
     this.props.appStore.setUserId(response.data.userId);
-    this.setState({redirect: true, successText: "Your token is " + response.data.token });
+    this.props.appStore.setUserIdFromCookie(response.data.userId);
+    this.setState({redirect: true, successText: "You got logged in" });
     // window.sessionStorage.setItem("token", response.data.token);
     // document.cookie = "token=" + response.data.token;
     var exdays = 3;
@@ -78,6 +82,7 @@ this.setState({successText: "You just logged out"});
 render() {
 const isError = this.state.error;
 const successText = this.state.successText;
+console.log(this.state);
 return (
   <section className="section is medium">
   <div className="container is large">
