@@ -16,5 +16,11 @@ export const LoadingDoubleHoc = (loadingProp1, loadingProp2) => (WrappedComponen
     }
   }))
 }
-
-const EmptyComponent = props => <div><h2>Oops, looks like something went wrong.</h2><h3>Please try again later</h3></div>
+const EmptyComponent = props => <article className="message is-danger">
+<div className="message-header">
+  <p>Oops, looks like something went wrong.</p>
+</div>
+<div className="message-body"><p>
+Please try again later</p>
+</div>
+</article>
