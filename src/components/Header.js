@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link} from 'react-router-dom';
 
 export const Header = props => (<div>
 <section className="hero is-medium is-primary is-bold">
@@ -18,12 +19,12 @@ export const Header = props => (<div>
     </p></div>
     <section className="section">
     <div className="columns is-mobile is-centered">
-    <div className="column is-3">
+    <div className="column">
     <div className="container is-fluid has-text-centered"> 
 <p className="title">Start now!</p>
-<div className="buttons">
-<a className="button is-large is-primary" href="/login">Login</a>
-<a className="button is-large is-info" href="/signup">Signup</a>
+<div className="buttons is-centered">
+<Link className="button is-large is-primary" to="/login">Login</Link>
+<Link className="button is-large is-info" to="/signup">Signup</Link>
     </div>    </div></div>
   </div></section>
   

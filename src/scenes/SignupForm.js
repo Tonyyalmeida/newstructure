@@ -1,6 +1,7 @@
 import React from 'react';
 import { Redirect} from 'react-router-dom';
 import axios from 'axios';
+import { Link} from 'react-router-dom';
 
 class SignupForm extends React.Component {
   constructor(props) {
@@ -34,11 +35,12 @@ if (redirect) {
 }
 else {
 return (
-  <section className="section is medium">
-  <div className="container is large">
-  <div className="columns">
-  <div className="column is-half">
-  <h1 className="title">Signup</h1>
+  <section className="section is-medium hero is-primary">
+  <div className="container is-large">
+  <div className="columns is-centered">
+  <div className="column is-4 has-text-centered">
+  <div className="box has-text-centered">
+  <h1 style={{color: "#584e4e"}} className="title">Signup</h1>
   <form onSubmit={this.handleSubmit}>
     <div className="field">
     <div className="control has-icons-left has-icons-right">
@@ -76,8 +78,10 @@ return (
   </div></div></form>
   {isError ? <ErrorField msg={this.state.errorText}/> : null  }
   </div>
+  <p><Link to="/login">Login</Link></p>
   </div>
-</div>
+  
+</div></div>
 </section>
 )}}};
 

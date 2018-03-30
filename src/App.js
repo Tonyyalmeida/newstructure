@@ -33,7 +33,9 @@ const BasicExample = () => (
         <div>
         <LoginNavBar/>
        <Route exact path="/" component={Header}/>
-     <section style={{minHeight: 800}}className="section">
+       <Route exact path="/signup" component={SignupForm}/>
+      <Route exact path="/login" component={LoginForm}/>
+     <section style={{minHeight: 800}} className="section">
   <div className="columns is-mobile">
   <div className="column is-2">
   <Route path="/home/userId/:userId" component={AllListsOverview}/>
@@ -42,8 +44,7 @@ const BasicExample = () => (
         <div className="column is-10">
       <Route exact path="/home/userId/:userId" component={WelcomeComponent}/>
       <Route exact path="/" component={IntroSection}/>
-      <Route exact path="/signup" component={SignupForm}/>
-      <Route exact path="/login" component={LoginForm}/>
+
       <Route exact path="/home/userId/:userId/lists/:listId/edit" component={WordlistDetailsContainer}/>
       <Route exact path="/home/userId/:userId/lists/:listId/study" component={StudySessionComponentContainer}/>
       <Route exact path="/logout" component={LogoutForm}/>

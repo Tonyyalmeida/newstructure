@@ -1,6 +1,7 @@
 import React from 'react';
 import {observer, inject } from 'mobx-react';
 import axios from 'axios';
+import { Link} from 'react-router-dom';
 
 
 const LoginForm = inject('appStore')(observer(class LoginForm extends React.Component {
@@ -82,13 +83,13 @@ this.setState({successText: "You just logged out"});
 render() {
 const isError = this.state.error;
 const successText = this.state.successText;
-console.log(this.state);
 return (
-  <section className="section is medium">
-  <div className="container is large">
-  <div className="columns">
-  <div className="column is-half">
-  <h1 className="title">Login</h1>
+  <section className="section is-medium hero is-primary">
+  <div className="container is-large">
+  <div className="columns is-centered">
+  <div className="column is-4 has-text-centered">
+  <div className="box has-text-centered">
+  <h1 style={{color: "#584e4e"}} className="title">Login</h1>
   <form onSubmit={this.handleSubmit}>
     <div className="field">
     <div className="control has-icons-left has-icons-right">
@@ -112,7 +113,8 @@ return (
   {isError ? <ErrorField msg={this.state.errorText}/> : null  }
   {successText ? <SuccessField msg={successText}/> : null  }
   </div>
-  </div>
+  <p><Link to="/signup">Signup</Link></p>
+  </div></div>
 </div>
 </section>
 )
