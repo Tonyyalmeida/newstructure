@@ -21,11 +21,16 @@ const CreateWordlist =  inject('appStore')(observer(class CreateWordlist extends
   this.props.appStore.createList(newListName);
   this.setState({ adding: false });  
   }}
-  renderNormal() { return (          <a onClick={this.handleClick} className="button is-medium is-rounded is-success">
+  renderNormal() { return (        <div>  <a onClick={this.handleClick} className="button is-medium is-rounded is-success">
   <span className="icon is-medium">
     <i className="fas fa-plus"></i>
   </span>
-</a>) }
+</a>
+{this.props.appStore.doneCreatingLists ? null : <QuickSpy/> } 
+</div>
+) 
+
+}
   renderEdit() {
     return (
       <form onReset={()=> this.handleClick()} onSubmit={(e) => this.handleSave(e)}>
@@ -45,4 +50,16 @@ const CreateWordlist =  inject('appStore')(observer(class CreateWordlist extends
 }
 ))
 
+const QuickSpy =  inject('appStore')(observer(class QuickSpy extends React.Component {
+  constructor(props) {
+    super(props);
+  }
+  componentWillUnmount () {
+  console.log("here");
+  this.props.appStore.setDoneCreatingList(false); 
+  }
+render() {
+  return <div className="helme"></div>
+}
+}))
 export default CreateWordlist

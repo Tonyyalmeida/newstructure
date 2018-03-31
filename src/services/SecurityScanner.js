@@ -12,12 +12,25 @@ const SecurityScanner= inject('appStore')(observer( class SecurityScanner extend
   componentWillUpdate(nextProps, nextState) {
   nextProps.appStore.setUserId(this.props.match.params.total);
   };
+  componentDidUpdate() {
+  this.props.appStore.setDoneCreatingList(false);
+}
           render() {
-  return this.props.appStore.isRealUser && !this.props.appStore.breach ? null : <Redirect to={{
+if (!this.props.appStore.isRealUser && this.props.appStore.breach) 
+{return <Redirect to={{
     pathname: '/login',
     state: { logout: true, error: true, errorText: "Unauthorized Access" }
-  }}/>
-    }
+  }}/>}
+  if (this.props.appStore.doneCreatingList)
+  {
+   
+    {
+      return <Redirect to={{
+      pathname: "/home/userId/" + this.props.appStore.userId + "/lists/" + this.props.appStore.currentListInfo + '/edit',
+    }}/>}   
+  }
+return (null);      
+}
   }))
 
   export default SecurityScanner

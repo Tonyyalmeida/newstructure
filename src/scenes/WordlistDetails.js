@@ -37,6 +37,7 @@ const WordlistDetailsComponentOriginal = inject('appStore')(observer(
       }
     componentWillUpdate () {
       this.props.appStore.currenListId = [];
+      this.props.appStore.setDoneCreatingList(false);
         }
   componentWillUnmount () {
   this.props.appStore.doneLoading = false;

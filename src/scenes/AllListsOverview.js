@@ -9,28 +9,8 @@ import { LoadingHocWithEmptyTwo }  from "../services/LoadingHocWithEmptyTwo";
 
 const AllListsOverviewContainer = inject('appStore')(observer(class AllListsOverviewContainer extends React.Component {
     componentWillMount() {
-      //this.props.appStore.setUserId(this.props.match.params.userId);
       this.props.appStore.getListsByUserId(this.props.match.params.userId);    
         }
-        componentWillUpdate(nextProps, nextState) {
-          //this.props.appStore.setUserId(this.props.match.params.userId); 
-            }
-
-        // shouldComponentUpdate(nextProps, nextState)
-        // {
-        // return false;
-        // } 
-    // componentWillUpdate(nextProps, nextState) {
-    //   console.log(nextProps.appStore.listIds);
-    //   console.log(nextState);
-    // nextProps.appStore.setUserId(this.props.match.params.userId);}
-        // console.log(nextProps.appStore.doneCreatingList)
-        // if (nextProps.appStore.doneCreatingList)
-        // {  
-        // this.props.history.push('/home/userId/' + this.props.appStore.userId + "/lists/" + this.props.appStore.currentListInfo + '/edit');
-        // this.props.appStore.setDoneCreatingList(false);
-        // }
-        // }
   render() {
     return (
     <AllListsOverviewComponent />
@@ -47,18 +27,6 @@ const AllListsOverviewComponentOriginal = inject('appStore')(observer(class AllL
     this.toggleHiddenOpen = this.toggleHiddenOpen.bind(this);
     this.eachClosedListComponent = this.eachClosedListComponent.bind(this);
 }
-componentWillUnmount()
-{
-console.log("willUnMount")
-}
-componentWillUpdate(nextProps, nextState) {
-//nextProps.appStore.setUserId(this.props.match.params.userId);
-// console.log(nextProps.appStore.doneCreatingList)
-/// this would have to be passed own;
-  if (nextProps.appStore.doneCreatingList)
-  {
-    this.props.history.push('/home/userId/' + this.props.appStore.userId + "/lists/" + this.props.appStore.currentListInfo + '/edit');
-  }}
 toggleHiddenClose () {
   this.setState((prevState, props) => ({
     hiddenClose: !(prevState.hiddenClose)

@@ -16,6 +16,7 @@ class SignupForm extends React.Component {
   .then( (response) => {
     if (response.data.error)
     {
+      console.log(response.data.messages.map(x => x.msg))
    this.setState({error: true, errorText: response.data.messages.map(x => x.msg)});
     }
     else {
@@ -88,7 +89,7 @@ return (
 
 const ErrorField = props =>
 <div>
-{props.msg.map((x) => <p className="help is-danger">{x}</p>)} 
+{props.msg.map((x, i) => <p key={i} className="help is-danger">{x}</p>)} 
 </div>
 
 export default SignupForm
