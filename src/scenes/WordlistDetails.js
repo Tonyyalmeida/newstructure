@@ -46,7 +46,7 @@ const WordlistDetailsComponentOriginal = inject('appStore')(observer(
     this.props.appStore.updateListStatusByListId(this.props.appStore.currentListId[0]);
     var wordArray = [];
     [0, 4, 8, 12, 16, 20, 24, 28, 32, 36].forEach((a) => {wordArray.push(this.createWord(event, a))});
-    axios.post('http://localhost:3101/words/words', wordArray).then(() => this.props.appStore.getWordsByListId(this.props.appStore.currentListId[0].listId))
+    axios.post('http://localhost:3101/words/words', wordArray, {headers: {"Authorization": this.topicoToken}}).then(() => this.props.appStore.getWordsByListId(this.props.appStore.currentListId[0].listId))
   };
   createWord(event, index) {
   const createWordFactory = ({ vn, en, exampleUseVn, exampleUseEn, wordId, status }) => ({
@@ -114,10 +114,10 @@ const WordlistDetailsComponentOriginal = inject('appStore')(observer(
   </Link> 
   <br/>  <br/>
   <div className="field"><span className="tooltip is-tooltip-bottom is-tooltip-multiline" data-tooltip="Status of this list. Should be set to close when you know all words in this list">
-  <input id="switchColorWarning" onChange={()=> {this.props.appStore.currentListId[0].listStatus === "0" ?  this.props.appStore.currentListId[0].listStatus = "1" : this.props.appStore.currentListId[0].listStatus = "0";  this.props.appStore.updateListStatusByListIdAndRefresh(this.props.appStore.currentListId[0]); }} 
-  checked={this.props.appStore.currentListId[0].listStatus === "0" || this.props.appStore.currentListId[0].listStatus === undefined ? false : true}
+  <input id="switchColorWarning" onChange={()=> {this.props.appStore.currentListId[0].listStatus == "0" ?  this.props.appStore.currentListId[0].listStatus = "1" : this.props.appStore.currentListId[0].listStatus = "0";  this.props.appStore.updateListStatusByListIdAndRefresh(this.props.appStore.currentListId[0]); }} 
+  checked={this.props.appStore.currentListId[0].listStatus == "0" || this.props.appStore.currentListId[0].listStatus === undefined ? false : true}
    type="checkbox" name="switchColorWarning" className="switch is-medium is-dark"/>
-  <label htmlFor="switchColorWarning">Status: {this.props.appStore.currentListId[0].listStatus === "0" || this.props.appStore.currentListId[0].listStatus === undefined ? "Open":  "Closed" } </label>
+  <label htmlFor="switchColorWarning">Status: {this.props.appStore.currentListId[0].listStatus == "0" || this.props.appStore.currentListId[0].listStatus === undefined ? "Open":  "Closed" } </label>
 </span>
 </div>
         </article>

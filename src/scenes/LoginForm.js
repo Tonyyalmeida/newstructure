@@ -53,7 +53,6 @@ this.setState({successText: "You just logged out"});
     else {
     this.props.appStore.setUserId(response.data.userId);
     this.props.appStore.setUserIdFromCookie(response.data.userId);
-    this.setState({redirect: true, successText: "You got logged in" });
     // window.sessionStorage.setItem("token", response.data.token);
     // document.cookie = "token=" + response.data.token;
     var exdays = 3;
@@ -61,10 +60,12 @@ this.setState({successText: "You just logged out"});
     d.setTime(d.getTime() + (exdays*24*60*60*1000));
     var expires = "expires="+ d.toUTCString();
     document.cookie = "topicoToken=" + response.data.token + ";" + expires + ";path=/";
+    this.props.appStore.settopicoToken(response.data.token); 
     document.cookie =  "userName=" + this.props.appStore.userName  + ";" + expires + ";path=/";
     document.cookie =  "userId=" + this.props.appStore.userId  + ";" + expires + ";path=/";
     this.props.appStore.setTrueLoggedInState();
     this.props.history.push("/home/userId/" + this.props.appStore.userId)
+    //this.setState({redirect: true, successText: "You got logged in" });
     }
   }).catch(
     error =>
@@ -85,7 +86,7 @@ const isError = this.state.error;
 const successText = this.state.successText;
 return (
   <section className="section is-medium hero is-primary">
-  <div className="container is-large">
+  <div className="is-large">
   <div className="columns is-centered">
   <div className="column is-4 has-text-centered">
   <div className="box has-text-centered">

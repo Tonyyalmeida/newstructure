@@ -36,7 +36,7 @@ if (redirect) {
 else {
 return (
   <section className="section is-medium hero is-primary">
-  <div className="container is-large">
+  <div className="is-large">
   <div className="columns is-centered">
   <div className="column is-4 has-text-centered">
   <div className="box has-text-centered">

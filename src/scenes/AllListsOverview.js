@@ -1,19 +1,64 @@
 import React from 'react';
 import { observer, inject } from 'mobx-react';
+import { withRouter} from 'react-router-dom';
 import WordlistRow from "../components/WordlistRow";
 import CreateWordlist from "../components/CreateWordlist";
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group'; // ES6
+import { LoadingHocWithEmptyTwo }  from "../services/LoadingHocWithEmptyTwo";
 //import { LoadingHoc }  from "../services/LoadingHoc";
 
-const AllListsOverview = inject('appStore')(observer(class AllListsOverview extends React.Component {
+const AllListsOverviewContainer = inject('appStore')(observer(class AllListsOverviewContainer extends React.Component {
+    componentWillMount() {
+      //this.props.appStore.setUserId(this.props.match.params.userId);
+      this.props.appStore.getListsByUserId(this.props.match.params.userId);    
+        }
+        componentWillUpdate(nextProps, nextState) {
+          //this.props.appStore.setUserId(this.props.match.params.userId); 
+            }
+
+        // shouldComponentUpdate(nextProps, nextState)
+        // {
+        // return false;
+        // } 
+    // componentWillUpdate(nextProps, nextState) {
+    //   console.log(nextProps.appStore.listIds);
+    //   console.log(nextState);
+    // nextProps.appStore.setUserId(this.props.match.params.userId);}
+        // console.log(nextProps.appStore.doneCreatingList)
+        // if (nextProps.appStore.doneCreatingList)
+        // {  
+        // this.props.history.push('/home/userId/' + this.props.appStore.userId + "/lists/" + this.props.appStore.currentListInfo + '/edit');
+        // this.props.appStore.setDoneCreatingList(false);
+        // }
+        // }
+  render() {
+    return (
+    <AllListsOverviewComponent />
+    )
+  }
+  }
+  ))
+const AllListsOverviewComponentOriginal = inject('appStore')(observer(class AllListsOverviewComponentOriginal extends React.Component {
   constructor(props) {
     super(props);
-    this.state =  {doneLoading : false, hiddenClose: false, hiddenOpen: false}
+    this.state =  {hiddenClose: false, hiddenOpen: false}
     this.eachListComponent = this.eachListComponent.bind(this);
     this.toggleHiddenClose = this.toggleHiddenClose.bind(this);
     this.toggleHiddenOpen = this.toggleHiddenOpen.bind(this);
     this.eachClosedListComponent = this.eachClosedListComponent.bind(this);
 }
+componentWillUnmount()
+{
+console.log("willUnMount")
+}
+componentWillUpdate(nextProps, nextState) {
+//nextProps.appStore.setUserId(this.props.match.params.userId);
+// console.log(nextProps.appStore.doneCreatingList)
+/// this would have to be passed own;
+  if (nextProps.appStore.doneCreatingList)
+  {
+    this.props.history.push('/home/userId/' + this.props.appStore.userId + "/lists/" + this.props.appStore.currentListInfo + '/edit');
+  }}
 toggleHiddenClose () {
   this.setState((prevState, props) => ({
     hiddenClose: !(prevState.hiddenClose)
@@ -24,18 +69,6 @@ toggleHiddenOpen () {
     hiddenOpen: !(prevState.hiddenOpen)
   }))   
 }
-  componentWillMount() {
-//this.props.appStore.setUserId(this.props.match.params.userId);
-this.props.appStore.getListsByUserId(this.props.match.params.userId);    
-  }
-  componentWillUpdate(nextProps, nextState) {
-  //nextProps.appStore.setUserId(this.props.match.params.userId);
-  if (nextProps.appStore.doneCreatingList)
-  {  
-  this.props.history.push('/home/userId/' + this.props.appStore.userId + "/lists/" + this.props.appStore.currentListInfo + '/edit');
-  this.props.appStore.setDoneCreatingList(false);
-  }
-  }
   eachListComponent(x, id) {
     return (<WordlistRow x={x} id={id} key={id}/>)
   }
@@ -43,20 +76,22 @@ this.props.appStore.getListsByUserId(this.props.match.params.userId);
     return (<WordlistRow x={x} id={id} key={id}/>)
   }
   render() {
-  const openLists = this.props.appStore.listIds.filter((list) => list.listStatus === "undefined" || list.listStatus === 0 || list.listStatus === '0' );
-  const closedLists = this.props.appStore.listIds.filter((list) => list.listStatus === "1");
+  const openLists = this.props.appStore.listIds.filter((list) => list.listStatus == "undefined" || list.listStatus == 0 || list.listStatus == '0' );
+  const closedLists = this.props.appStore.listIds.filter((list) => list.listStatus == "1");
 return (
+  <div style={{paddingLeft: "35px" ,paddingTop: "30px", minHeight: 800, borderRight: "solid 0.5px", backgroundColor: "#ddf3f2"}} 
+  className="column is-3">
 <aside className="menu">
-<a style={{fontWeight: 600}} onClick={this.toggleHiddenOpen} className="navbar-link">
+<a style={this.state.hiddenOpen ? {fontWeight: 700} : {borderBottom: "solid 1px", fontStyle: "oblique"}} onClick={this.toggleHiddenOpen} className="navbar-link">
 Open Word Decks ({openLists ? this.props.appStore.numberOfOpenLists : 0})
 </a>
 <HiddenLists list={openLists} hidden={this.state.hiddenOpen}/>
          <CreateWordlist/>
-            <a style={{fontWeight: 600}} onClick={this.toggleHiddenClose} className="navbar-link">
+            <a style={this.state.hiddenClose ? {fontWeight: 700} : {borderBottom: "solid 1px", fontStyle: "oblique"}} onClick={this.toggleHiddenClose} className="navbar-link">
             Closed Word Decks ({closedLists ? this.props.appStore.numberOfClosedLists : 0})
            </a>
            <HiddenLists list={closedLists} hidden={this.state.hiddenClose}/>
-        </aside>
+        </aside></div>
         )
   }}))
 
@@ -87,7 +122,9 @@ Open Word Decks ({openLists ? this.props.appStore.numberOfOpenLists : 0})
   )
   }}
   ))
+  const AllListsOverviewComponent = withRouter(AllListsOverviewComponentOriginal);
+  // const AllListsOverview = LoadingHocWithEmptyTwo("listIds")(AllListsOverviewComponent);
+ // const AllListsOverviewComponent = LoadingHocWithEmptyTwo("listIds")(AllListsOverviewComponentOriginal);
 
 
-
-export default AllListsOverview
+export default AllListsOverviewContainer

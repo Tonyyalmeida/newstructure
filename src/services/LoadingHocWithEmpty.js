@@ -17,11 +17,11 @@ export const LoadingHocWithEmpty = (loadingProp1) => (WrappedComponent) => {
   }))
 }
 
-const EmptyComponent = props => <article className="message is-danger">
+const EmptyComponent = props => <div className="container is-fluid"><article className="message is-danger">
 <div className="message-header">
   <p>Oops, looks like something went wrong.</p>
 </div>
 <div className="message-body"><p>
 Maybe there are no Words in the List you want to study</p>
 </div>
-</article>
+</article></div>
