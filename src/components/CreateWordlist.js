@@ -21,25 +21,24 @@ const CreateWordlist =  inject('appStore')(observer(class CreateWordlist extends
   this.props.appStore.createList(newListName);
   this.setState({ adding: false });  
   }}
-  renderNormal() { return (        <div>  <a onClick={this.handleClick} className="button is-medium is-rounded is-success">
+  renderNormal() { return (
+  <a onClick={this.handleClick} className="button is-medium is-rounded is-success">
   <span className="icon is-medium">
     <i className="fas fa-plus"></i>
   </span>
 </a>
-{this.props.appStore.doneCreatingLists ? null : <QuickSpy/> } 
-</div>
 ) 
 
 }
   renderEdit() {
-    return (
+    return (<div  className="box">
       <form onReset={()=> this.handleClick()} onSubmit={(e) => this.handleSave(e)}>
       <div className="row uniform">
       <input className="input" type="text" placeholder="New ListName"/>
 <button type="submit" className="button is-primary">Save</button>
 <button type="reset" className="button">Cancel</button>
 </div>
-</form>
+</form></div>
 )
   }
   render() {
@@ -50,16 +49,16 @@ const CreateWordlist =  inject('appStore')(observer(class CreateWordlist extends
 }
 ))
 
-const QuickSpy =  inject('appStore')(observer(class QuickSpy extends React.Component {
-  constructor(props) {
-    super(props);
-  }
-  componentWillUnmount () {
-  console.log("here");
-  this.props.appStore.setDoneCreatingList(false); 
-  }
-render() {
-  return <div className="helme"></div>
-}
-}))
+// const QuickSpy =  inject('appStore')(observer(class QuickSpy extends React.Component {
+//   constructor(props) {
+//     super(props);
+//   }
+//   componentWillUnmount () {
+//   console.log("here");
+//   this.props.appStore.setDoneCreatingList(false); 
+//   }
+// render() {
+//   return <div className="helme"></div>
+// }
+// }))  //{this.props.appStore.doneCreatingLists ? null : <QuickSpy/> } 
 export default CreateWordlist

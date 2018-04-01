@@ -81,7 +81,7 @@ class Heading123 extends React.Component {
                 borderBottomRightRadius: '50%',
                 marginRight: 15
               }}
-              src="https://bulma.io/images/bulma-logo.png"
+              src={require("../images/logo.png")}
               width="30px" alt="" />
             <span>topico.com</span>
           </Link>
@@ -157,7 +157,7 @@ class HeadingLoggedIn extends React.Component {
                 borderBottomRightRadius: '50%',
                 marginRight: 15
               }}
-              src="https://bulma.io/images/bulma-logo.png"
+              src={require("../images/logo.png")}
               width="30px" alt="" />
             <span>topico.com</span>
           </Link>

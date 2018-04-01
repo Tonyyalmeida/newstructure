@@ -3,7 +3,6 @@ import React from 'react';
 import {
   BrowserRouter as Router,
   Route,
-  UpdateBlocker
 } from 'react-router-dom';
 // import axios from 'axios';
 import { Provider } from 'mobx-react';
@@ -36,13 +35,12 @@ const BasicExample = () => (
        <Route exact path="/" component={Header}/>
        <Route exact path="/signup" component={SignupForm}/>
       <Route exact path="/login" component={LoginForm}/>
-     <section style={{minHeight: 800}}>
+     <section style={{minHeight: 900}}>
   <div className="columns is-mobile">
   <Route path="/home/userId/:userId" component={AllListsOverviewContainer}/>
   <Route path="/home/userId/:total" component={SecurityScanner}/>
         <div style={{paddingTop: "35px", paddingLeft: "35px"}} className="column is-9">
       <Route exact path="/home/userId/:userId" component={WelcomeComponent}/>
-      <Route exact path="/" component={IntroSection}/>
       <Route exact path="/home/userId/:userId/lists/:listId/edit" component={WordlistDetailsContainer}/>
       <Route exact path="/home/userId/:userId/lists/:listId/study" component={StudySessionComponentContainer}/>
       <Route exact path="/logout" component={LogoutForm}/>

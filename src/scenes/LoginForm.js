@@ -46,10 +46,8 @@ this.setState({successText: "You just logged out"});
   this.props.appStore.setUserName(event.target.username.value);
     axios.post('http://localhost:3101/login', formData)
   .then( (response) => {
-    console.log("hi");
     if (response.data.error)
     {
-      console.log('is it error?')
    this.setState({error: true, errorText: response.data.messages.map(x => x.msg)});
     }
     else {
@@ -72,7 +70,6 @@ this.setState({successText: "You just logged out"});
   }).catch(
     error =>
     {
-      console.log('from here');
     if ( error.request.status === 401) {
     this.setState({error: true, errorText: "Username and password are not matching. Please try again"})
   }

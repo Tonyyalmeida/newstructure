@@ -23,11 +23,9 @@ if (!this.props.appStore.isRealUser && this.props.appStore.breach)
   }}/>}
   if (this.props.appStore.doneCreatingList)
   {
-   
-    {
       return <Redirect to={{
       pathname: "/home/userId/" + this.props.appStore.userId + "/lists/" + this.props.appStore.currentListInfo + '/edit',
-    }}/>}   
+    }}/>
   }
 return (null);      
 }

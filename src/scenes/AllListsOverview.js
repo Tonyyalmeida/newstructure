@@ -4,8 +4,6 @@ import { withRouter} from 'react-router-dom';
 import WordlistRow from "../components/WordlistRow";
 import CreateWordlist from "../components/CreateWordlist";
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group'; // ES6
-import { LoadingHocWithEmptyTwo }  from "../services/LoadingHocWithEmptyTwo";
-//import { LoadingHoc }  from "../services/LoadingHoc";
 
 const AllListsOverviewContainer = inject('appStore')(observer(class AllListsOverviewContainer extends React.Component {
     componentWillMount() {
@@ -91,8 +89,5 @@ Open Word Decks ({openLists ? this.props.appStore.numberOfOpenLists : 0})
   }}
   ))
   const AllListsOverviewComponent = withRouter(AllListsOverviewComponentOriginal);
-  // const AllListsOverview = LoadingHocWithEmptyTwo("listIds")(AllListsOverviewComponent);
- // const AllListsOverviewComponent = LoadingHocWithEmptyTwo("listIds")(AllListsOverviewComponentOriginal);
-
 
 export default AllListsOverviewContainer

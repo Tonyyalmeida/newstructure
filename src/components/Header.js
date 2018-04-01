@@ -25,7 +25,14 @@ export const Header = props => (<div>
 <div className="buttons is-centered">
 <Link className="button is-large is-primary" to="/login">Login</Link>
 <Link className="button is-large is-info" to="/signup">Signup</Link>
-    </div>    </div></div>
+    </div>
+       <div className="columns is-mobile is-centered">    
+         <div className="column is-half-mobile is-one-quarter-desktop">
+         <div className="container is-fluid">
+            <figure style={{marginLeft: "auto", marginRight:"auto"}}className="image is-128x128 avatar">
+  <img src={require("../images/logo.png")}/>
+</figure>  </div>
+</div> </div>  </div>  </div>
   </div></section>
   
 </div>)
