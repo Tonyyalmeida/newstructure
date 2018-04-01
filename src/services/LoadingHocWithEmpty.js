@@ -9,18 +9,19 @@ const isEmpty = (prop) => (
   (prop.constructor === Object && Object.keys(prop).length === 0)
 );
 
-export const LoadingDoubleHoc = (loadingProp1, loadingProp2) => (WrappedComponent) => {
+export const LoadingHocWithEmpty = (loadingProp1) => (WrappedComponent) => {
   return inject('appStore')(observer( class DoubleHoc extends Component {
           render() {
-  return this.props.appStore.doneLoading ?  ((isEmpty(this.props.appStore[loadingProp1])  || isEmpty(this.props.appStore[loadingProp2])) ? <EmptyComponent/> : <WrappedComponent {...this.props}/>) : <div className="loader"></div>
+  return this.props.appStore.doneLoading ?  ((isEmpty(this.props.appStore[loadingProp1])  ) ? <EmptyComponent/> : <WrappedComponent {...this.props}/>) : <div className="loader"></div>
     }
   }))
 }
-const EmptyComponent = props => <article className="message is-danger">
+
+const EmptyComponent = props => <div className="container is-fluid"><article className="message is-danger">
 <div className="message-header">
   <p>Oops, looks like something went wrong.</p>
 </div>
 <div className="message-body"><p>
-Please try again later</p>
+Maybe there are no Words in the List you want to study</p>
 </div>
-</article>
+</article></div>

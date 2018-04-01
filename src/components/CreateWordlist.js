@@ -1,6 +1,5 @@
 import React from 'react';
 import { observer, inject } from 'mobx-react';
-import { LoadingHoc }  from "../services/LoadingHoc";
 
 
 const CreateWordlist =  inject('appStore')(observer(class CreateWordlist extends React.Component {
@@ -11,7 +10,7 @@ const CreateWordlist =  inject('appStore')(observer(class CreateWordlist extends
     this.handleClick = this.handleClick.bind(this);
   }
   handleClick() {
-    this.setState({ adding: !this.state.adding, hocState: true })
+    this.setState({ adding: !this.state.adding})
   }
   handleSave(e) {
   e.preventDefault(); 
@@ -20,23 +19,26 @@ const CreateWordlist =  inject('appStore')(observer(class CreateWordlist extends
   {alert("Fields cannot be empty") }
   else {
   this.props.appStore.createList(newListName);
-  this.setState({ adding: false });
-  this.props.appStore.getListsByUserId(this.props.appStore.userId);    
+  this.setState({ adding: false });  
   }}
-  renderNormal() { return (<div><button onClick={this.handleClick}>Create a new deck</button></div>) }
+  renderNormal() { return (
+  <a onClick={this.handleClick} className="button is-medium is-rounded is-success">
+  <span className="icon is-medium">
+    <i className="fas fa-plus"></i>
+  </span>
+</a>
+) 
+
+}
   renderEdit() {
-    return (
+    return (<div  className="box">
       <form onReset={()=> this.handleClick()} onSubmit={(e) => this.handleSave(e)}>
       <div className="row uniform">
-<div className="5u 12u$(xsmall)">
-   <input type="text" name="demo-name" id="demo-name" placeholder="New Deck Name" />
-</div>
-<div className="12u 12u$(xsmall)">
-<button type="submit" className="button submit">Save</button>
+      <input className="input" type="text" placeholder="New ListName"/>
+<button type="submit" className="button is-primary">Save</button>
 <button type="reset" className="button">Cancel</button>
 </div>
-</div>
-</form>
+</form></div>
 )
   }
   render() {
@@ -47,7 +49,16 @@ const CreateWordlist =  inject('appStore')(observer(class CreateWordlist extends
 }
 ))
 
-
-const CreateWordlistHOC= LoadingHoc("listIds")(CreateWordlist);
-
-export default CreateWordlistHOC
+// const QuickSpy =  inject('appStore')(observer(class QuickSpy extends React.Component {
+//   constructor(props) {
+//     super(props);
+//   }
+//   componentWillUnmount () {
+//   console.log("here");
+//   this.props.appStore.setDoneCreatingList(false); 
+//   }
+// render() {
+//   return <div className="helme"></div>
+// }
+// }))  //{this.props.appStore.doneCreatingLists ? null : <QuickSpy/> } 
+export default CreateWordlist
