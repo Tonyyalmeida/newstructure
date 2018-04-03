@@ -44,7 +44,7 @@ this.setState({successText: "You just logged out"});
   event.preventDefault();    
   var formData = { email: event.target.username.value, password: event.target.password1.value};
   this.props.appStore.setUserName(event.target.username.value);
-    axios.post('http://localhost:3101/login', formData)
+    axios.post('https://peaceful-tundra-85950.herokuapp.com/login', formData)
   .then( (response) => {
     if (response.data.error)
     {
