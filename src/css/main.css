@@ -33,7 +33,7 @@
       height: 600px;
     }
     to {
-      opacity: 0.0;
+      opacity: 1.0;
       height: 0px;
     }
   }
@@ -56,7 +56,7 @@
   }
   .toggle2-leave {
     animation-name: fade-out2;
-    animation-duration: 600ms;
+    animation-duration: 100ms;
   }
   
   @keyframes fade-in2 {
@@ -83,3 +83,7 @@
 
     .tableheaders { display: none; }
     }
+
+    .columns:last-child {
+      margin-bottom: 0;
+  }

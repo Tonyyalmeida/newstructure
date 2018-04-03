@@ -16,7 +16,8 @@ const SecurityScanner= inject('appStore')(observer( class SecurityScanner extend
   this.props.appStore.setDoneCreatingList(false);
 }
           render() {
-if (!this.props.appStore.isRealUser && this.props.appStore.breach) 
+            //console.log((!this.props.appStore.isRealUser && this.props.appStore.breach) )
+if (!this.props.appStore.isRealUser || this.props.appStore.breach) 
 {return <Redirect to={{
     pathname: '/login',
     state: { logout: true, error: true, errorText: "Unauthorized Access" }

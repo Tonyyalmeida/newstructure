@@ -28,6 +28,9 @@ redirectReady: false,
 setRedirectReady: action(function() {
     this.redirectReady = true;
 }),
+setDoneLoading: action(function(status) {
+    this.doneLoading = status;
+}),
 allowEditListName: true,
 wordIds: [],
 finalStatus: computed(function () {
