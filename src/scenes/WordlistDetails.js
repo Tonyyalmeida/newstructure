@@ -44,11 +44,12 @@ const WordlistDetailsComponentOriginal = inject('appStore')(observer(
   }
   handleSubmit(event) {
     event.preventDefault();
+    this.props.appStore.setWordIds([]);
+    this.props.appStore.setDoneLoading(false);
     this.props.appStore.updateListStatusByListId(this.props.appStore.currentListId[0]);
     var wordArray = [];
     [0, 4, 8, 12, 16, 20, 24, 28, 32, 36].forEach((a) => {wordArray.push(this.createWord(event, a))});
-    axios.post('http://localhost:3101/words/words', wordArray, {headers: {"Authorization": this.topicoToken}}).then(() => this.props.appStore.getWordsByListId(this.props.appStore.currentListId[0].listId))
-  };
+    axios.post('https://peaceful-tundra-85950.herokuapp.com/api/words/words', wordArray, {headers: {"Authorization": this.props.appStore.topicoToken}}).then(() => this.props.appStore.getWordsByListId(this.props.appStore.currentListId[0].listId))};
   createWord(event, index) {
   const createWordFactory = ({ vn, en, exampleUseVn, exampleUseEn, wordId, status }) => ({
     vn,

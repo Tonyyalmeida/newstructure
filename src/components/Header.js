@@ -30,7 +30,7 @@ export const Header = props => (<div>
          <div className="column is-half-mobile is-one-quarter-desktop">
          <div className="container is-fluid">
             <figure style={{marginLeft: "auto", marginRight:"auto"}}className="image is-128x128 avatar">
-  <img src={require("../images/logo.png")}/>
+  <img alt={"logo"}src={require("../images/logo.png")}/>
 </figure>  </div>
 </div> </div>  </div>  </div>
   </div></section>
