@@ -12,7 +12,7 @@ class SignupForm extends React.Component {
   handleSubmit(event) {
   event.preventDefault();    
   var formData = { email: event.target.email.value, username: event.target.username.value, password1: event.target.password1.value, password2: event.target.password2.value  };
-    axios.post('http://localhost:3101/users', formData)
+    axios.post('https://peaceful-tundra-85950.herokuapp.com/users', formData)
   .then( (response) => {
     if (response.data.error)
     {
