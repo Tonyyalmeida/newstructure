@@ -35,7 +35,7 @@ const BasicExample = () => (
        <Route exact path="/" component={Header}/>
        <Route exact path="/signup" component={SignupForm}/>
       <Route exact path="/login" component={LoginForm}/>
-     <section style={{minHeight: 400}}>
+     <section style={{minHeight: 650}}>
   <div className="columns is-mobile">
   <Route path="/home/userId/:userId" component={AllListsOverviewContainer}/>
   <Route path="/home/userId/:total" component={SecurityScanner}/>

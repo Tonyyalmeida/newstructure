@@ -161,7 +161,7 @@ create_ten_wordIds: action(function (listId) {
     var base = "https://peaceful-tundra-85950.herokuapp.com/api/words/newwords/"
     var url = base + listId
     axios.post(url, {listId: listId}, {headers: {"Authorization": this.topicoToken}})
-    .then(action(json => { this.getLatestListsByUserId(this.userId); console.log('expected zuerst') }))
+    .then(action(json => { this.getLatestListsByUserId(this.userId) }))
 }),
 getListsByUserId: action(function (userId) {
 //const authHeaders = {headers: {"Authorization": this.topicoToken}}; 
@@ -176,7 +176,7 @@ getLatestListsByUserId: action(function (userId) {
     var base = "https://peaceful-tundra-85950.herokuapp.com/api/users/"
     var ending = "/lists"
     var url = base + userId + ending;
-    axios.get(url,{headers: {"Authorization": this.topicoToken}} ).then(action( y =>{if (y.data.success === false) {this.setBreach(true)} this.setListIds(y.data); this.doneLoading = true })).then(() => {console.log('expected zuletzt');this.setDoneCreatingList(true)}).catch((error) => 
+    axios.get(url,{headers: {"Authorization": this.topicoToken}} ).then(action( y =>{if (y.data.success === false) {this.setBreach(true)} this.setListIds(y.data); this.doneLoading = true })).then(() => {this.setDoneCreatingList(true)}).catch((error) => 
     {console.log(error) })
     }),
 updateListStatusByListId: action(function (listObject) {   

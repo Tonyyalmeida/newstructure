@@ -45,7 +45,7 @@ toggleHiddenOpen () {
   const openLists = this.props.appStore.listIds.filter((list) => list.listStatus == "undefined" || list.listStatus == 0 || list.listStatus == '0' );
   const closedLists = this.props.appStore.listIds.filter((list) => list.listStatus == "1");
 return (
-  <div style={{paddingLeft: "35px" ,paddingTop: "30px", minHeight: 800, borderRight: "solid 0.5px", backgroundColor: "#ddf3f2"}} 
+  <div style={{paddingLeft: "35px" ,paddingTop: "30px", minHeight: 650, borderRight: "solid 0.5px", backgroundColor: "#ddf3f2"}} 
   className="column is-3">
 <aside className="menu">
 <a style={this.state.hiddenOpen ? {fontWeight: 700} : {borderBottom: "solid 1px", fontStyle: "oblique"}} onClick={this.toggleHiddenOpen} className="navbar-link">
