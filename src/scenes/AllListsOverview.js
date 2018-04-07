@@ -45,15 +45,15 @@ toggleHiddenOpen () {
   const openLists = this.props.appStore.listIds.filter((list) => list.listStatus == "undefined" || list.listStatus == 0 || list.listStatus == '0' );
   const closedLists = this.props.appStore.listIds.filter((list) => list.listStatus == "1");
 return (
-  <div style={{paddingLeft: "35px", paddingTop: "30px", minHeight: "650px", borderRight: "solid 0.5px", backgroundColor: "#ddf3f2"}} 
+  <div style={{paddingLeft: "35px", paddingTop: "30px", minHeight: "950px", borderRight: "solid 0.5px", backgroundColor: "#ddf3f2"}} 
   className="column is-3">
 <aside className="menu">
-<a style={this.state.hiddenOpen ? {fontWeight: 800} : {borderBottom: "solid 1px", fontStyle: "oblique"}} onClick={this.toggleHiddenOpen} className={"navbar-link"}>
+<a style={this.state.hiddenOpen ? {fontWeight: 800} : {borderBottom: "solid 1px", fontStyle: "oblique"}} onClick={this.toggleHiddenOpen} className={this.state.hiddenOpen ? "navbar-link" : "menudropdown"}>
 Open Word Decks ({openLists ? this.props.appStore.numberOfOpenLists : 0})
 </a>
 <HiddenLists list={openLists} hidden={this.state.hiddenOpen}/>
          <CreateWordlist/>
-            <a style={this.state.hiddenClose ? {fontWeight: 700} : {borderBottom: "solid 1px", fontStyle: "oblique"}} onClick={this.toggleHiddenClose} className="navbar-link">
+            <a style={this.state.hiddenClose ? {fontWeight: 700} : {borderBottom: "solid 1px", fontStyle: "oblique"}} onClick={this.toggleHiddenClose} className={this.state.hiddenClose ? "navbar-link" : "menudropdown"}>
             Closed Word Decks ({closedLists ? this.props.appStore.numberOfClosedLists : 0})
            </a>
            <HiddenLists list={closedLists} hidden={this.state.hiddenClose}/>
@@ -76,8 +76,8 @@ Open Word Decks ({openLists ? this.props.appStore.numberOfOpenLists : 0})
       return(
         <ReactCSSTransitionGroup
         transitionName="toggle2"
-        transitionEnterTimeout={700}
-        transitionLeaveTimeout={300}>
+        transitionEnterTimeout={0}
+        transitionLeaveTimeout={0}>
           {this.props.hidden ? null: <div className="toggle2-base">
           <ul className="menu-list">
           {lists ? lists.map(this.eachClosedListComponent) : null}

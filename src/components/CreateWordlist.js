@@ -13,7 +13,8 @@ const CreateWordlist =  inject('appStore')(observer(class CreateWordlist extends
     this.setState({ adding: !this.state.adding})
   }
   handleSave(e) {
-  e.preventDefault(); 
+  e.preventDefault();
+  this.props.appStore.setDoneLoading(false);
   const newListName = e.target[0].value.toString();
   if (newListName.length === 0)
   {alert("Fields cannot be empty") }
@@ -34,7 +35,7 @@ const CreateWordlist =  inject('appStore')(observer(class CreateWordlist extends
     return (<div  className="box">
       <form onReset={()=> this.handleClick()} onSubmit={(e) => this.handleSave(e)}>
       <div className="row uniform">
-      <input className="input" type="text" placeholder="New ListName"/>
+      <input className="input" type="text" placeholder="New Listname"/>
 <button type="submit" className="button is-primary">Save</button>
 <button type="reset" className="button">Cancel</button>
 </div>

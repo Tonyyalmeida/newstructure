@@ -20,6 +20,9 @@ const WordlistDetailsContainer = inject('appStore')(observer(
         this.props.appStore.getNeededInfo(nextProps.match.params.listId);
         this.props.appStore.setUserId(this.props.match.params.userId);
     };
+    componentWillUnmount() {
+      this.props.appStore.setDoneCreatingList(false);
+    }
   render () {
     return(
       <WordlistDetails wordId={this.props.match.params.listId}/>

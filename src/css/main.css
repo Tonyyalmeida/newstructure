@@ -12,7 +12,7 @@
   }
   .toggle-leave {
     animation-name: fade-out;
-    animation-duration:600ms;
+    animation-duration: 100ms;
   }
   
   @keyframes fade-in {
@@ -22,7 +22,7 @@
     }
     to {
       opacity: 1.0;
-      height: 160px;
+      height: 100%;
     }
   }
   
@@ -30,7 +30,7 @@
   @keyframes fade-out {
     from {
       opacity: 1.0;
-      height: 600px;
+      height: 100%;
     }
     to {
       opacity: 1.0;
@@ -87,3 +87,17 @@
     .columns:last-child {
       margin-bottom: 0;
   }
+
+  .menudropdown {
+      color: #363636;
+      display: block;
+      line-height: 1.5;
+      padding: 0.5rem 1rem;
+      padding-right: 2.5em;
+      position: relative;
+  }
+  
+  .menudropdown:hover {
+    background-color: whitesmoke;
+    color: #3273dc;
+}
