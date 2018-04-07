@@ -13,18 +13,22 @@ const LoginForm = inject('appStore')(observer(class LoginForm extends React.Comp
     this.handleLogout =    this.handleLogout.bind(this);
   }
   componentWillMount() {
+    this.props.appStore.setDoneLoading(true);
  if (this.props.location.state)
 {
  if (this.props.location.state.logout)
  {
   this.handleLogout();
-  if (this.props.location.state.error) {this.setState({errorText: this.props.location.state.errorText, error: true});
+  if (this.props.location.state.error) {
+    this.setState({errorText: this.props.location.state.errorText, error: true});
+    this.props.appStore.setDoneLoading(true);
 }
  }
  else {
 this.setState({successText: this.props.location.state.from});
 }
 }
+this.props.appStore.setDoneLoading(true);
   }
 handleLogout() { 
   this.props.appStore.setFalseLoggedInState();
@@ -41,16 +45,19 @@ this.setState({successText: "You just logged out"});
     document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
 };
   handleSubmit(event) {
-  event.preventDefault();    
+  event.preventDefault();
+  this.props.appStore.setDoneLoading(false);    
   var formData = { email: event.target.username.value, password: event.target.password1.value};
   this.props.appStore.setUserName(event.target.username.value);
     axios.post('https://peaceful-tundra-85950.herokuapp.com/login', formData)
   .then( (response) => {
     if (response.data.error)
     {
+      this.props.appStore.setDoneLoading(true);
    this.setState({error: true, errorText: response.data.messages.map(x => x.msg)});
     }
     else {
+    this.props.appStore.setDoneLoading(true);
     this.props.appStore.setUserId(response.data.userId);
     this.props.appStore.setUserIdFromCookie(response.data.userId);
     // window.sessionStorage.setItem("token", response.data.token);
@@ -64,27 +71,37 @@ this.setState({successText: "You just logged out"});
     document.cookie =  "userName=" + this.props.appStore.userName  + ";" + expires + ";path=/";
     document.cookie =  "userId=" + this.props.appStore.userId  + ";" + expires + ";path=/";
     this.props.appStore.setTrueLoggedInState();
+    this.props.appStore.setDoneLoading(true);
     this.props.history.push("/home/userId/" + this.props.appStore.userId)
     //this.setState({redirect: true, successText: "You got logged in" });
     }
   }).catch(
     error =>
     {
+    if (error.request) {
     if ( error.request.status === 401) {
+    this.props.appStore.setDoneLoading(true);
     this.setState({error: true, errorText: "Username and password are not matching. Please try again"})
   }
-  else if ( error.response.status === 400) {
+  if ( error.request.status === 400) {
+    this.props.appStore.setDoneLoading(true);
     this.setState({error: true, errorText: "Please enter username and password"})
   }
   else {
-    this.setState({error: true, errorText: "Something went wrong a lot"})
+    this.props.appStore.setDoneLoading(true);
+    this.setState({error: true, errorText: "Something went wrong"})
+  }
+}
+  else {
+    this.props.appStore.setDoneLoading(true);
+    this.setState({error: true, errorText: "Something went wrong"})
   }
 });
   }
 render() {
 const isError = this.state.error;
 const successText = this.state.successText;
-return (
+return (  
   <section className="section is-medium hero is-primary">
   <div className="is-large">
   <div className="columns is-centered">
@@ -109,17 +126,16 @@ return (
   </div>
   <div className="field is-grouped">
   <div className="control">
-    <button type="submit" className="button is-link">Submit</button>
+    {this.props.appStore.doneLoading ? <button type="submit" className="button is-link">Submit</button> : <div className="loader"></div>}
   </div></div></form>
   {isError ? <ErrorField msg={this.state.errorText}/> : null  }
   {successText ? <SuccessField msg={successText}/> : null  }
   </div>
-  <p><Link to="/signup">Signup</Link></p>
+<p><Link to="/signup">Signup</Link></p>
   </div></div>
 </div>
 </section>
 )
-
 }}
 ));
 
