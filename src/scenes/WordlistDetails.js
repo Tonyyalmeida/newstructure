@@ -32,16 +32,16 @@ const WordlistDetailsComponentOriginal = inject('appStore')(observer(
     }))
   }
   componentWillMount () {
-  if (this.props.history.location.state) 
-  this.setState({fromStudy: this.props.history.location.state.done, lengthCounter:this.props.history.location.state.lengthCounter,  successCounter: this.props.history.location.state.successCounter});
-      }
-    componentWillUpdate () {
-      this.props.appStore.currenListId = [];
-      this.props.appStore.setDoneCreatingList(false);
+    if (this.props.history.location.state) 
+    this.setState({fromStudy: this.props.history.location.state.done, lengthCounter:this.props.history.location.state.lengthCounter,  successCounter: this.props.history.location.state.successCounter});
         }
-  componentWillUnmount () {
-  this.props.appStore.doneLoading = false;
-  }
+      componentWillUpdate () {
+        this.props.appStore.currenListId = [];
+        this.props.appStore.setDoneCreatingList(false);
+          }
+    componentWillUnmount () {
+      this.props.appStore.setDoneLoading(false);
+    }
   handleSubmit(event) {
     event.preventDefault();
     this.props.appStore.setWordIds([]);

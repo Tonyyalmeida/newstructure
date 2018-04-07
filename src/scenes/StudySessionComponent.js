@@ -58,7 +58,7 @@ incrementFailCounter() {
       const currentIndex = this.state.index+1;
       const lastOne = this.state.index === this.props.appStore.studyWordIds.length - 1 ? true : false;
       return (
-      <div>
+      <div style={{paddingRight: "10px" }}>
                 <nav className="breadcrumb" aria-label="breadcrumbs">
   <ul>
     <li className="is-active"><a style={{fontWeight:"800"}} aria-current="page">{this.props.appStore.currentListId[0] ? this.props.appStore.currentListId[0].listName : "placeholder"}</a></li>

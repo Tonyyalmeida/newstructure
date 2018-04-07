@@ -63,6 +63,7 @@ setCurrentListInfo: action(function(currentListInfo) {
 }),
 setCurrentListId: action(function(currentListId) {
     this.currentListId = currentListId;
+    this.doneLoading = true;
 }),
 setListIds: action(function(listIds) {
     this.listIds = listIds;
@@ -99,7 +100,7 @@ setWordIds: action(function(wordIds) {
     this.wordIds = wordIds;
 }),
 setStudyWordIds: action(function(wordIds) {
-    this.studyWordIds = wordIds;
+this.studyWordIds = wordIds;
 }),
 toggleIsLoggedInState: action(function () {
 this.isLoggedIn = !this.isLoggedIn;
@@ -116,22 +117,39 @@ console.log();
 getNeededInfo: action (function (listId) {
     var base = "https://peaceful-tundra-85950.herokuapp.com/api/lists/"
     var ending = "/words"
-    var url = base + listId + ending;
-    this.doneLoading = false;
-    axios.get(url, {headers: {"Authorization": this.topicoToken}}).then(action(json => {if (json.data.success === false) {this.setBreach(true)}  this.setWordIds(json.data); })).then(() => this.getListStatusByListId (listId) ).then(() => this.doneLoading = true).catch(function(error) {
-        console.log(error.response);
-    })}), 
+    var url1 = base + listId + ending;
+    var base2 = "https://peaceful-tundra-85950.herokuapp.com/api/lists/status/"
+    var url2 = base2 + listId;
+    axios.all([
+        axios.get(url1, {headers: {"Authorization": this.topicoToken}}),
+        axios.get(url2, {headers: {"Authorization": this.topicoToken}})
+      ]).then(axios.spread((jsonWords, jsonList) => {if (jsonWords.data.success === false || jsonList.data.success === false) {this.setBreach(true)}; this.setWordIds(jsonWords.data); this.setCurrentListId(jsonList.data[0]); this.setCurrentListName(jsonList.data[0][0].listName )      })).then( () => this.setDoneLoading(true)).catch(function(error) {
+        console.log(error.response);})
+}),
+getNeededInfoToStudy: action (function (listId) {
+    var base = "https://peaceful-tundra-85950.herokuapp.com/api/lists/"
+    var ending = "/words"
+    var url1 = base + listId + ending;
+    var base2 = "https://peaceful-tundra-85950.herokuapp.com/api/lists/status/"
+    var url2 = base2 + listId;
+    axios.all([
+        axios.get(url1, {headers: {"Authorization": this.topicoToken}}),
+        axios.get(url2, {headers: {"Authorization": this.topicoToken}})
+      ]).then(axios.spread((jsonWords, jsonList) => {if (jsonWords.data.success === false || jsonList.data.success === false) {this.setBreach(true)}; this.setWordIds(jsonWords.data); this.setStudyWordIds((jsonWords.data.filter((json) => (json.status !== 10 && json.vn && json.en)))); this.setCurrentListId(jsonList.data[0]); this.setCurrentListName(jsonList.data[0][0].listName )      })).then( () => this.setDoneLoading(true)).catch(function(error) {
+        console.log(error.response);})
+}),
 getWordsByListId: action(function (listId) {  
-var base = "https://peaceful-tundra-85950.herokuapp.com/api/lists/"
-var ending = "/words"
-var url = base + listId + ending;
-axios.get(url, {headers: {"Authorization": this.topicoToken}}).then(action(json => {if (json.data.success === false) {this.setBreach(true)}; this.setWordIds(json.data); })).then(() => this.doneLoading = true).catch(function(error) {
-    console.log(error.response);
-})}),
-getListStatusByListId: action(function (listId) {  
+    var base = "https://peaceful-tundra-85950.herokuapp.com/api/lists/"
+    var ending = "/words"
+    var url = base + listId + ending;
+    axios.get(url, {headers: {"Authorization": this.topicoToken}}).then(action(json => {if (json.data.success === false) {this.setBreach(true)}; this.setWordIds(json.data); })).then(() => this.doneLoading = true).catch(function(error) {
+        console.log(error.response)})
+    }),
+getListStatusByListId: action(function (listId) {
+    this.setDoneLoading(false);  
     var base = "https://peaceful-tundra-85950.herokuapp.com/api/lists/status/"
     var url = base + listId
-    axios.get(url, {headers: {"Authorization": this.topicoToken}}).then(action(json => {this.setCurrentListId(json.data[0]); this.setCurrentListName(json.data[0][0].listName)})).then(() => this.doneLoading = true).catch(function(error) {
+    axios.get(url, {headers: {"Authorization": this.topicoToken}}).then(action(json => {this.setCurrentListId(json.data[0]); this.setCurrentListName(json.data[0][0].listName);})).catch(function(error) {
         console.log(error);
     })}),
 getStudyWordsByListId: action(function (listId) { 
@@ -141,10 +159,11 @@ getStudyWordsByListId: action(function (listId) {
     axios.get(url, {headers: {"Authorization": this.topicoToken}}).then(action(json => {if (json.data.success === false) {this.setBreach(true)}  this.setWordIds(json.data); this.setStudyWordIds((json.data.filter((json) => (json.status !== 10 && json.vn && json.en)))) })).then(() => {this.doneLoading = true;}).catch(function(error) {
         console.log(error);
     })}),
-createList: action(function (listName) {  
+createList: action(function (listName) {
+    this.setDoneLoading(false);  
     var listNameObject = {listName: listName, userId: this.userId}
     var base = "https://peaceful-tundra-85950.herokuapp.com/api/lists/"
-    var url = base
+    var url = base;
     axios.post(url, listNameObject, {headers: {"Authorization": this.topicoToken}})
     .then(action(json => { this.setCurrentListInfo(json.data.listId); this.create_ten_wordIds(json.data.listId) }));
 }),
@@ -169,10 +188,11 @@ create_ten_wordIds: action(function (listId) {
 getListsByUserId: action(function (userId) {
 //const authHeaders = {headers: {"Authorization": this.topicoToken}}; 
 var base = "https://peaceful-tundra-85950.herokuapp.com/api/users/"
-var ending = "/lists"
+var ending = "/lists";
+this.setDoneLoading(false);
 var url = base + userId + ending;
 axios.get(url,{headers: {"Authorization": this.topicoToken}} ).then(action( y =>{if (y.data.success === false) {this.setBreach(true)} this.setListIds(y.data); this.doneLoading = true })).catch((error) => 
-{console.log(error) })
+{console.log(error);this.setDoneLoading(true);  })
 }),
 getLatestListsByUserId: action(function (userId) {
     //const authHeaders = {headers: {"Authorization": this.topicoToken}}; 
