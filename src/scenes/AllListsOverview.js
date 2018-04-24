@@ -1,21 +1,96 @@
 import React from 'react';
 import { observer, inject } from 'mobx-react';
-import { withRouter} from 'react-router-dom';
+import { withRouter, Link } from 'react-router-dom';
 import WordlistRow from "../components/WordlistRow";
 import CreateWordlist from "../components/CreateWordlist";
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group'; // ES6
 
 const AllListsOverviewContainer = inject('appStore')(observer(class AllListsOverviewContainer extends React.Component {
-    componentWillMount() {
-      this.props.appStore.getListsByUserId(this.props.match.params.userId);    
+  constructor(props) {
+    super(props);
+    this.state = {
+      width: window.innerWidth,
+    };
+  }  
+componentWillMount() {
+  window.addEventListener('resize', this.handleWindowSizeChange);
+  this.props.appStore.getListsByUserId(this.props.match.params.userId);    
         }
+componentWillUnmount() {
+  window.removeEventListener('resize', this.handleWindowSizeChange);
+  }
+handleWindowSizeChange = () => {
+          this.setState({ width: window.innerWidth });
+          if (this.state.width <= 768) {this.props.appStore.setIsMobile(true)}
+          else {this.props.appStore.setIsMobile(false)} 
+};
   render() {
-    return (
-    <AllListsOverviewComponent />
-    )
+    const { width } = this.state;
+    const isMobile = width <= 768;
+    if (isMobile)
+    {
+      return (null)
   }
+  else {
+  return (<AllListsOverviewComponent/>)
   }
+  }}
   ))
+
+  const NavwordlistRow = inject('appStore')(observer(class NavwordlistRow extends React.Component {
+    render() {
+     return (
+     <Link className={"navbar-item"}to={"/home/userId/" + this.props.appStore.userId +  "/lists/" + this.props.x.listId + "/edit"}>
+              {this.props.x.listName}</Link>
+              )
+          }}))
+
+
+  const AllListsOverviewMobile = inject('appStore')(observer(class AllListsOverviewMobile extends React.Component {
+    constructor(props) {
+      super(props);
+      this.state = {
+        isActive: false,
+      }
+  }
+  toggleNav = () => {
+    this.setState(prevState => ({
+      isActive: !prevState.isActive
+    }))
+  }
+  eachListComponent(x, id) {
+    return (<NavwordlistRow x={x} id={id} key={id}/>)
+  }
+  render() {
+      const openLists = this.props.appStore.listIds.filter((list) => list.listStatus == "undefined" || list.listStatus == 0 || list.listStatus == '0' );
+  const closedLists = this.props.appStore.listIds.filter((list) => list.listStatus == "1");
+    return(
+      <div className="column is-12">
+  <nav className="navbar is-light"
+  aria-label="main navigation"
+  style={{
+    borderBottom: 'solid 1px #dddddd',
+  }}>
+<div className="navbar-brand">
+  <button className="button navbar-burger" style={{marginLeft:0}}onClick={this.toggleNav}>
+    <span></span>
+    <span></span>
+    <span></span>
+  </button>
+</div>
+<div className={ this.state.isActive ? 'navbar-menu is-active' : 'navbar-menu'}>
+  <div className="navbar-start">
+  Open Word Decks ({openLists ? this.props.appStore.numberOfOpenLists : 0})
+  {openLists ? openLists.map(this.eachListComponent) : null}
+<hr className="navbar-divider"/>
+<br/>
+Closed Word Decks ({closedLists ? this.props.appStore.numberOfClosedLists : 0})
+  {closedLists ? closedLists.map(this.eachListComponent) : null}
+  </div>
+</div>
+</nav></div>
+  )}}))
+
 const AllListsOverviewComponentOriginal = inject('appStore')(observer(class AllListsOverviewComponentOriginal extends React.Component {
   constructor(props) {
     super(props);
@@ -88,6 +163,7 @@ Open Word Decks ({openLists ? this.props.appStore.numberOfOpenLists : 0})
   )
   }}
   ))
+
   const AllListsOverviewComponent = withRouter(AllListsOverviewComponentOriginal);
 
 export default AllListsOverviewContainer

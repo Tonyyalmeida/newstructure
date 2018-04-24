@@ -44,6 +44,7 @@ const WelcomeComponent = inject('appStore')(observer(
   <div><br/>
   <p className="subtitle" style={{fontStyle:"oblique"}}>"Success is no accident. It is hard work, perseverance, learning, studying and sacrifice.
   Repetition is the mother of learning, the father of action, which makes it the architect of accomplishment."</p>
+  <p>-Some Guy, at some Point in time</p>
   <br/>
   </div>
    <span style={{float: "right"}}><CreateWordlist/>     </span>

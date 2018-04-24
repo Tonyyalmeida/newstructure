@@ -10,8 +10,13 @@ currentIndex: 0,
 userName: "",
 userId: "",
 doneLoading: false,
+isMobile: false,
+setIsMobile: action(function(status) {
+    this.isMobile = status;
+}),
 listIds: [],
 currentListId: [],
+isEditing: false,
 userIdFromCookie: "",
 isRealUser: computed(function () {
     return (this.userIdFromCookie.toString() === this.userId)
@@ -97,6 +102,9 @@ settopicoToken: action(function(topicoToken) {
     this.topicoToken = topicoToken;
 }),
 setWordIds: action(function(wordIds) {
+wordIds.sort(function (a, b) {
+        return a.wordId- b.wordIdd;
+      });
     this.wordIds = wordIds;
 }),
 setStudyWordIds: action(function(wordIds) {
