@@ -16,7 +16,7 @@ const SignupForm = inject('appStore')(observer(class SignupForm extends React.Co
   handleSubmit(event) {
   event.preventDefault();
   this.props.appStore.setDoneLoading(false);    
-  var formData = { email: event.target.email.value, username: event.target.username.value, password1: event.target.password1.value, password2: event.target.password2.value  };
+  var formData = { email: event.target.email.value.toString().replace(/ /g, ""), username: event.target.username.value.toString().replace(/ /g, ""), password1: event.target.password1.value.toString().replace(/ /g, ""), password2: event.target.password2.value.toString().replace(/ /g, "")  };
     axios.post('https://peaceful-tundra-85950.herokuapp.com/users', formData)
   .then( (response) => {
     if (response.data.error)

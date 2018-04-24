@@ -239,8 +239,10 @@ const HeadingLoggedInAndMobile= inject('appStore')(observer(class HeadingLoggedI
           <hr className="navbar-divider"/>
           </div>
           <div className="navbar-end">
-          <hr className="navbar-divider"/>
-          <hr className="navbar-divider"/>
+          <hr/>
+          <Link to={"/home/userId/" + this.props.userId} className="navbar-item">
+              Home
+            </Link>
             <Link to={{pathname: "/login", state: { logout: true }}} className="navbar-item">
               Logout
             </Link>

@@ -35,7 +35,7 @@ handleLogout() {
     document.cookie = "topicoToken=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
     document.cookie = "userName=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
     document.cookie = "userId=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
-this.setState({successText: "You just logged out"});
+this.setState({successText: "You just logged out"}, () =>   this.props.appStore.setDoneLoading(true));
     };
  setCookie(cname, cvalue) {
     var exdays = 3;
@@ -47,7 +47,7 @@ this.setState({successText: "You just logged out"});
   handleSubmit(event) {
   event.preventDefault();
   this.props.appStore.setDoneLoading(false);    
-  var formData = { email: event.target.username.value, password: event.target.password1.value};
+  var formData = { email: event.target.username.value.toString().replace(/ /g, ""), password: event.target.password1.value.toString().replace(/ /g, "")};
   this.props.appStore.setUserName(event.target.username.value);
     axios.post('https://peaceful-tundra-85950.herokuapp.com/login', formData)
   .then( (response) => {
