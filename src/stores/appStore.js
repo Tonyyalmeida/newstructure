@@ -102,10 +102,9 @@ settopicoToken: action(function(topicoToken) {
     this.topicoToken = topicoToken;
 }),
 setWordIds: action(function(wordIds) {
-wordIds.sort(function (a, b) {
-        return a.wordId- b.wordIdd;
-      });
-    this.wordIds = wordIds;
+const newWordIds = Object.assign(wordIds);
+newWordIds.sort((a, b) => a.wordId - b.wordId);
+    this.wordIds = newWordIds;
 }),
 setStudyWordIds: action(function(wordIds) {
 this.studyWordIds = wordIds;
@@ -131,7 +130,7 @@ getNeededInfo: action (function (listId) {
     axios.all([
         axios.get(url1, {headers: {"Authorization": this.topicoToken}}),
         axios.get(url2, {headers: {"Authorization": this.topicoToken}})
-      ]).then(axios.spread((jsonWords, jsonList) => {if (jsonWords.data.success === false || jsonList.data.success === false) {this.setBreach(true)}; this.setWordIds(jsonWords.data); this.setCurrentListId(jsonList.data[0]); this.setCurrentListName(jsonList.data[0][0].listName )      })).then( () => this.setDoneLoading(true)).catch(function(error) {
+      ]).then(axios.spread((jsonWords, jsonList) => {if (jsonWords.data.success === false || jsonList.data.success === false) {this.setBreach(true)}; this.setWordIds(jsonWords.data); this.setCurrentListId(jsonList.data[0]); this.setCurrentListName(jsonList.data[0][0].listName )      })).then( () => {this.setDoneLoading(true); console.log(this.wordIds)} ).catch(function(error) {
         console.log(error.response);})
 }),
 getNeededInfoToStudy: action (function (listId) {
