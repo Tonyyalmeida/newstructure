@@ -107,7 +107,9 @@ newWordIds.sort((a, b) => a.wordId - b.wordId);
     this.wordIds = newWordIds;
 }),
 setStudyWordIds: action(function(wordIds) {
-this.studyWordIds = wordIds;
+    const newStudyWordIds = Object.assign(wordIds);
+newStudyWordIds.sort(() => Math.random() - 0.5);
+this.studyWordIds = newStudyWordIds;
 }),
 toggleIsLoggedInState: action(function () {
 this.isLoggedIn = !this.isLoggedIn;
