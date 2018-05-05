@@ -132,8 +132,8 @@ getNeededInfo: action (function (listId) {
     axios.all([
         axios.get(url1, {headers: {"Authorization": this.topicoToken}}),
         axios.get(url2, {headers: {"Authorization": this.topicoToken}})
-      ]).then(axios.spread((jsonWords, jsonList) => {if (jsonWords.data.success === false || jsonList.data.success === false) {this.setBreach(true)}; this.setWordIds(jsonWords.data); this.setCurrentListId(jsonList.data[0]); this.setCurrentListName(jsonList.data[0][0].listName )      })).then( () => {this.setDoneLoading(true); console.log(this.wordIds)} ).catch(function(error) {
-        console.log(error.response);})
+      ]).then(axios.spread((jsonWords, jsonList) => {if (jsonWords.data.success === false || jsonList.data.success === false) {this.setBreach(true)}; this.setWordIds(jsonWords.data); this.setCurrentListId(jsonList.data[0]); this.setCurrentListName(jsonList.data[0][0].listName )      })).then( () => {this.setDoneLoading(true)} ).catch(function(error) {
+        console.log(error.response)})
 }),
 getNeededInfoToStudy: action (function (listId) {
     var base = "https://peaceful-tundra-85950.herokuapp.com/api/lists/"
@@ -151,7 +151,7 @@ getWordsByListId: action(function (listId) {
     var base = "https://peaceful-tundra-85950.herokuapp.com/api/lists/"
     var ending = "/words"
     var url = base + listId + ending;
-    axios.get(url, {headers: {"Authorization": this.topicoToken}}).then(action(json => {if (json.data.success === false) {this.setBreach(true)}; this.setWordIds(json.data); })).then(() => this.doneLoading = true).catch(function(error) {
+    axios.get(url, {headers: {"Authorization": this.topicoToken}}).then(action(json => {if (json.data.success === false) {this.setBreach(true)}; this.setWordIds(json.data); })).then(() => this.setDoneLoading(true)).catch(function(error) {
         console.log(error.response)})
     }),
 getListStatusByListId: action(function (listId) {
